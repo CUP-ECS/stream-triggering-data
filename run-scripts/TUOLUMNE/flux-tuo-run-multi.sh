@@ -1,11 +1,7 @@
 #!/bin/bash
-#flux: --nodes=2
-#flux: --nslots=8
 #flux: --gpus-per-slot=1
 #flux: --output=TUO-{{nnodes}}.out
 #flux: --exclusive
-#flux: --time-limit=10m
-#flux: --queue=pdebug
 #flux: --env=FLUX_TEST={{nnodes}}
 
 #ulimit -c unlimited
@@ -35,7 +31,7 @@ VAR_MOD_FILE="$COLLECTION_DIR/0-var-mod.tmp"
 module list >> $VAR_MOD_FILE 2>&1
 srun --nodes=$NODES --ntasks-per-node=1 --output=$HOSTNAMES_FILE hostname
 
-TEST="./build/src/gol"
+TEST="$HOME/git/CabanaGhost/build/src/gol"
 
 START_EXP=0
 END_EXP=2
@@ -54,11 +50,12 @@ run_test()
     sed -i "1i$STRING" $RUN_FILE
 }
 
+matrix_sizes=(16384 61440)
+
 for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
     PPN=$((2 ** $exp))
-    for j in {14..14}; do
-        SIZE=$((2 ** $j))
-        SIZE=16384
+    for j in "${matrix_sizes[@]}"; do
+        SIZE=$j
 
         run_test "a-db" "MPI Advance Double Buffer"
 
