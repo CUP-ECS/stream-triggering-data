@@ -1,6 +1,6 @@
 #!/bin/bash
 #flux: --gpus-per-slot=1
-#flux: --output=TUO-{{nnodes}}.out
+#flux: --output=TIOGA-{{nnodes}}.out
 #flux: --exclusive
 #flux: --env=FLUX_TEST={{nnodes}}
 
@@ -8,9 +8,9 @@
 
 NODES=$FLUX_TEST
 
-SYSTEM=TUO
+SYSTEM=TIOGA
 export HSA_XNACK=1
-module load craype-accel-amd-gfx942
+module load craype-accel-amd-gfx90a
 module load rocm
 
 COLLECTION_DIR=outputs
@@ -34,7 +34,7 @@ srun --nodes=$NODES --ntasks-per-node=1 --output=$HOSTNAMES_FILE hostname
 TEST="$HOME/git/CabanaGhost/build/src/gol"
 
 START_EXP=0
-END_EXP=2
+END_EXP=3
 ITERS=1000
 
 run_test()
@@ -49,7 +49,7 @@ run_test()
     sed -i "1i$STRING" $RUN_FILE
 }
 
-matrix_sizes=(16384 92160)
+matrix_sizes=(16384 61440)
 
 for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
     PPN=$((2 ** $exp))
