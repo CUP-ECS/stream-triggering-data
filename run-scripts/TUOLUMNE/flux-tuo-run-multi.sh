@@ -49,7 +49,7 @@ run_test()
     sed -i "1i$STRING" $RUN_FILE
 }
 
-matrix_sizes=(16384 92160)
+matrix_sizes=(16384 90112)
 
 for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
     PPN=$((2 ** $exp))
