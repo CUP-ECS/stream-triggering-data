@@ -63,32 +63,59 @@ speedupdata=df[  df['Backend'].isin(["MPI Advance RSend","MPI Advance Send","Cra
                & df['Size'].isin([16384,61440,90112,92160])
               ]
 
+# Speedup broken down by Problem Size
 speedup_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks', 
-                           y='Speedup', hue='Backend',
-                           col='GB', style='PPN',
+                           y='Speedup', hue='Backend', row='System', 
+                           style='GB',
                            errorbar=("ci", 68), markers=True)
-
-speedup_plot.set_titles("Speedup by Backend and PPN\non Problem Size {col_name}GB")
-speedup_plot.set(ylim=(0.3, 130))
-speedup_plot.set(xlim=(0.3, 150))
+speedup_plot.set_titles("Speedup by Backend and Problem Size\non {row_name}")
+speedup_plot.set(ylim=(0.8, 130))
+speedup_plot.set(xlim=(0.8, 150))
 for ax in speedup_plot.axes.flat:
     ax.axline((0, 0), slope=1, color='k', ls='--')
     ax.grid(True, axis='both', ls=':')
 plt.xscale('log', base=2)
 plt.yscale('log', base=2)
-plt.savefig("speedup.png")
-#plt.show()
+plt.savefig("speedup-size.png")
 
 efficiency_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks', 
-                              y='Parallel Efficiency', hue='Backend',
-                              col='GB', style='PPN', 
+                              y='Parallel Efficiency', hue='Backend', row='System', 
+                              style='GB', 
                               errorbar=("ci", 68), markers=True)
-efficiency_plot.set_titles("Parallel Efficiency by Backend and PPN\non Problem Size {col_name}GB")
+efficiency_plot.set_titles("Parallel Efficiency by Backend and Problem Size\non {row_name}")
 efficiency_plot.set(ylim=(0.01, 1.05))
 efficiency_plot.set(xlim=(0.8, 150))
 for ax in efficiency_plot.axes.flat:
     ax.grid(True, axis='both', ls=':')
 plt.xscale('log', base=2)
+#plt.yscale('log', base=2)
+plt.savefig("efficiency-size.png")
+
+# Speedup broken down by Problem Size and PPN
+speedup_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks', 
+                           y='Speedup', hue='Backend', row='System', 
+                           style='PPN', col='GB',
+                           errorbar=("ci", 68), markers=True)
+speedup_plot.set_titles("Speedup by Backend and PPN\non {row_name} {col_name}GB Problem")
+speedup_plot.set(ylim=(0.8, 130))
+speedup_plot.set(xlim=(0.8, 150))
+for ax in speedup_plot.axes.flat:
+    ax.axline((0, 0), slope=1, color='k', ls='--')
+    ax.grid(True, axis='both', ls=':')
+plt.xscale('log', base=2)
 plt.yscale('log', base=2)
-plt.savefig("efficiency.png")
-#plt.show()
+plt.savefig("speedup-ppn.png")
+
+efficiency_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks', 
+                              y='Parallel Efficiency', hue='Backend', row='System', 
+                              style='PPN', col='GB',
+                              errorbar=("ci", 68), markers=True)
+efficiency_plot.set_titles("Parallel Efficiency by Backend and PPN Size\non {row_name} {col_name}GB Problem")
+efficiency_plot.set(ylim=(0.01, 1.05))
+efficiency_plot.set(xlim=(0.8, 150))
+for ax in efficiency_plot.axes.flat:
+    ax.grid(True, axis='both', ls=':')
+plt.xscale('log', base=2)
+#plt.yscale('log', base=2)
+plt.savefig("efficiency-ppn.png")
+
