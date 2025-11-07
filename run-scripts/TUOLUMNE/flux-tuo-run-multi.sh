@@ -31,7 +31,7 @@ VAR_MOD_FILE="$COLLECTION_DIR/0-var-mod.tmp"
 module list >> $VAR_MOD_FILE 2>&1
 srun --nodes=$NODES --ntasks-per-node=1 --output=$HOSTNAMES_FILE hostname
 
-TEST="$HOME/git/CabanaGhost/build/src/gol"
+TEST="/usr/workspace/$USER/apps/tuolumne/CabanaGhost/bin/gol"
 
 START_EXP=0
 END_EXP=2
@@ -50,6 +50,7 @@ run_test()
 }
 
 matrix_sizes=(16384 90112)
+export MPICH_OFI_NIC_POLICY=GPU
 
 for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
     PPN=$((2 ** $exp))
