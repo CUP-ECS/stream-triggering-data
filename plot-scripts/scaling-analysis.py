@@ -68,8 +68,8 @@ speedup_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks',
                            style='GB',
                            errorbar=("ci", 68), markers=True)
 speedup_plot.set_titles("Speedup by Backend and Problem Size\non {row_name}")
-speedup_plot.set(ylim=(0.8, 1050))
-speedup_plot.set(xlim=(0.8, 1050))
+speedup_plot.set(ylim=(0.8, 1100))
+speedup_plot.set(xlim=(0.8, 1100))
 for ax in speedup_plot.axes.flat:
     ax.axline((0, 0), slope=1, color='k', ls='--')
     ax.grid(True, axis='both', ls=':')
@@ -83,7 +83,7 @@ efficiency_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks',
                               errorbar=("ci", 68), markers=True)
 efficiency_plot.set_titles("Parallel Efficiency by Backend and Problem Size\non {row_name}")
 efficiency_plot.set(ylim=(0.01, 1.05))
-efficiency_plot.set(xlim=(0.8, 1050))
+efficiency_plot.set(xlim=(0.8, 1100))
 for ax in efficiency_plot.axes.flat:
     ax.grid(True, axis='both', ls=':')
 plt.xscale('log', base=2)
@@ -96,8 +96,8 @@ speedup_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks',
                            col='PPN', style='GB',
                            errorbar=("ci", 68), markers=True)
 speedup_plot.set_titles("Speedup by Backend and PPN\non {row_name} {col_name} PPN")
-speedup_plot.set(ylim=(0.8, 1050))
-speedup_plot.set(xlim=(0.8, 1050))
+speedup_plot.set(ylim=(0.8, 1100))
+speedup_plot.set(xlim=(0.8, 1100))
 for ax in speedup_plot.axes.flat:
     ax.axline((0, 0), slope=1, color='k', ls='--')
     ax.grid(True, axis='both', ls=':')
@@ -118,14 +118,17 @@ plt.xscale('log', base=2)
 plt.yscale('log', base=2)
 plt.savefig("efficiency-ppn.png")
 
-startup_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks', 
+startupdata=df[  df['Backend'].isin(["MPI Advance RSend","MPI Advance Send","Cray MPICH","Cray MPICH No GPU IPC"]) 
+               & df['Memory Type'].isin(["coarse","fine"])
+               & df['Size'].isin([16384])
+              ]
+startup_plot = sbn.relplot(data=startupdata, kind='line', x='Ranks', 
                               y='Startup Time', hue='Backend', row='System', 
-                              style='GB', 
                               errorbar=("ci", 68), markers=True)
-startup_plot.set_titles("Startup Time by Backend and Problem Size\non {row_name}")
+startup_plot.set_titles("Startup Time by Backend for 2GB Problem\non {row_name}")
 #startup_plot.set(ylim=(0.01, 1.05))
-startup_plot.set(xlim=(0.8, 1050))
+startup_plot.set(xlim=(0.8, 1100))
 plt.xscale('log', base=2)
-plt.yscale('log', base=2)
+#plt.yscale('log', base=2)
 plt.savefig("startup-size.png")
 
