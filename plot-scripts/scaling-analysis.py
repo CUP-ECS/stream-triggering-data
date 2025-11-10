@@ -122,13 +122,23 @@ startupdata=df[  df['Backend'].isin(["MPI Advance RSend","MPI Advance Send","Cra
                & df['Memory Type'].isin(["coarse","fine"])
                & df['Size'].isin([16384])
               ]
-startup_plot = sbn.relplot(data=startupdata, kind='line', x='Ranks', 
+startup_plot = sbn.relplot(data=startupdata, kind='line', x='Nodes', 
                               y='Startup Time', hue='Backend', row='System', 
                               errorbar=("ci", 68), markers=True)
 startup_plot.set_titles("Startup Time by Backend for 2GB Problem\non {row_name}")
 #startup_plot.set(ylim=(0.01, 1.05))
-startup_plot.set(xlim=(0.8, 1100))
+startup_plot.set(xlim=(0.8, 265))
 plt.xscale('log', base=2)
 #plt.yscale('log', base=2)
 plt.savefig("startup-size.png")
+
+startup_plot = sbn.relplot(data=startupdata, kind='line', x='Nodes', 
+                              y='Startup Time', hue='Backend', row='System', 
+                              col='PPN', errorbar=("ci", 68), markers=True)
+startup_plot.set_titles("Startup Time by Backend for 2GB Problem by PPN\non {row_name}")
+#startup_plot.set(ylim=(0.01, 1.05))
+startup_plot.set(xlim=(0.8, 265))
+plt.xscale('log', base=2)
+#plt.yscale('log', base=2)
+plt.savefig("startup-ppn.png")
 
