@@ -7,7 +7,7 @@ import seaborn as sbn
 import glob
 
 # Read the raw data into a Pandas Data Frame
-all_files = glob.glob("../data/*/scaling-data-*.csv")
+all_files = glob.glob("../data/TUOLUMNE/scaling-data-*.csv")
 df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
 
 # Fix the labels of the columns to be more readable
@@ -117,4 +117,15 @@ for ax in efficiency_plot.axes.flat:
 plt.xscale('log', base=2)
 plt.yscale('log', base=2)
 plt.savefig("efficiency-ppn.png")
+
+startup_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks', 
+                              y='Startup Time', hue='Backend', row='System', 
+                              style='GB', 
+                              errorbar=("ci", 68), markers=True)
+startup_plot.set_titles("Startup Time by Backend and Problem Size\non {row_name}")
+#startup_plot.set(ylim=(0.01, 1.05))
+startup_plot.set(xlim=(0.8, 1050))
+plt.xscale('log', base=2)
+plt.yscale('log', base=2)
+plt.savefig("startup-size.png")
 
