@@ -18,8 +18,7 @@ df = df.rename(columns={'nodes':'Nodes', 'ntasks':'PPN', 'ranks':'Ranks',
 # Fix the names of the backends to be more readable
 df['Backend'] = df['Backend'].replace({"MPIAdvance-CXI-Double-Buffering":"MPI Advance RSend",
                                        "MPIAdvance-CXI-Single-Buffering":"MPI Advance Send",
-                                       "Cray-MPICH-CXI-GPU-Enabled":"Cray MPICH",
-                                       "Cray-MPICH-CXI-GPU-Disabled":"Cray MPICH No GPU IPC"})
+                                       "Cray-MPICH-CXI-GPU-Enabled":"Cray MPICH"})
 # Fix the names of the backends to be more readable
 df['System'] = df['System'].replace({"tioga":"Tioga",
                                      "tuolumne":"Tuolumne",
@@ -28,7 +27,7 @@ df['System'] = df['System'].replace({"tioga":"Tioga",
 
 # Compute derived values to use to generate data to plot from measured terms
 ## The total number of MPI ranks used in a sample
-df['GB'] = round(df['Size'] * df['Size'] * 8 / 2**30, 0)
+df['GB'] = round(df['Size'] * df['Size'] * 8 / 10**9, 0)
 df['Ranks'] = df['Nodes'] * df['PPN']
 df = df.sort_values(['Ranks','Nodes'])
 
@@ -55,11 +54,22 @@ def speedup_func(row):
 df['Speedup'] = df.apply(speedup_func, axis=1)
 df['Parallel Efficiency'] = df['Speedup'] / df['Ranks']
 
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_colwidth', None)
+speedup_df = pd.pivot_table(df,
+                     index = ["System", "GB", 'Ranks', 'Backend'],
+                     values = ["Speedup"],
+                     aggfunc = ["min", "mean", "max"])
+speedup_df.columns = speedup_df.columns.droplevel(1)
+print("Summary of speedup statistics")
+print(speedup_df)
+
 
 # Now generate the actual plots using Seaborn
-speedupdata=df[  df['Backend'].isin(["MPI Advance RSend","MPI Advance Send","Cray MPICH","Cray MPICH No GPU IPC"]) 
+speedupdata=df[  df['Backend'].isin(["MPI Advance RSend","MPI Advance Send","Cray MPICH"]) 
                & df['Memory Type'].isin(["coarse","fine"])
-               & df['Size'].isin([16384,61440,90112,92160])
+           #    & df['Size'].isin([16384,88320])
               ]
 
 # Speedup broken down by Problem Size
