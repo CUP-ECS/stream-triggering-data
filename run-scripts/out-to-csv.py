@@ -13,82 +13,58 @@ def parse_directory(dir_to_parse, cluster, writer):
     for entry in dir_to_parse.iterdir():
         if entry.is_file():
             print(f"{blue}Found: {reset}{entry}")
-            if "TIOGA" in entry.name:
-                PPN_MAX_POWER = 3
-            else:
-                PPN_MAX_POWER = 2
-
-            PPN_MIN_POWER = 0
 
             nodes = entry.name.split("-")[1]
-            lines = []
-            sizes = []
+
+            tests = []
+            start_lines = []
+            solve_lines = []
             with open(entry, 'r') as file:
                 for line in file:
-                    if "Solver creation time" in line or "Solver solve time" in line:
-                        lines.append(line)
-                    elif "Cells" in line:
-                        new_size = line.split(" ")[-4]
-                        if new_size not in sizes:
-                            sizes.append(new_size)
+                    if "Solver creation time" in line:
+                        start_lines.append(line.split(":")[1].strip())
+                    elif "Solver solve time" in line:
+                        solve_lines.append(line.split(":")[1].strip())
                     elif "Total Simulation Time:" in line:
                         num_cycles = line.split(":")[1].strip()
+                    elif "Test:" in line:
+                        tests.append(line.split(":")[1].strip())
+
+            if len(tests) != len(start_lines) and len(start_lines) != len(solve_lines):
+                print("Sizes not the same!")
+                exit(1)
             
-            print(sizes)
-
-            line_number = 0
+            lines_written = 0
             line_dictionary = {"system":cluster.lower(), "nodes":nodes, "cycles":num_cycles}
-            for j in range(PPN_MIN_POWER, PPN_MAX_POWER+1):
-                ppn = 1 << j
-                print(f"Nodes {nodes}; PPN {ppn}")
+            for test_data, start_time, solve_time in zip(tests, start_lines, solve_lines):
+                test_data = ( test_data.replace("MPI Advance", "MPIAdvance-CXI")
+                                       .replace("Single ", "Single-")
+                                       .replace("Double ", "Double-")
+                                       .replace("grained ", "grained-")
+                                       .replace("MPI ", "Cray-MPICH-CXI-GPU-Enabled ")
+                                       .replace("MPIAdvance-CXI Single",
+                                                "MPIAdvance-CXI-Single-Buffering Single")
+                                       .replace("MPIAdvance-CXI Double",
+                                                "MPIAdvance-CXI-Double-Buffering Double")
+                            )
+
+                backend, buffer_type, nodes, ppn, buff_size = test_data.split(" ")
                 line_dictionary["ntasks"] = ppn
-                for l in range(len(sizes)):
-                    line_dictionary["size"] = sizes[l]
-                    # MPI Advance Double Buffered Coarse
-                    line_dictionary["backend"] = "MPIAdvance-CXI-Double-Buffering"
+                line_dictionary["backend"] = backend
+                if "Fine" in buffer_type:
+                    line_dictionary["memory_type"] = "fine"
+                else:
                     line_dictionary["memory_type"] = "coarse"
+                if "Double" in buffer_type:
                     line_dictionary["send_type"] = "Ready Send"
-                    line_dictionary["solver_creation"] = lines[line_number].strip().split(": ")[-1]
-                    line_number+=1
-                    line_dictionary["solver_time"] = lines[line_number].strip().split(": ")[-1]
-                    line_number+=1
-                    writer.writerow(line_dictionary)
-
-                    # MPI Advance Double Buffered Fine
-                    line_dictionary["memory_type"] = "fine"
-                    line_dictionary["solver_creation"] = lines[line_number].strip().split(": ")[-1]
-                    line_number+=1
-                    line_dictionary["solver_time"] = lines[line_number].strip().split(": ")[-1]
-                    line_number+=1
-                    writer.writerow(line_dictionary)
-
-                    # MPI Advance Single Buffered Coarse
-                    line_dictionary["backend"] = "MPIAdvance-CXI-Single-Buffering"
-                    line_dictionary["memory_type"] = "coarse"
+                else:
                     line_dictionary["send_type"] = "Standard"
-                    line_dictionary["solver_creation"] = lines[line_number].strip().split(": ")[-1]
-                    line_number+=1
-                    line_dictionary["solver_time"] = lines[line_number].strip().split(": ")[-1]
-                    line_number+=1
-                    writer.writerow(line_dictionary)
-
-                    # MPI Advance Single Buffered Fine
-                    line_dictionary["memory_type"] = "fine"
-                    line_dictionary["solver_creation"] = lines[line_number].strip().split(": ")[-1]
-                    line_number+=1
-                    line_dictionary["solver_time"] = lines[line_number].strip().split(": ")[-1]
-                    line_number+=1
-                    writer.writerow(line_dictionary)
-
-                    # Cray MPICH
-                    line_dictionary["backend"] = "Cray-MPICH-CXI-GPU-Enabled"
-                    line_dictionary["memory_type"] = "coarse"
-                    line_dictionary["send_type"] = "Standard"
-                    line_dictionary["solver_creation"] = lines[line_number].strip().split(": ")[-1]
-                    line_number+=1
-                    line_dictionary["solver_time"] = lines[line_number].strip().split(": ")[-1]
-                    line_number+=1
-                    writer.writerow(line_dictionary)
+                line_dictionary["solver_creation"] = start_time
+                line_dictionary["solver_time"] = solve_time
+                line_dictionary["size"] = buff_size
+                writer.writerow(line_dictionary)
+                lines_written+=1
+            print(f"{blue}Lines added: {reset}{lines_written}")
 
 def main():
     # CSV fields

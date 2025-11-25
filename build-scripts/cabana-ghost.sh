@@ -8,8 +8,10 @@ RESET='\033[0m'
 
 # Long term -- use spack instead of this script!
 usage() {
-    echo "Usage: $0 [-T] [-Q queue] [-E power] [-S power] [-I time]"
+    echo "Usage: $0 [-TSK] [-Q queue] [-E power] [-S power] [-I time]"
     echo " -T Run TUO version (default TIOGA version)"
+    echo " -S Skip Silo build"
+    echo " -K Skip Kokkos build"
     echo " -F [path] Where the script should attempt to install all libraries (optional, default = \"/usr/workspace/$USER/apps/<system>\")"
     echo " -B [path] Base directory where all the git repos are cloned to (optional, default = \"$HOME/git\")"
 }
@@ -20,7 +22,7 @@ clone_repo() {
 	if [ ! -d $GIT_REPO_NAME ]; then
 		git clone $GIT_URL
 	else
-		echo -e " -> ${BLUE} Skipping git clone of:${RESET} $GIT_REPO_NAME"
+		echo -e " -> ${BLUE}Skipping git clone of:${RESET} $GIT_REPO_NAME"
 	fi
 }
 
@@ -32,10 +34,16 @@ build_build_dir() {
 	mkdir $DIR_TO_BUILD && cd $DIR_TO_BUILD
 }
 
-while getopts ":TF:B:" opt; do
+while getopts ":TSKF:B:" opt; do
     case $opt in
         T)
             VERSION=TUO
+            ;;
+        S)
+            SKIP_SILO=1
+            ;;
+        K)
+            SKIP_KOKKOS=1
             ;;
         F)
             BUILD_PATH="$OPTARG"
@@ -98,6 +106,7 @@ echo "Building all projects:"
 THREADS=8
 
 cd Silo
+if [ -z $SKIP_SILO ]; then
 echo -e " -> ${CYAN}Building Silo${RESET}"
 build_build_dir
 cmake \
@@ -106,8 +115,13 @@ cmake \
  -DCMAKE_CXX_COMPILER=CC ..
 
 make -j$THREADS install
+else
+echo -e " -> ${BLUE}Skipping Silo build${RESET}"
+cd build
+fi
 
 cd ../../kokkos
+if [ -z $SKIP_KOKKOS ]; then
 echo -e " -> ${CYAN}Building kokkos${RESET}"
 build_build_dir
 cmake \
@@ -119,6 +133,10 @@ cmake \
  -DBUILD_SHARED_LIBS=ON ..
 
 make -j$THREADS install
+else
+echo -e " -> ${BLUE}Skipping Kokkos build${RESET}"
+cd build
+fi
 
 cd ../../stream-triggering
 echo -e " -> ${CYAN}Building stream-triggering${RESET}"
