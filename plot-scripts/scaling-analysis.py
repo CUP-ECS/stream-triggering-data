@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sbn
@@ -29,6 +30,7 @@ df['System'] = df['System'].replace({"tioga":"Tioga",
 ## The total number of MPI ranks used in a sample
 df['GB'] = round(df['Size'] * df['Size'] * 8 / 10**9, 0)
 df['Ranks'] = df['Nodes'] * df['PPN']
+df['Edge Length'] = np.sqrt(df['Size']*df['Size']/df['Ranks']) * 8
 df = df.sort_values(['Ranks','Nodes'])
 
 
@@ -78,8 +80,8 @@ speedup_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks',
                            style='GB',
                            errorbar=("ci", 68), markers=True)
 speedup_plot.set_titles("Speedup by Backend and Problem Size\non {row_name}")
-speedup_plot.set(ylim=(0.8, 1100))
 speedup_plot.set(xlim=(0.8, 1100))
+speedup_plot.set(ylim=(0.8, 1100))
 for ax in speedup_plot.axes.flat:
     ax.axline((0, 0), slope=1, color='k', ls='--')
     ax.grid(True, axis='both', ls=':')
@@ -92,8 +94,8 @@ efficiency_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks',
                               style='GB', 
                               errorbar=("ci", 68), markers=True)
 efficiency_plot.set_titles("Parallel Efficiency by Backend and Problem Size\non {row_name}")
-efficiency_plot.set(ylim=(0.01, 1.05))
 efficiency_plot.set(xlim=(0.8, 1100))
+efficiency_plot.set(ylim=(0.01, 1.05))
 for ax in efficiency_plot.axes.flat:
     ax.grid(True, axis='both', ls=':')
 plt.xscale('log', base=2)
@@ -105,9 +107,9 @@ speedup_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks',
                            y='Speedup', hue='Backend', row='System', 
                            col='PPN', style='GB',
                            errorbar=("ci", 68), markers=True)
-speedup_plot.set_titles("Speedup by Backend and PPN\non {row_name} {col_name} PPN")
-speedup_plot.set(ylim=(0.8, 1100))
-speedup_plot.set(xlim=(0.8, 1100))
+speedup_plot.set_titles("Speedup by Backend and Problem Size\non {row_name} {col_name} PPN")
+speedup_plot.set(ylim=(0.8, 275))
+speedup_plot.set(xlim=(0.8, 275))
 for ax in speedup_plot.axes.flat:
     ax.axline((0, 0), slope=1, color='k', ls='--')
     ax.grid(True, axis='both', ls=':')
@@ -115,18 +117,31 @@ plt.xscale('log', base=2)
 plt.yscale('log', base=2)
 plt.savefig("speedup-ppn.png")
 
-efficiency_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks', 
+efficiency_plot = sbn.relplot(data=speedupdata, kind='line', x='Nodes', 
                               y='Parallel Efficiency', hue='Backend', row='System', 
                               col='PPN', style='GB',
                               errorbar=("ci", 68), markers=True)
-efficiency_plot.set_titles("Parallel Efficiency by Backend and PPN Size\non {row_name} {col_name} PPN")
+efficiency_plot.set_titles("Parallel Efficiency by Backend and Problem Size\non {row_name} {col_name} PPN")
 efficiency_plot.set(ylim=(0.01, 1.05))
-efficiency_plot.set(xlim=(0.8, 1050))
+efficiency_plot.set(xlim=(0.8, 275))
 for ax in efficiency_plot.axes.flat:
     ax.grid(True, axis='both', ls=':')
 plt.xscale('log', base=2)
-plt.yscale('log', base=2)
+#plt.yscale('log', base=2)
 plt.savefig("efficiency-ppn.png")
+
+# Efficiency broken down by Edge Length
+efficiency_plot = sbn.relplot(data=speedupdata, kind='line', x='Edge Length', 
+                              y='Parallel Efficiency', hue='Backend', row='System', 
+                              errorbar=("ci", 68), markers=True)
+efficiency_plot.set_titles("Parallel Efficiency by Backend and Edge Length\non {row_name}")
+#efficiency_plot.set(xlim=(0.8, 1100))
+efficiency_plot.set(ylim=(0.01, 1.05))
+for ax in efficiency_plot.axes.flat:
+    ax.grid(True, axis='both', ls=':')
+plt.xscale('log', base=2)
+#plt.yscale('log', base=2)
+plt.savefig("efficiency-edge.png")
 
 startupdata=df[  df['Backend'].isin(["MPI Advance RSend","MPI Advance Send","Cray MPICH","Cray MPICH No GPU IPC"]) 
                & df['Memory Type'].isin(["coarse","fine"])
