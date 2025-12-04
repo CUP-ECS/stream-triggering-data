@@ -8,8 +8,8 @@ RESET='\033[0m'
 
 # Long term -- use spack instead of this script!
 usage() {
-    echo "Usage: $0 [-TSK] [-Q queue] [-E power] [-S power] [-I time]"
-    echo " -T Run TUO version (default TIOGA version)"
+    echo "Usage: $0 [-T value] [-SK] [-Q queue] [-E power] [-S power] [-I time]"
+    echo " -T Integer that specifies build system: 0 (Tioga), 1 (Tuoloumne), 2 (Frontier) (default TIOGA version)"
     echo " -S Skip Silo build"
     echo " -K Skip Kokkos build"
     echo " -F [path] Where the script should attempt to install all libraries (optional, default = \"/usr/workspace/$USER/apps/<system>\")"
@@ -17,27 +17,33 @@ usage() {
 }
 
 clone_repo() {
-	GIT_REPO_NAME=$1
-	GIT_URL=$2
+	local GIT_REPO_NAME=$1
+	local GIT_URL=$2
 	if [ ! -d $GIT_REPO_NAME ]; then
 		git clone $GIT_URL
+        if [[ -n "$3" ]]; then
+            cd $GIT_REPO_NAME
+            git checkout $3
+            cd ..
+        fi
 	else
 		echo -e " -> ${BLUE}Skipping git clone of:${RESET} $GIT_REPO_NAME"
+        echo -e " -> ${RED} Be sure to manually check branches and versions!${RESET}"
 	fi
 }
 
 build_build_dir() {
-	DIR_TO_BUILD=build
+	local DIR_TO_BUILD=build
 	if [ -d $DIR_TO_BUILD ]; then
 		rm -rf $DIR_TO_BUILD
 	fi
 	mkdir $DIR_TO_BUILD && cd $DIR_TO_BUILD
 }
 
-while getopts ":TSKF:B:" opt; do
+while getopts ":T:SKF:B:" opt; do
     case $opt in
         T)
-            VERSION=TUO
+            VERSION="$OPTARG"
             ;;
         S)
             SKIP_SILO=1
@@ -59,23 +65,43 @@ while getopts ":TSKF:B:" opt; do
 done
 
 if [ -z $VERSION ]; then
+    VERSION=0
+fi
+
+if [ "$VERSION" -eq 0 ]; then
     SYSTEM=tioga
     GPU_ARCH=gfx90a
     KOKKOS_FLAG="-DKokkos_ARCH_AMD_GFX90A=ON"
-else
+    LIBFABRIC=/opt/cray/libfabric/2.1/
+    if [ -z $BUILD_PATH ]; then
+        BUILD_PATH=/usr/workspace/$USER/apps/$SYSTEM
+    fi
+elif [ "$VERSION" -eq 1 ]; then
     SYSTEM=tuolumne
     GPU_ARCH=gfx942
     KOKKOS_FLAG="-DKokkos_ARCH_AMD_GFX942_APU=ON"
+    LIBFABRIC=/opt/cray/libfabric/2.1/
+    if [ -z $BUILD_PATH ]; then
+        BUILD_PATH=/usr/workspace/$USER/apps/$SYSTEM
+    fi
+elif [ "$VERSION" -eq 2 ]; then
+    SYSTEM=frontier
+    GPU_ARCH=gfx90a
+    KOKKOS_FLAG="-DKokkos_ARCH_AMD_GFX90A=ON"
+    LIBFABRIC=/opt/cray/libfabric/1.22.0/
+else
+    echo "Invalid system specified, stopping."
+    exit 1
 fi
 
 echo -e "Running ${CYAN}$SYSTEM${RESET} version:"
 module load rocm "craype-accel-amd-${GPU_ARCH}"
 module list
 
+# Setup location for where to install everything (technically everything is build in the git folders)
 if [ -z $BUILD_PATH ]; then
-    BUILD_PATH=/usr/workspace/$USER/apps/$SYSTEM
+    BUILD_PATH=$HOME/apps/
 fi
-
 echo "Will build to: $BUILD_PATH" 
 if [ ! -d $BUILD_PATH ]; then
     echo -e " -> ${BLUE}Build path does not exist, creating${RESET}"
@@ -94,13 +120,13 @@ else
 fi
 
 cd $GIT_PATH
-echo "Collecting repositories:"
+echo -e "Collecting repositories" 
 # Very simple version -- does not checkout branches or specific versions!
 clone_repo "Silo" "https://github.com/LLNL/Silo.git" 
-clone_repo "kokkos" "https://github.com/kokkos/kokkos.git" 
+clone_repo "kokkos" "https://github.com/kokkos/kokkos.git" "4.6.02" 
 clone_repo "stream-triggering" "https://github.com/mpi-advance/stream-triggering.git" 
-clone_repo "Cabana" "https://github.com/CUP-ECS/Cabana.git" 
-clone_repo "CabanaGhost" "https://github.com/CUP-ECS/CabanaGhost.git"
+clone_repo "Cabana" "https://github.com/CUP-ECS/Cabana.git" "mpi-advance-stream-halo"
+clone_repo "CabanaGhost" "https://github.com/CUP-ECS/CabanaGhost.git" "stream-halo"
 
 echo "Building all projects:"
 THREADS=8
@@ -111,7 +137,8 @@ echo -e " -> ${CYAN}Building Silo${RESET}"
 build_build_dir
 cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/silo \
- -DCMAKE_BUILD_TYPE=Release \
+ -DSILO_ENABLE_HDF5=OFF                  \
+ -DCMAKE_BUILD_TYPE=Release              \
  -DCMAKE_CXX_COMPILER=CC ..
 
 make -j$THREADS install
@@ -145,7 +172,7 @@ cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/stream_trigger \
  -DUSE_HIP_BACKEND=ON \
  -DUSE_CXI_BACKEND=ON \
- -DLIBFABRIC_PREFIX=/opt/cray/libfabric/2.1/ \
+ -DLIBFABRIC_PREFIX=$LIBFABRIC \
  -DCMAKE_HIP_ARCHITECTURES=$GPU_ARCH \
  -DCMAKE_BUILD_TYPE=Release ..
 
