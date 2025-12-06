@@ -274,12 +274,12 @@ plt.savefig("percent-ppn-frontier-linear.png")
 
 ## Finally, look at the startup time for the different systems
 startupdata=df[  df['Backend'].isin(["MPI Advance RSSend","MPI Advance SSend","Cray MPICH Send"]) 
-               & df['Memory Type'].isin(["coarse"])
+               & df['Size'].isin([16384])
               ]
 startup_plot = sbn.relplot(data=startupdata, kind='line', x='Ranks', 
                               y='Startup Time', hue='Backend', col='System',
                               errorbar=("ci", 68), markers=True)
-startup_plot.set_titles("Startup Time by Backend\non {col_name}")
+startup_plot.set_titles("Startup Time for 2GB Problem by Backend\non {col_name}")
 #startup_plot.set(ylim=(0.01, 1.05))
 startup_plot.set(xlim=(0.8, 1100))
 plt.xscale('log', base=2)
