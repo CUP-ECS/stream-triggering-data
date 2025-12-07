@@ -7,6 +7,73 @@ import matplotlib.pyplot as plt
 import seaborn as sbn
 import glob
 
+def make_speedup_plot(data, x, yscale, breakdown, extra=""):
+    title = "Speedup by Backend and Problem Size"
+    if breakdown != "System":
+        title = title + "\non {row_name}" + " {col_name} " + breakdown
+        kargs = {"row" : "System", "col" : breakdown}
+        c = breakdown
+        r = "System"
+    else:
+        title = title + "\non {col_name}"
+        kargs = {"col" : "System"}
+        
+    speedup_plot = sbn.relplot(data=data, kind="line", x=x, y="Speedup", hue='Backend',
+                               style="GB", errorbar=("ci", 68), markers=True, **kargs)
+    speedup_plot.set_titles(title)
+    for ax in speedup_plot.axes.flat:
+        ax.grid(True, axis='both', ls=':')
+        if yscale == 'log':
+            ax.axline((0, 0), slope=1, color='k', ls='--')
+    plt.xscale('log', base=2)
+    if yscale == "log":
+        plt.yscale('log', base=2)
+    plt.savefig(f"Speedup-{x}-{breakdown}-{yscale}{extra}.png")
+
+def make_percent_plot(data, x, breakdown, extra=""):
+    ### Relative improvement in speedup by Problem Size
+    mpiadvancedata = data[ data['Backend'].isin(["MPI Advance RSSend", "MPI Advance SSend"]) ]
+    title = "Relative Speedup Improvement over Cray MPICH Send\nby Backend and Problem Size"
+    if breakdown != "System":
+        title = title + "on {row_name}" + " {col_name} " + breakdown
+        kargs = {"row" : "System", "col" : breakdown}
+        c = breakdown
+        r = "System"
+    else:
+        title = title + "on {col_name}"
+        kargs = {"col" : "System"}
+
+    percent_plot = sbn.relplot(data=mpiadvancedata, kind="line", x=x, 
+                               y="Percent Speedup Improvement", hue='Backend', style='GB',
+                               errorbar=("ci", 68), markers=True, **kargs)
+    percent_plot.set_titles(title)
+    for ax in percent_plot.axes.flat:
+        ax.grid(True, axis='both', ls=':')
+    plt.xscale('log', base=2)
+    plt.savefig(f"Percent-{x}-{breakdown}-linear{extra}.png")
+
+def make_efficiency_plot(data, x, breakdown, extra=""):
+    title = "Parallel Efficiency by Backend and Problem Size"
+    if breakdown != "System":
+        title = title + "\non {row_name}" + " {col_name} " + breakdown
+        kargs = {"row" : "System", "col" : breakdown}
+        c = breakdown
+        r = "System"
+    else:
+        title = title + "\non {col_name}"
+        kargs = {"col" : "System"}
+        
+    efficiency_plot = sbn.relplot(data=data, kind="line", x=x,
+                                  y='Parallel Efficiency', hue='Backend', style='GB', 
+                                  errorbar=("ci", 68), markers=True, **kargs)
+    efficiency_plot.set_titles(title)
+    efficiency_plot.set(ylim=(0.01, 1.05))
+    for ax in efficiency_plot.axes.flat:
+         ax.grid(True, axis='both', ls=':')
+    plt.xscale('log', base=2)
+    plt.savefig(f"Efficiency-{x}-{breakdown}-linear{extra}.png")
+
+
 # Read the raw data into a Pandas Data Frame
 all_files = glob.glob("../data/*/scaling-data*.csv")
 df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
@@ -87,190 +154,37 @@ frontierdata=speedupdata[ speedupdata['System'].isin(["Frontier"]) ]
 ## broken down by Problem Size
 
 ### For Speedup, we use both log and linear scales.
-speedup_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks', 
-                           y='Speedup', hue='Backend', col='System', 
-                           style='GB',
-                           errorbar=("ci", 68), markers=True)
-speedup_plot.set_titles("Speedup by Backend and Problem Size\non {col_name}")
-speedup_plot.set(xlim=(0.8, 8300))
-#### First a linear scale with a perfect speedup refernece line showing the differences
-#### across the range but deemphasizeing hte big differences at the larger sizes
-plt.xscale('log', base=2)
-for ax in speedup_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-plt.savefig("speedup-size-linear.png")
-
-#### Then a log scale which shows the big differences at the end but compresses
-#### out the small differences at the start and on the small problem.
-plt.xscale('linear')
-plt.yscale('linear')
-for ax in speedup_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-    ax.axline((0, 0), slope=1, color='k', ls='--')
-plt.xscale('log', base=2)
-plt.yscale('log', base=2)
-plt.savefig("speedup-size-log.png")
-
-
-### Relative improvement in speedup by Problem Size
-mpiadvancedata = speedupdata[ speedupdata['Backend'].isin(["MPI Advance RSSend", "MPI Advance SSend"]) ]
-percent_plot = sbn.relplot(data=mpiadvancedata, kind='line', x='Ranks', 
-                           y='Percent Speedup Improvement', hue='Backend', col='System', 
-                           style='GB',
-                           errorbar=("ci", 68), markers=True)
-percent_plot.set_titles("Relative Speedup Improvement over Cray MPICH Send\nby Backend and Problem Size on {col_name}")
-percent_plot.set(xlim=(0.8, 8300))
-for ax in percent_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-plt.xscale('log', base=2)
-plt.savefig("percent-size-linear.png")
-
-### Parallel efficiency 
-efficiency_plot = sbn.relplot(data=speedupdata, kind='line', x='Ranks', 
-                              y='Parallel Efficiency', hue='Backend', col='System', 
-                              style='GB', 
-                              errorbar=("ci", 68), markers=True)
-efficiency_plot.set_titles("Parallel Efficiency by Backend and Problem Size\non {col_name}")
-efficiency_plot.set(xlim=(0.8, 8300))
-efficiency_plot.set(ylim=(0.01, 1.05))
-for ax in efficiency_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-plt.xscale('log', base=2)
-plt.savefig("efficiency-size-linear.png")
+make_speedup_plot(data=speedupdata, x="Ranks", yscale="log", breakdown="System")
+make_speedup_plot(data=speedupdata, x="Ranks", yscale="linear", breakdown="System")
+make_percent_plot(data=speedupdata, x='Ranks', breakdown="System")
+make_efficiency_plot(data=speedupdata, x='Ranks', breakdown="System")
 
 ## On tuolumne (but not Frontier), the speedup for Cray MPICH is highly dependent on PPN 
-## Break these down separately.
+## Break these down separately by system since they have different PPNs they can support
 
 ### First Tuolumne
-speedup_plot = sbn.relplot(data=tuodata, kind='line', x='Ranks', 
-                           y='Speedup', hue='Backend', row='System', 
-                           col='PPN', style='GB',
-                           errorbar=("ci", 68), markers=True)
-speedup_plot.set_titles("Speedup by Backend and Problem Size\non {row_name} {col_name} PPN")
-#### First a linear scale with a perfect speedup refernece line showing the differences
-#### across the range but deemphasizeing hte big differences at the larger sizes
-plt.xscale('log', base=2)
-for ax in speedup_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-plt.savefig("speedup-ppn-tuo-linear.png")
-
-#### Then a log scale which shows the big differences at the end but compresses
-#### out the small differences at the start and on the small problem.
-plt.xscale('linear')
-plt.yscale('linear')
-for ax in speedup_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-    ax.axline((0, 0), slope=1, color='k', ls='--')
-plt.xscale('log', base=2)
-plt.yscale('log', base=2)
-plt.savefig("speedup-ppn-tuo-log.png")
-
-efficiency_plot = sbn.relplot(data=tuodata, kind='line', x='Ranks', 
-                              y='Parallel Efficiency', hue='Backend', row='System', 
-                              col='PPN', style='GB',
-                              errorbar=("ci", 68), markers=True)
-efficiency_plot.set_titles("Parallel Efficiency by Backend and Problem Size\non {row_name} {col_name} PPN")
-efficiency_plot.set(ylim=(0.01, 1.05))
-for ax in efficiency_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-plt.xscale('log', base=2)
-plt.savefig("efficiency-ppn-tuo-linear.png")
-
-mpiadvancedata = tuodata[ tuodata['Backend'].isin(["MPI Advance RSSend", "MPI Advance SSend"]) ]
-percent_plot = sbn.relplot(data=mpiadvancedata, kind='line', x='Ranks', 
-                           y='Percent Speedup Improvement', hue='Backend', row='System', 
-                           col='PPN', style='GB',
-                           errorbar=("ci", 68), markers=True)
-percent_plot.set_titles("Relative Speedup Improvement over Cray MPICH Send\nby Backend and Problem Size on {row_name} {col_name} PPN")
-for ax in percent_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-plt.xscale('log', base=2)
-plt.savefig("percent-ppn-tuo-linear.png")
-
+print("Generating Tuolumne PPN breakdown")
+make_speedup_plot(data=tuodata, x="Ranks", yscale="log", breakdown="PPN", extra="-Tuolumne")
+make_speedup_plot(data=tuodata, x="Ranks", yscale="linear", breakdown="PPN", extra="-Tuolumne")
+make_percent_plot(data=tuodata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
+make_efficiency_plot(data=tuodata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
 
 ### Then Frontier
-speedup_plot = sbn.relplot(data=frontierdata, kind='line', x='Ranks', 
-                           y='Speedup', hue='Backend', row='System', 
-                           col='PPN', style='GB',
-                           errorbar=("ci", 68), markers=True)
-speedup_plot.set_titles("Speedup by Backend and Problem Size\non {row_name} {col_name} PPN")
-#### First a linear scale with a perfect speedup refernece line showing the differences
-#### across the range but deemphasizeing hte big differences at the larger sizes
-plt.xscale('log', base=2)
-for ax in speedup_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-plt.savefig("speedup-ppn-frontier-linear.png")
+print("Generating Frontier PPN breakdown")
+make_speedup_plot(data=frontierdata, x="Ranks", yscale="log", breakdown="PPN", extra="-Frontier")
+make_speedup_plot(data=frontierdata, x="Ranks", yscale="linear", breakdown="PPN", extra="-Frontier")
+make_percent_plot(data=frontierdata, x='Ranks', breakdown="PPN", extra="-Frontier")
+make_efficiency_plot(data=frontierdata, x='Ranks', breakdown="PPN", extra="-Frontier")
 
-#### Then a log scale which shows the big differences at the end but compresses
-#### out the small differences at the start and on the small problem.
-plt.xscale('linear')
-plt.yscale('linear')
-for ax in speedup_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-    ax.axline((0, 0), slope=1, color='k', ls='--')
-plt.xscale('log', base=2)
-plt.yscale('log', base=2)
-plt.savefig("speedup-ppn-frontier-log.png")
+## Break down speedup and efficiency by edge size
+print("Generating Edge Length breakdown")
+make_speedup_plot(data=speedupdata, x="Edge Length", yscale="log", breakdown="System")
+make_speedup_plot(data=speedupdata, x="Edge Length", yscale="linear", breakdown="System")
+make_percent_plot(data=speedupdata, x='Edge Length', breakdown="System")
+make_efficiency_plot(data=speedupdata, x='Edge Length', breakdown="System")
 
-efficiency_plot = sbn.relplot(data=frontierdata, kind='line', x='Ranks', 
-                              y='Parallel Efficiency', hue='Backend', row='System', 
-                              col='PPN', style='GB',
-                              errorbar=("ci", 68), markers=True)
-efficiency_plot.set_titles("Parallel Efficiency by Backend and Problem Size\non {row_name} {col_name} PPN")
-efficiency_plot.set(ylim=(0.01, 1.05))
-for ax in efficiency_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-plt.xscale('log', base=2)
-plt.savefig("efficiency-ppn-frontier-linear.png")
-
-mpiadvancedata = frontierdata[ frontierdata['Backend'].isin(["MPI Advance RSSend", "MPI Advance SSend"]) ]
-percent_plot = sbn.relplot(data=mpiadvancedata, kind='line', x='Ranks', 
-                           y='Percent Speedup Improvement', hue='Backend', row='System', 
-                           col='PPN', style='GB',
-                           errorbar=("ci", 68), markers=True)
-percent_plot.set_titles("Relative Speedup Improvement over Cray MPICH Send\nby Backend and Problem Size on {row_name} {col_name} PPN")
-for ax in percent_plot.axes.flat:
-    ax.grid(True, axis='both', ls=':')
-plt.xscale('log', base=2)
-plt.savefig("percent-ppn-frontier-linear.png")
-
-## On Frontier (but not Tuolumne), we can use fine versus coarse grain memory to
-## reduce triggering time. See if it makes a difference. It doesn't, so we aren't
-## generating these plots right now.
-
-#### mpiadvancedata = speedupdata[ speedupdata['Backend'].isin(["MPI Advance RSSend", "MPI Advance SSend"]) ]
-#### speedup_plot = sbn.relplot(data=mpiadvancedata, kind='line', x='Ranks', 
-####                            y='Speedup', hue='Memory Type', col='System', 
-####                            style='GB',
-####                            errorbar=("ci", 68), markers=True)
-#### speedup_plot.set_titles("Speedup by Memory Type and Problem Size\non {col_name}")
-#### speedup_plot.set(xlim=(0.8, 8300))
-#### for ax in speedup_plot.axes.flat:
-####     ax.grid(True, axis='both', ls=':')
-#### plt.xscale('log', base=2)
-#### plt.savefig("speedup-memory-linear.png")
-#### 
-#### efficiency_plot = sbn.relplot(data=mpiadvancedata, kind='line', x='Ranks', 
-####                               y='Parallel Efficiency', hue='Memory Type', col='System', 
-####                               style='GB',
-####                               errorbar=("ci", 68), markers=True)
-#### efficiency_plot.set_titles("Parallel Efficiency by Memory Type and Problem Size\non {col_name}")
-#### efficiency_plot.set(ylim=(0.01, 1.05))
-#### for ax in efficiency_plot.axes.flat:
-####     ax.grid(True, axis='both', ls=':')
-#### plt.xscale('log', base=2)
-#### plt.savefig("efficiency-memory-linear.png")
-#### 
-#### percent_plot = sbn.relplot(data=mpiadvancedata, kind='line', x='Ranks', 
-####                            y='Percent Speedup Improvement', hue='Memory Type', col='System', 
-####                            style='GB',
-####                            errorbar=("ci", 68), markers=True)
-#### percent_plot.set_titles("Relative Speedup Improvement over Cray MPICH Send\nby Memory Type and Problem Size on {col_name}")
-#### percent_plot.set(xlim=(0.8, 8300))
-#### for ax in percent_plot.axes.flat:
-####     ax.grid(True, axis='both', ls=':')
-#### plt.xscale('log', base=2)
-#### plt.savefig("percent-memory-linear.png")
+make_percent_plot(data=tuodata, x="Edge Length", breakdown="PPN", extra="-Tuolumne")
+make_percent_plot(data=frontierdata, x="Edge Length", breakdown="PPN", extra="-Frontier")
 
 ## Finally, look at the startup time for the different systems
 startupdata=df[  df['Backend'].isin(["MPI Advance RSSend","MPI Advance SSend","Cray MPICH Send"]) 
