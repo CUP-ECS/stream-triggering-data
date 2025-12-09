@@ -2879,3 +2879,1283 @@ nodes,ntasks,backend,solver_creation,solver_time,system,size,memory_type,send_ty
 512,8,MPIAdvance-CXI-Single-Buffering,0.0705577,0.176027,frontier,61440,fine,Standard,1000
 512,8,MPIAdvance-CXI-Single-Buffering,0.0648165,0.178914,frontier,61440,coarse,Standard,1000
 512,8,Cray-MPICH-CXI-GPU-Enabled,0.0442684,0.191876,frontier,61440,coarse,Standard,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,0.0476004,6.37664,frontier,16384,coarse,Ready Send,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,0.0162358,6.3247,frontier,16384,fine,Ready Send,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,0.0194455,6.50013,frontier,16384,fine,Standard,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,0.0201754,6.55083,frontier,16384,coarse,Standard,1000
+1,1,Cray-MPICH-CXI-GPU-Enabled,0.00404618,6.18191,frontier,16384,coarse,Standard,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,0.0199047,87.8815,frontier,61440,coarse,Ready Send,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,1.35897,87.8418,frontier,61440,fine,Ready Send,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,0.6695,88.0253,frontier,61440,fine,Standard,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,1.60595,88.2486,frontier,61440,coarse,Standard,1000
+1,1,Cray-MPICH-CXI-GPU-Enabled,1.55263,88.26,frontier,61440,coarse,Standard,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.0296545,3.01029,frontier,16384,coarse,Ready Send,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.0245386,3.01475,frontier,16384,fine,Ready Send,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.0283224,3.01712,frontier,16384,fine,Standard,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.028179,3.01205,frontier,16384,coarse,Standard,1000
+1,2,Cray-MPICH-CXI-GPU-Enabled,0.00391662,3.07881,frontier,16384,coarse,Standard,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.0324533,42.6825,frontier,61440,coarse,Ready Send,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.0331574,42.6878,frontier,61440,fine,Ready Send,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.0409439,42.7732,frontier,61440,fine,Standard,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.0369888,42.7515,frontier,61440,coarse,Standard,1000
+1,2,Cray-MPICH-CXI-GPU-Enabled,0.0115108,42.8591,frontier,61440,coarse,Standard,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.0440826,1.58956,frontier,16384,coarse,Ready Send,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.0402874,1.59395,frontier,16384,fine,Ready Send,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.0451362,1.59731,frontier,16384,fine,Standard,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.0455347,1.59338,frontier,16384,coarse,Standard,1000
+1,4,Cray-MPICH-CXI-GPU-Enabled,0.00672815,1.60911,frontier,16384,coarse,Standard,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.0456593,21.76,frontier,61440,coarse,Ready Send,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.0429436,21.8053,frontier,61440,fine,Ready Send,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.0457365,21.865,frontier,61440,fine,Standard,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.0467379,21.8282,frontier,61440,coarse,Standard,1000
+1,4,Cray-MPICH-CXI-GPU-Enabled,0.00945741,21.6264,frontier,61440,coarse,Standard,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.0730341,0.864415,frontier,16384,coarse,Ready Send,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.0800171,0.86739,frontier,16384,fine,Ready Send,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.0854765,0.872444,frontier,16384,fine,Standard,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.0864633,0.867499,frontier,16384,coarse,Standard,1000
+1,8,Cray-MPICH-CXI-GPU-Enabled,0.0144175,0.895367,frontier,16384,coarse,Standard,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.0801847,10.8326,frontier,61440,coarse,Ready Send,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.0768012,10.8271,frontier,61440,fine,Ready Send,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.0871953,10.9542,frontier,61440,fine,Standard,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.0899072,10.9422,frontier,61440,coarse,Standard,1000
+1,8,Cray-MPICH-CXI-GPU-Enabled,0.009339,10.8231,frontier,61440,coarse,Standard,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.0261333,2.9978,frontier,16384,coarse,Ready Send,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.0131652,3.00008,frontier,16384,fine,Ready Send,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.0184612,3.00374,frontier,16384,fine,Standard,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.018345,3.00124,frontier,16384,coarse,Standard,1000
+2,1,Cray-MPICH-CXI-GPU-Enabled,0.00689174,3.06133,frontier,16384,coarse,Standard,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.0175426,42.5715,frontier,61440,coarse,Ready Send,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.0159246,42.5735,frontier,61440,fine,Ready Send,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.0247285,42.8629,frontier,61440,fine,Standard,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.0280055,42.8764,frontier,61440,coarse,Standard,1000
+2,1,Cray-MPICH-CXI-GPU-Enabled,0.0153324,43.0168,frontier,61440,coarse,Standard,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.0180324,1.58658,frontier,16384,coarse,Ready Send,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.017461,1.59132,frontier,16384,fine,Ready Send,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.0190721,1.594,frontier,16384,fine,Standard,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.0191564,1.58974,frontier,16384,coarse,Standard,1000
+2,2,Cray-MPICH-CXI-GPU-Enabled,0.00435609,1.60709,frontier,16384,coarse,Standard,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.0188463,21.6494,frontier,61440,coarse,Ready Send,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.0186396,21.7086,frontier,61440,fine,Ready Send,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.0196708,21.6824,frontier,61440,fine,Standard,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.020769,21.6851,frontier,61440,coarse,Standard,1000
+2,2,Cray-MPICH-CXI-GPU-Enabled,0.00909048,21.5303,frontier,61440,coarse,Standard,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.0212516,0.864243,frontier,16384,coarse,Ready Send,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.0184799,0.868413,frontier,16384,fine,Ready Send,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.0217088,0.872067,frontier,16384,fine,Standard,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.0257178,0.867,frontier,16384,coarse,Standard,1000
+2,4,Cray-MPICH-CXI-GPU-Enabled,0.00541561,0.887219,frontier,16384,coarse,Standard,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.0210614,10.6908,frontier,61440,coarse,Ready Send,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.0210084,10.6957,frontier,61440,fine,Ready Send,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.0252174,10.8516,frontier,61440,fine,Standard,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.0256197,10.8467,frontier,61440,coarse,Standard,1000
+2,4,Cray-MPICH-CXI-GPU-Enabled,0.00873264,10.6439,frontier,61440,coarse,Standard,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.0336464,0.504144,frontier,16384,coarse,Ready Send,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.0300437,0.509015,frontier,16384,fine,Ready Send,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0331339,0.515754,frontier,16384,fine,Standard,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0305144,0.511253,frontier,16384,coarse,Standard,1000
+2,8,Cray-MPICH-CXI-GPU-Enabled,0.011058,0.533943,frontier,16384,coarse,Standard,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.0314194,5.50812,frontier,61440,coarse,Ready Send,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.031601,5.49957,frontier,61440,fine,Ready Send,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0367446,5.6217,frontier,61440,fine,Standard,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0361177,5.62918,frontier,61440,coarse,Standard,1000
+2,8,Cray-MPICH-CXI-GPU-Enabled,0.0115627,5.60356,frontier,61440,coarse,Standard,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0416121,1.59035,frontier,16384,coarse,Ready Send,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0145518,1.59246,frontier,16384,fine,Ready Send,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.0165038,1.59964,frontier,16384,fine,Standard,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.0187629,1.59718,frontier,16384,coarse,Standard,1000
+4,1,Cray-MPICH-CXI-GPU-Enabled,0.00462809,1.60497,frontier,16384,coarse,Standard,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0157242,21.7778,frontier,61440,coarse,Ready Send,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0162142,21.7801,frontier,61440,fine,Ready Send,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.018498,21.9258,frontier,61440,fine,Standard,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.0252128,21.9158,frontier,61440,coarse,Standard,1000
+4,1,Cray-MPICH-CXI-GPU-Enabled,0.00573187,21.8298,frontier,61440,coarse,Standard,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.0284332,0.865965,frontier,16384,coarse,Ready Send,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.0162268,0.869749,frontier,16384,fine,Ready Send,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.0203264,0.874342,frontier,16384,fine,Standard,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.0200674,0.869503,frontier,16384,coarse,Standard,1000
+4,2,Cray-MPICH-CXI-GPU-Enabled,0.00460557,0.881421,frontier,16384,coarse,Standard,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.0190009,10.7734,frontier,61440,coarse,Ready Send,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.0172516,10.7853,frontier,61440,fine,Ready Send,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.0212245,10.8697,frontier,61440,fine,Standard,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.0227898,10.878,frontier,61440,coarse,Standard,1000
+4,2,Cray-MPICH-CXI-GPU-Enabled,0.00811878,10.7105,frontier,61440,coarse,Standard,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0230909,0.505657,frontier,16384,coarse,Ready Send,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0171667,0.510247,frontier,16384,fine,Ready Send,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.0253742,0.517326,frontier,16384,fine,Standard,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.025229,0.512026,frontier,16384,coarse,Standard,1000
+4,4,Cray-MPICH-CXI-GPU-Enabled,0.00912301,0.532546,frontier,16384,coarse,Standard,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0214415,5.59024,frontier,61440,coarse,Ready Send,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0203982,5.60186,frontier,61440,fine,Ready Send,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.0252735,5.69723,frontier,61440,fine,Standard,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.0240453,5.68512,frontier,61440,coarse,Standard,1000
+4,4,Cray-MPICH-CXI-GPU-Enabled,0.011203,5.56188,frontier,61440,coarse,Standard,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.0339779,0.312762,frontier,16384,coarse,Ready Send,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.0307331,0.318743,frontier,16384,fine,Ready Send,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.032919,0.329613,frontier,16384,fine,Standard,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.0297722,0.322615,frontier,16384,coarse,Standard,1000
+4,8,Cray-MPICH-CXI-GPU-Enabled,0.0086876,0.347453,frontier,16384,coarse,Standard,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.0268968,2.68263,frontier,61440,coarse,Ready Send,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.0280208,2.68793,frontier,61440,fine,Ready Send,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.0359324,2.69023,frontier,61440,fine,Standard,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.0373174,2.68636,frontier,61440,coarse,Standard,1000
+4,8,Cray-MPICH-CXI-GPU-Enabled,0.0132015,2.6949,frontier,61440,coarse,Standard,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.0535251,0.859031,frontier,16384,coarse,Ready Send,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.014181,0.863488,frontier,16384,fine,Ready Send,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0197585,0.873643,frontier,16384,fine,Standard,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0195244,0.868477,frontier,16384,coarse,Standard,1000
+8,1,Cray-MPICH-CXI-GPU-Enabled,0.0032264,0.873577,frontier,16384,coarse,Standard,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.0177414,10.9238,frontier,61440,coarse,Ready Send,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.0207275,10.9174,frontier,61440,fine,Ready Send,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0228185,11.0633,frontier,61440,fine,Standard,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0196581,11.0613,frontier,61440,coarse,Standard,1000
+8,1,Cray-MPICH-CXI-GPU-Enabled,0.00557829,10.9087,frontier,61440,coarse,Standard,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.0173138,0.504797,frontier,16384,coarse,Ready Send,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.0195607,0.509972,frontier,16384,fine,Ready Send,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0221744,0.516102,frontier,16384,fine,Standard,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0202603,0.510308,frontier,16384,coarse,Standard,1000
+8,2,Cray-MPICH-CXI-GPU-Enabled,0.00359899,0.523985,frontier,16384,coarse,Standard,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.0205588,5.58199,frontier,61440,coarse,Ready Send,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.0189297,5.59415,frontier,61440,fine,Ready Send,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0206081,5.63777,frontier,61440,fine,Standard,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0211968,5.60554,frontier,61440,coarse,Standard,1000
+8,2,Cray-MPICH-CXI-GPU-Enabled,0.00533014,5.52774,frontier,61440,coarse,Standard,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.0207648,0.313452,frontier,16384,coarse,Ready Send,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.0236271,0.319122,frontier,16384,fine,Ready Send,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.0262834,0.329294,frontier,16384,fine,Standard,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.0245644,0.322361,frontier,16384,coarse,Standard,1000
+8,4,Cray-MPICH-CXI-GPU-Enabled,0.00815123,0.340739,frontier,16384,coarse,Standard,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.0191586,2.67711,frontier,61440,coarse,Ready Send,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.0176405,2.68035,frontier,61440,fine,Ready Send,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.0241326,2.68269,frontier,61440,fine,Standard,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.0225259,2.67868,frontier,61440,coarse,Standard,1000
+8,4,Cray-MPICH-CXI-GPU-Enabled,0.00852278,2.68694,frontier,61440,coarse,Standard,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.0353425,0.222042,frontier,16384,coarse,Ready Send,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.0371834,0.22669,frontier,16384,fine,Ready Send,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.0264781,0.23731,frontier,16384,fine,Standard,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.0329724,0.233023,frontier,16384,coarse,Standard,1000
+8,8,Cray-MPICH-CXI-GPU-Enabled,0.0156862,0.253413,frontier,16384,coarse,Standard,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.0263463,1.42597,frontier,61440,coarse,Ready Send,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.023333,1.42677,frontier,61440,fine,Ready Send,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.0356997,1.43001,frontier,61440,fine,Standard,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.0294018,1.42886,frontier,61440,coarse,Standard,1000
+8,8,Cray-MPICH-CXI-GPU-Enabled,0.0128845,1.45496,frontier,61440,coarse,Standard,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.0345851,0.502006,frontier,16384,coarse,Ready Send,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.0135954,0.507286,frontier,16384,fine,Ready Send,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0167821,0.518742,frontier,16384,fine,Standard,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0173276,0.514124,frontier,16384,coarse,Standard,1000
+16,1,Cray-MPICH-CXI-GPU-Enabled,0.00380381,0.518985,frontier,16384,coarse,Standard,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.0153499,5.5122,frontier,61440,coarse,Ready Send,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.0155193,5.50292,frontier,61440,fine,Ready Send,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0183869,5.70855,frontier,61440,fine,Standard,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0186528,5.71116,frontier,61440,coarse,Standard,1000
+16,1,Cray-MPICH-CXI-GPU-Enabled,0.00439139,5.63817,frontier,61440,coarse,Standard,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0193083,0.31349,frontier,16384,coarse,Ready Send,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0169894,0.319403,frontier,16384,fine,Ready Send,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0190806,0.329355,frontier,16384,fine,Standard,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0196261,0.322966,frontier,16384,coarse,Standard,1000
+16,2,Cray-MPICH-CXI-GPU-Enabled,0.00496445,0.337433,frontier,16384,coarse,Standard,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0160121,2.67882,frontier,61440,coarse,Ready Send,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0178072,2.68157,frontier,61440,fine,Ready Send,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0222781,2.68442,frontier,61440,fine,Standard,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0196072,2.67999,frontier,61440,coarse,Standard,1000
+16,2,Cray-MPICH-CXI-GPU-Enabled,0.00788419,2.68573,frontier,61440,coarse,Standard,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.0183546,0.222151,frontier,16384,coarse,Ready Send,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.017444,0.227111,frontier,16384,fine,Ready Send,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.022061,0.237532,frontier,16384,fine,Standard,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.0225303,0.233219,frontier,16384,coarse,Standard,1000
+16,4,Cray-MPICH-CXI-GPU-Enabled,0.00805883,0.250687,frontier,16384,coarse,Standard,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.0185851,1.42569,frontier,61440,coarse,Ready Send,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.0182851,1.42628,frontier,61440,fine,Ready Send,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.0211078,1.43026,frontier,61440,fine,Standard,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.025155,1.42933,frontier,61440,coarse,Standard,1000
+16,4,Cray-MPICH-CXI-GPU-Enabled,0.00651531,1.44271,frontier,61440,coarse,Standard,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.0262861,0.169414,frontier,16384,coarse,Ready Send,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.0278274,0.179092,frontier,16384,fine,Ready Send,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0402017,0.191081,frontier,16384,fine,Standard,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0319298,0.183187,frontier,16384,coarse,Standard,1000
+16,8,Cray-MPICH-CXI-GPU-Enabled,0.00416134,0.208241,frontier,16384,coarse,Standard,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.0281982,0.784251,frontier,61440,coarse,Ready Send,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.0319737,0.785816,frontier,61440,fine,Ready Send,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0398201,0.79115,frontier,61440,fine,Standard,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0349968,0.787779,frontier,61440,coarse,Standard,1000
+16,8,Cray-MPICH-CXI-GPU-Enabled,0.00902837,0.812224,frontier,61440,coarse,Standard,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.0492918,0.311602,frontier,16384,coarse,Ready Send,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.0146715,0.316929,frontier,16384,fine,Ready Send,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.0192166,0.33134,frontier,16384,fine,Standard,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.0178712,0.32523,frontier,16384,coarse,Standard,1000
+32,1,Cray-MPICH-CXI-GPU-Enabled,0.00342062,0.330306,frontier,16384,coarse,Standard,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.0158687,2.6733,frontier,61440,coarse,Ready Send,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.0151492,2.67545,frontier,61440,fine,Ready Send,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.0178216,2.68187,frontier,61440,fine,Standard,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.0190491,2.68047,frontier,61440,coarse,Standard,1000
+32,1,Cray-MPICH-CXI-GPU-Enabled,0.00490077,2.69457,frontier,61440,coarse,Standard,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.0251393,0.222788,frontier,16384,coarse,Ready Send,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.0200913,0.227242,frontier,16384,fine,Ready Send,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.0259825,0.237075,frontier,16384,fine,Standard,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.028118,0.232789,frontier,16384,coarse,Standard,1000
+32,2,Cray-MPICH-CXI-GPU-Enabled,0.00634,0.246248,frontier,16384,coarse,Standard,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.0236818,1.42622,frontier,61440,coarse,Ready Send,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.0222359,1.42676,frontier,61440,fine,Ready Send,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.0254677,1.42994,frontier,61440,fine,Standard,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.0273086,1.42871,frontier,61440,coarse,Standard,1000
+32,2,Cray-MPICH-CXI-GPU-Enabled,0.00575747,1.43784,frontier,61440,coarse,Standard,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.0229655,0.169901,frontier,16384,coarse,Ready Send,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.0184209,0.179721,frontier,16384,fine,Ready Send,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.024739,0.190973,frontier,16384,fine,Standard,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.0232548,0.180637,frontier,16384,coarse,Standard,1000
+32,4,Cray-MPICH-CXI-GPU-Enabled,0.00789465,0.199824,frontier,16384,coarse,Standard,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.0189225,0.784265,frontier,61440,coarse,Ready Send,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.0217317,0.786105,frontier,61440,fine,Ready Send,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.0242721,0.790675,frontier,61440,fine,Standard,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.0243099,0.787599,frontier,61440,coarse,Standard,1000
+32,4,Cray-MPICH-CXI-GPU-Enabled,0.00582921,0.805691,frontier,61440,coarse,Standard,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.0290474,0.14539,frontier,16384,coarse,Ready Send,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.0338363,0.150441,frontier,16384,fine,Ready Send,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.0289967,0.174501,frontier,16384,fine,Standard,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.032751,0.176589,frontier,16384,coarse,Standard,1000
+32,8,Cray-MPICH-CXI-GPU-Enabled,0.0110922,0.182767,frontier,16384,coarse,Standard,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.0380415,0.467208,frontier,61440,coarse,Ready Send,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.0358649,0.469777,frontier,61440,fine,Ready Send,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.0340458,0.478234,frontier,61440,fine,Standard,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.0361385,0.475012,frontier,61440,coarse,Standard,1000
+32,8,Cray-MPICH-CXI-GPU-Enabled,0.00963414,0.502234,frontier,61440,coarse,Standard,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.241971,0.221364,frontier,16384,coarse,Ready Send,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.0156706,0.225572,frontier,16384,fine,Ready Send,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.0311468,0.239335,frontier,16384,fine,Standard,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.019955,0.234942,frontier,16384,coarse,Standard,1000
+64,1,Cray-MPICH-CXI-GPU-Enabled,0.00680485,0.230685,frontier,16384,coarse,Standard,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.0177793,1.42048,frontier,61440,coarse,Ready Send,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.0255731,1.42136,frontier,61440,fine,Ready Send,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.0206963,1.42947,frontier,61440,fine,Standard,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.029459,1.42839,frontier,61440,coarse,Standard,1000
+64,1,Cray-MPICH-CXI-GPU-Enabled,0.00810914,1.43588,frontier,61440,coarse,Standard,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.021525,0.169753,frontier,16384,coarse,Ready Send,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.0294544,0.180004,frontier,16384,fine,Ready Send,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.0227488,0.190916,frontier,16384,fine,Standard,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.0196666,0.180712,frontier,16384,coarse,Standard,1000
+64,2,Cray-MPICH-CXI-GPU-Enabled,0.00403016,0.196443,frontier,16384,coarse,Standard,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.0190826,0.784589,frontier,61440,coarse,Ready Send,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.0266322,0.786424,frontier,61440,fine,Ready Send,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.0291717,0.790716,frontier,61440,fine,Standard,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.0248868,0.787787,frontier,61440,coarse,Standard,1000
+64,2,Cray-MPICH-CXI-GPU-Enabled,0.00771454,0.79932,frontier,61440,coarse,Standard,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.0258684,0.14449,frontier,16384,coarse,Ready Send,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.0231795,0.152641,frontier,16384,fine,Ready Send,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.029118,0.164849,frontier,16384,fine,Standard,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.0298571,0.158885,frontier,16384,coarse,Standard,1000
+64,4,Cray-MPICH-CXI-GPU-Enabled,0.00443341,0.181207,frontier,16384,coarse,Standard,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.0223701,0.467649,frontier,61440,coarse,Ready Send,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.0233511,0.470112,frontier,61440,fine,Ready Send,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.0281788,0.47816,frontier,61440,fine,Standard,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.0290953,0.475073,frontier,61440,coarse,Standard,1000
+64,4,Cray-MPICH-CXI-GPU-Enabled,0.00602101,0.507973,frontier,61440,coarse,Standard,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.0431111,0.142719,frontier,16384,coarse,Ready Send,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.0317876,0.140623,frontier,16384,fine,Ready Send,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.0395471,0.173487,frontier,16384,fine,Standard,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.0446416,0.176254,frontier,16384,coarse,Standard,1000
+64,8,Cray-MPICH-CXI-GPU-Enabled,0.0195174,0.165523,frontier,16384,coarse,Standard,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.0413117,0.299776,frontier,61440,coarse,Ready Send,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.0453812,0.301673,frontier,61440,fine,Ready Send,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.0439528,0.310823,frontier,61440,fine,Standard,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.0441436,0.308912,frontier,61440,coarse,Standard,1000
+64,8,Cray-MPICH-CXI-GPU-Enabled,0.0217025,0.334897,frontier,61440,coarse,Standard,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.17796,0.167747,frontier,16384,coarse,Ready Send,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.0186877,0.177906,frontier,16384,fine,Ready Send,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.0225063,0.192979,frontier,16384,fine,Standard,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.023903,0.182582,frontier,16384,coarse,Standard,1000
+128,1,Cray-MPICH-CXI-GPU-Enabled,0.00627873,0.180394,frontier,16384,coarse,Standard,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.0232001,0.779442,frontier,61440,coarse,Ready Send,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.0245822,0.782305,frontier,61440,fine,Ready Send,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.0279112,0.792928,frontier,61440,fine,Standard,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.0265703,0.789497,frontier,61440,coarse,Standard,1000
+128,1,Cray-MPICH-CXI-GPU-Enabled,0.00946788,0.797383,frontier,61440,coarse,Standard,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.0259344,0.14375,frontier,16384,coarse,Ready Send,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.0207035,0.150641,frontier,16384,fine,Ready Send,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.0234197,0.163313,frontier,16384,fine,Standard,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.0212809,0.160887,frontier,16384,coarse,Standard,1000
+128,2,Cray-MPICH-CXI-GPU-Enabled,0.279123,0.173889,frontier,16384,coarse,Standard,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.0219528,0.467431,frontier,61440,coarse,Ready Send,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.31972,0.470025,frontier,61440,fine,Ready Send,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.0357395,0.47842,frontier,61440,fine,Standard,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.0247112,0.474914,frontier,61440,coarse,Standard,1000
+128,2,Cray-MPICH-CXI-GPU-Enabled,0.0588732,0.491704,frontier,61440,coarse,Standard,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.0347451,0.128592,frontier,16384,coarse,Ready Send,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.036758,0.135257,frontier,16384,fine,Ready Send,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.0301745,0.160548,frontier,16384,fine,Standard,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.0376379,0.161595,frontier,16384,coarse,Standard,1000
+128,4,Cray-MPICH-CXI-GPU-Enabled,0.0167937,0.161472,frontier,16384,coarse,Standard,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.0217475,0.299546,frontier,61440,coarse,Ready Send,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.0246559,0.30025,frontier,61440,fine,Ready Send,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.0258464,0.310851,frontier,61440,fine,Standard,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.0267304,0.308531,frontier,61440,coarse,Standard,1000
+128,4,Cray-MPICH-CXI-GPU-Enabled,0.00845711,0.32763,frontier,61440,coarse,Standard,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.0533177,0.142417,frontier,16384,coarse,Ready Send,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.042127,0.139407,frontier,16384,fine,Ready Send,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.0421112,0.172811,frontier,16384,fine,Standard,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.0409747,0.17642,frontier,16384,coarse,Standard,1000
+128,8,Cray-MPICH-CXI-GPU-Enabled,0.0125697,0.144205,frontier,16384,coarse,Standard,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.0368339,0.217313,frontier,61440,coarse,Ready Send,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.0379954,0.221201,frontier,61440,fine,Ready Send,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.0410779,0.232499,frontier,61440,fine,Standard,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.0472774,0.227995,frontier,61440,coarse,Standard,1000
+128,8,Cray-MPICH-CXI-GPU-Enabled,0.0215236,0.259286,frontier,61440,coarse,Standard,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.40313,0.1429,frontier,16384,coarse,Ready Send,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.0181546,0.149213,frontier,16384,fine,Ready Send,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.0221757,0.165114,frontier,16384,fine,Standard,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.0194249,0.160501,frontier,16384,coarse,Standard,1000
+256,1,Cray-MPICH-CXI-GPU-Enabled,0.00587749,0.155857,frontier,16384,coarse,Standard,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.0188491,0.465277,frontier,61440,coarse,Ready Send,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.0188202,0.467959,frontier,61440,fine,Ready Send,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.0211916,0.480213,frontier,61440,fine,Standard,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.0227731,0.47757,frontier,61440,coarse,Standard,1000
+256,1,Cray-MPICH-CXI-GPU-Enabled,0.00710883,0.481674,frontier,61440,coarse,Standard,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.0258472,0.126462,frontier,16384,coarse,Ready Send,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.0270281,0.135258,frontier,16384,fine,Ready Send,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.0270149,0.156989,frontier,16384,fine,Standard,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.0284146,0.15331,frontier,16384,coarse,Standard,1000
+256,2,Cray-MPICH-CXI-GPU-Enabled,0.00699572,0.15778,frontier,16384,coarse,Standard,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.0272731,0.301456,frontier,61440,coarse,Ready Send,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.0249056,0.302365,frontier,61440,fine,Ready Send,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.0236127,0.31224,frontier,61440,fine,Standard,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.0260837,0.310381,frontier,61440,coarse,Standard,1000
+256,2,Cray-MPICH-CXI-GPU-Enabled,0.00848334,0.318753,frontier,61440,coarse,Standard,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.0296066,0.131104,frontier,16384,coarse,Ready Send,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.0265536,0.127728,frontier,16384,fine,Ready Send,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0365662,0.157585,frontier,16384,fine,Standard,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0289209,0.162003,frontier,16384,coarse,Standard,1000
+256,4,Cray-MPICH-CXI-GPU-Enabled,0.0106342,0.132901,frontier,16384,coarse,Standard,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.0306294,0.220236,frontier,61440,coarse,Ready Send,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.0287397,0.224428,frontier,61440,fine,Ready Send,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0304784,0.23356,frontier,61440,fine,Standard,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0352156,0.229425,frontier,61440,coarse,Standard,1000
+256,4,Cray-MPICH-CXI-GPU-Enabled,0.00815599,0.258856,frontier,61440,coarse,Standard,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.0360874,0.142214,frontier,16384,coarse,Ready Send,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.0329506,0.138947,frontier,16384,fine,Ready Send,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.0363814,0.172284,frontier,16384,fine,Standard,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.0427213,0.17505,frontier,16384,coarse,Standard,1000
+256,8,Cray-MPICH-CXI-GPU-Enabled,0.0130727,0.146396,frontier,16384,coarse,Standard,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.0550677,0.161643,frontier,61440,coarse,Ready Send,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.0498589,0.168414,frontier,61440,fine,Ready Send,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.0350082,0.18127,frontier,61440,fine,Standard,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.0444855,0.180264,frontier,61440,coarse,Standard,1000
+256,8,Cray-MPICH-CXI-GPU-Enabled,0.0210515,0.215544,frontier,61440,coarse,Standard,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,1.72804,0.130997,frontier,16384,coarse,Ready Send,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,0.0193312,0.134621,frontier,16384,fine,Ready Send,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,0.0236114,0.151996,frontier,16384,fine,Standard,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,0.0250541,0.155676,frontier,16384,coarse,Standard,1000
+512,1,Cray-MPICH-CXI-GPU-Enabled,0.00836619,0.142579,frontier,16384,coarse,Standard,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,0.0191459,0.297363,frontier,61440,coarse,Ready Send,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,0.0206314,0.300264,frontier,61440,fine,Ready Send,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,0.0219327,0.312931,frontier,61440,fine,Standard,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,0.030927,0.310842,frontier,61440,coarse,Standard,1000
+512,1,Cray-MPICH-CXI-GPU-Enabled,0.00759766,0.315596,frontier,61440,coarse,Standard,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,0.0452514,0.123289,frontier,16384,coarse,Ready Send,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,0.0254648,0.120379,frontier,16384,fine,Ready Send,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,0.0331755,0.149038,frontier,16384,fine,Standard,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,0.0331112,0.15174,frontier,16384,coarse,Standard,1000
+512,2,Cray-MPICH-CXI-GPU-Enabled,0.0104917,0.134427,frontier,16384,coarse,Standard,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,0.0310849,0.217671,frontier,61440,coarse,Ready Send,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,0.0257748,0.221468,frontier,61440,fine,Ready Send,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,0.0319683,0.232011,frontier,61440,fine,Standard,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,0.030822,0.227654,frontier,61440,coarse,Standard,1000
+512,2,Cray-MPICH-CXI-GPU-Enabled,0.0311259,0.237819,frontier,61440,coarse,Standard,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,0.0468154,0.130862,frontier,16384,coarse,Ready Send,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,0.0629891,0.128392,frontier,16384,fine,Ready Send,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,0.0428262,0.157741,frontier,16384,fine,Standard,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,0.056252,0.160047,frontier,16384,coarse,Standard,1000
+512,4,Cray-MPICH-CXI-GPU-Enabled,0.0280608,0.128393,frontier,16384,coarse,Standard,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,0.0342247,0.161399,frontier,61440,coarse,Ready Send,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,0.040218,0.167823,frontier,61440,fine,Ready Send,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,0.0424966,0.180273,frontier,61440,fine,Standard,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,0.0402797,0.172421,frontier,61440,coarse,Standard,1000
+512,4,Cray-MPICH-CXI-GPU-Enabled,0.0247954,0.198202,frontier,61440,coarse,Standard,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,0.0912567,0.142382,frontier,16384,coarse,Ready Send,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,0.094455,0.138675,frontier,16384,fine,Ready Send,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,0.0889375,0.173053,frontier,16384,fine,Standard,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,0.11222,0.17419,frontier,16384,coarse,Standard,1000
+512,8,Cray-MPICH-CXI-GPU-Enabled,0.0575996,0.1334,frontier,16384,coarse,Standard,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,0.094073,0.143937,frontier,61440,coarse,Ready Send,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,0.0949148,0.144506,frontier,61440,fine,Ready Send,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,0.093822,0.174309,frontier,61440,fine,Standard,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,0.0862338,0.176473,frontier,61440,coarse,Standard,1000
+512,8,Cray-MPICH-CXI-GPU-Enabled,0.0741306,0.191658,frontier,61440,coarse,Standard,1000
+1024,1,MPIAdvance-CXI-Double-Buffering2,0.916918,0.125675,frontier,16384,coarse,Ready Send,1000
+1024,1,MPIAdvance-CXI-Double-Buffering2,0.0252688,0.123025,frontier,16384,fine,Ready Send,1000
+1024,1,MPIAdvance-CXI-Single-Buffering2,0.0208367,0.15228,frontier,16384,fine,Standard,1000
+1024,1,MPIAdvance-CXI-Single-Buffering2,0.0280266,0.153881,frontier,16384,coarse,Standard,1000
+1024,1,Cray-MPICH-CXI-GPU-Enabled,0.0108967,0.120447,frontier,16384,coarse,Standard,1000
+1024,1,MPIAdvance-CXI-Double-Buffering2,0.0274322,0.216053,frontier,61440,coarse,Ready Send,1000
+1024,1,MPIAdvance-CXI-Double-Buffering2,0.0236774,0.220297,frontier,61440,fine,Ready Send,1000
+1024,1,MPIAdvance-CXI-Single-Buffering2,0.0236522,0.234233,frontier,61440,fine,Standard,1000
+1024,1,MPIAdvance-CXI-Single-Buffering2,0.029923,0.229767,frontier,61440,coarse,Standard,1000
+1024,1,Cray-MPICH-CXI-GPU-Enabled,0.00639432,0.227591,frontier,61440,coarse,Standard,1000
+1024,2,MPIAdvance-CXI-Double-Buffering2,0.0321787,0.127616,frontier,16384,coarse,Ready Send,1000
+1024,2,MPIAdvance-CXI-Double-Buffering2,0.0337014,0.124664,frontier,16384,fine,Ready Send,1000
+1024,2,MPIAdvance-CXI-Single-Buffering2,0.0325724,0.148932,frontier,16384,fine,Standard,1000
+1024,2,MPIAdvance-CXI-Single-Buffering2,0.0476561,0.154835,frontier,16384,coarse,Standard,1000
+1024,2,Cray-MPICH-CXI-GPU-Enabled,0.00716286,0.128189,frontier,16384,coarse,Standard,1000
+1024,2,MPIAdvance-CXI-Double-Buffering2,0.0211449,0.16173,frontier,61440,coarse,Ready Send,1000
+1024,2,MPIAdvance-CXI-Double-Buffering2,0.0292322,0.168035,frontier,61440,fine,Ready Send,1000
+1024,2,MPIAdvance-CXI-Single-Buffering2,0.0414368,0.180009,frontier,61440,fine,Standard,1000
+1024,2,MPIAdvance-CXI-Single-Buffering2,0.0344888,0.17166,frontier,61440,coarse,Standard,1000
+1024,2,Cray-MPICH-CXI-GPU-Enabled,0.0147602,0.184557,frontier,61440,coarse,Standard,1000
+1024,4,MPIAdvance-CXI-Double-Buffering2,0.0567248,0.130425,frontier,16384,coarse,Ready Send,1000
+1024,4,MPIAdvance-CXI-Double-Buffering2,0.0339536,0.126893,frontier,16384,fine,Ready Send,1000
+1024,4,MPIAdvance-CXI-Single-Buffering2,0.0686443,0.159369,frontier,16384,fine,Standard,1000
+1024,4,MPIAdvance-CXI-Single-Buffering2,0.0564698,0.160407,frontier,16384,coarse,Standard,1000
+1024,4,Cray-MPICH-CXI-GPU-Enabled,0.028477,0.128726,frontier,16384,coarse,Standard,1000
+1024,4,MPIAdvance-CXI-Double-Buffering2,0.0535831,0.139063,frontier,61440,coarse,Ready Send,1000
+1024,4,MPIAdvance-CXI-Double-Buffering2,0.0307245,0.145129,frontier,61440,fine,Ready Send,1000
+1024,4,MPIAdvance-CXI-Single-Buffering2,0.0591175,0.163499,frontier,61440,fine,Standard,1000
+1024,4,MPIAdvance-CXI-Single-Buffering2,0.043411,0.163785,frontier,61440,coarse,Standard,1000
+1024,4,Cray-MPICH-CXI-GPU-Enabled,0.031422,0.180521,frontier,61440,coarse,Standard,1000
+1024,8,MPIAdvance-CXI-Double-Buffering2,0.0564921,0.142299,frontier,16384,coarse,Ready Send,1000
+1024,8,MPIAdvance-CXI-Double-Buffering2,0.114761,0.139208,frontier,16384,fine,Ready Send,1000
+1024,8,MPIAdvance-CXI-Single-Buffering2,0.110865,0.17338,frontier,16384,fine,Standard,1000
+1024,8,MPIAdvance-CXI-Single-Buffering2,0.0773656,0.174273,frontier,16384,coarse,Standard,1000
+1024,8,Cray-MPICH-CXI-GPU-Enabled,0.0477706,0.133715,frontier,16384,coarse,Standard,1000
+1024,8,MPIAdvance-CXI-Double-Buffering2,0.0912967,0.142936,frontier,61440,coarse,Ready Send,1000
+1024,8,MPIAdvance-CXI-Double-Buffering2,0.105349,0.140209,frontier,61440,fine,Ready Send,1000
+1024,8,MPIAdvance-CXI-Single-Buffering2,0.0899054,0.173402,frontier,61440,fine,Standard,1000
+1024,8,MPIAdvance-CXI-Single-Buffering2,0.0918583,0.176329,frontier,61440,coarse,Standard,1000
+1024,8,Cray-MPICH-CXI-GPU-Enabled,0.0651213,0.190841,frontier,61440,coarse,Standard,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,0.0576942,6.32405,frontier,16384,coarse,Ready Send,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,0.0162602,6.36268,frontier,16384,fine,Ready Send,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,0.0194147,6.53091,frontier,16384,fine,Standard,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,0.0195997,6.49568,frontier,16384,coarse,Standard,1000
+1,1,Cray-MPICH-CXI-GPU-Enabled,0.00376251,6.14941,frontier,16384,coarse,Standard,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,0.0192089,88.1434,frontier,61440,coarse,Ready Send,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,0.496855,88.5777,frontier,61440,fine,Ready Send,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,1.58521,88.7836,frontier,61440,fine,Standard,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,1.59568,88.7634,frontier,61440,coarse,Standard,1000
+1,1,Cray-MPICH-CXI-GPU-Enabled,0.927184,89.0853,frontier,61440,coarse,Standard,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.0370364,3.00148,frontier,16384,coarse,Ready Send,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.0241118,3.00521,frontier,16384,fine,Ready Send,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.0269421,3.00717,frontier,16384,fine,Standard,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.0275232,3.00318,frontier,16384,coarse,Standard,1000
+1,2,Cray-MPICH-CXI-GPU-Enabled,0.00598668,3.075,frontier,16384,coarse,Standard,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.030582,42.7659,frontier,61440,coarse,Ready Send,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.0360693,42.8394,frontier,61440,fine,Ready Send,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.0349976,43.0565,frontier,61440,fine,Standard,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.0418093,42.6568,frontier,61440,coarse,Standard,1000
+1,2,Cray-MPICH-CXI-GPU-Enabled,0.00763693,42.8803,frontier,61440,coarse,Standard,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.0489241,1.58893,frontier,16384,coarse,Ready Send,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.0388904,1.59313,frontier,16384,fine,Ready Send,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.044554,1.5963,frontier,16384,fine,Standard,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.0468566,1.59284,frontier,16384,coarse,Standard,1000
+1,4,Cray-MPICH-CXI-GPU-Enabled,0.00358512,1.60902,frontier,16384,coarse,Standard,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.0461977,21.9839,frontier,61440,coarse,Ready Send,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.0421493,21.7898,frontier,61440,fine,Ready Send,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.0444378,21.8298,frontier,61440,fine,Standard,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.0508466,21.7971,frontier,61440,coarse,Standard,1000
+1,4,Cray-MPICH-CXI-GPU-Enabled,0.00486575,21.5957,frontier,61440,coarse,Standard,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.0702741,0.864035,frontier,16384,coarse,Ready Send,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.0726179,0.866974,frontier,16384,fine,Ready Send,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.0727729,0.872089,frontier,16384,fine,Standard,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.0742127,0.86726,frontier,16384,coarse,Standard,1000
+1,8,Cray-MPICH-CXI-GPU-Enabled,0.00748343,0.892364,frontier,16384,coarse,Standard,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.0745663,10.8944,frontier,61440,coarse,Ready Send,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.0710695,10.905,frontier,61440,fine,Ready Send,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.0762473,10.9614,frontier,61440,fine,Standard,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.0778326,10.9674,frontier,61440,coarse,Standard,1000
+1,8,Cray-MPICH-CXI-GPU-Enabled,0.0061234,10.8471,frontier,61440,coarse,Standard,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.0380014,3.01218,frontier,16384,coarse,Ready Send,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.013088,3.01657,frontier,16384,fine,Ready Send,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.01631,3.02311,frontier,16384,fine,Standard,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.0163341,3.01798,frontier,16384,coarse,Standard,1000
+2,1,Cray-MPICH-CXI-GPU-Enabled,0.00373001,3.08087,frontier,16384,coarse,Standard,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.0159865,42.7724,frontier,61440,coarse,Ready Send,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.0258681,42.8624,frontier,61440,fine,Ready Send,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.0190475,43.2858,frontier,61440,fine,Standard,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.0256148,43.1039,frontier,61440,coarse,Standard,1000
+2,1,Cray-MPICH-CXI-GPU-Enabled,0.0154224,42.7558,frontier,61440,coarse,Standard,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.0248084,1.58875,frontier,16384,coarse,Ready Send,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.0150621,1.59299,frontier,16384,fine,Ready Send,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.0185691,1.59675,frontier,16384,fine,Standard,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.0185207,1.59314,frontier,16384,coarse,Standard,1000
+2,2,Cray-MPICH-CXI-GPU-Enabled,0.00386871,1.61285,frontier,16384,coarse,Standard,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.0171068,21.9731,frontier,61440,coarse,Ready Send,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.0174997,21.8364,frontier,61440,fine,Ready Send,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.0300626,21.8276,frontier,61440,fine,Standard,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.0213995,21.8292,frontier,61440,coarse,Standard,1000
+2,2,Cray-MPICH-CXI-GPU-Enabled,0.00474939,21.6381,frontier,61440,coarse,Standard,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.0175062,0.864675,frontier,16384,coarse,Ready Send,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.018827,0.867946,frontier,16384,fine,Ready Send,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.0228008,0.87242,frontier,16384,fine,Standard,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.0212624,0.867358,frontier,16384,coarse,Standard,1000
+2,4,Cray-MPICH-CXI-GPU-Enabled,0.00642258,0.883256,frontier,16384,coarse,Standard,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.0183743,10.9025,frontier,61440,coarse,Ready Send,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.0217138,10.8897,frontier,61440,fine,Ready Send,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.023771,10.9468,frontier,61440,fine,Standard,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.0220851,10.9816,frontier,61440,coarse,Standard,1000
+2,4,Cray-MPICH-CXI-GPU-Enabled,0.00653665,10.7617,frontier,61440,coarse,Standard,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.0363383,0.503336,frontier,16384,coarse,Ready Send,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.0306285,0.508646,frontier,16384,fine,Ready Send,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0372297,0.51668,frontier,16384,fine,Standard,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0485067,0.510895,frontier,16384,coarse,Standard,1000
+2,8,Cray-MPICH-CXI-GPU-Enabled,0.00452638,0.536766,frontier,16384,coarse,Standard,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.0209018,5.65318,frontier,61440,coarse,Ready Send,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.0254903,5.67771,frontier,61440,fine,Ready Send,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0367359,5.73788,frontier,61440,fine,Standard,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0349251,5.76311,frontier,61440,coarse,Standard,1000
+2,8,Cray-MPICH-CXI-GPU-Enabled,0.0128595,5.922,frontier,61440,coarse,Standard,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0381433,1.58948,frontier,16384,coarse,Ready Send,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0140889,1.59148,frontier,16384,fine,Ready Send,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.0166188,1.59836,frontier,16384,fine,Standard,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.0173459,1.59638,frontier,16384,coarse,Standard,1000
+4,1,Cray-MPICH-CXI-GPU-Enabled,0.00324821,1.5976,frontier,16384,coarse,Standard,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0157491,21.7694,frontier,61440,coarse,Ready Send,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0143513,21.7845,frontier,61440,fine,Ready Send,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.0181742,21.9244,frontier,61440,fine,Standard,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.0189365,21.9555,frontier,61440,coarse,Standard,1000
+4,1,Cray-MPICH-CXI-GPU-Enabled,0.00660552,21.8185,frontier,61440,coarse,Standard,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.0178322,0.865613,frontier,16384,coarse,Ready Send,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.015516,0.869895,frontier,16384,fine,Ready Send,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.0196543,0.873819,frontier,16384,fine,Standard,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.020864,0.868776,frontier,16384,coarse,Standard,1000
+4,2,Cray-MPICH-CXI-GPU-Enabled,0.00346013,0.879275,frontier,16384,coarse,Standard,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.0192592,10.7529,frontier,61440,coarse,Ready Send,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.0186091,10.7287,frontier,61440,fine,Ready Send,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.021472,10.8998,frontier,61440,fine,Standard,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.0207454,10.9008,frontier,61440,coarse,Standard,1000
+4,2,Cray-MPICH-CXI-GPU-Enabled,0.00483919,10.7161,frontier,61440,coarse,Standard,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0167513,0.503653,frontier,16384,coarse,Ready Send,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0179472,0.508756,frontier,16384,fine,Ready Send,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.0229505,0.516736,frontier,16384,fine,Standard,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.0236581,0.511075,frontier,16384,coarse,Standard,1000
+4,4,Cray-MPICH-CXI-GPU-Enabled,0.0059773,0.527529,frontier,16384,coarse,Standard,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0199781,5.58667,frontier,61440,coarse,Ready Send,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0213767,5.59238,frontier,61440,fine,Ready Send,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.0230057,5.66584,frontier,61440,fine,Standard,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.0244307,5.6455,frontier,61440,coarse,Standard,1000
+4,4,Cray-MPICH-CXI-GPU-Enabled,0.00819598,5.58806,frontier,61440,coarse,Standard,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.0299083,0.311965,frontier,16384,coarse,Ready Send,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.0319035,0.317562,frontier,16384,fine,Ready Send,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.0275375,0.329099,frontier,16384,fine,Standard,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.0324602,0.322266,frontier,16384,coarse,Standard,1000
+4,8,Cray-MPICH-CXI-GPU-Enabled,0.00725038,0.344286,frontier,16384,coarse,Standard,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.027879,2.68008,frontier,61440,coarse,Ready Send,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.0325898,2.68392,frontier,61440,fine,Ready Send,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.0421287,2.68825,frontier,61440,fine,Standard,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.0336844,2.68348,frontier,61440,coarse,Standard,1000
+4,8,Cray-MPICH-CXI-GPU-Enabled,0.00765488,2.6918,frontier,61440,coarse,Standard,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.258052,0.858326,frontier,16384,coarse,Ready Send,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.0143918,0.863088,frontier,16384,fine,Ready Send,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0184142,0.87614,frontier,16384,fine,Standard,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0177517,0.871224,frontier,16384,coarse,Standard,1000
+8,1,Cray-MPICH-CXI-GPU-Enabled,0.0034718,0.867179,frontier,16384,coarse,Standard,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.0277295,10.8432,frontier,61440,coarse,Ready Send,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.0144861,10.8462,frontier,61440,fine,Ready Send,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0198702,10.999,frontier,61440,fine,Standard,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0198277,10.9963,frontier,61440,coarse,Standard,1000
+8,1,Cray-MPICH-CXI-GPU-Enabled,0.00537147,10.8654,frontier,61440,coarse,Standard,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.0196811,0.504043,frontier,16384,coarse,Ready Send,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.014833,0.509334,frontier,16384,fine,Ready Send,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0199713,0.51641,frontier,16384,fine,Standard,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0207971,0.511593,frontier,16384,coarse,Standard,1000
+8,2,Cray-MPICH-CXI-GPU-Enabled,0.00338605,0.524781,frontier,16384,coarse,Standard,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.017282,5.578,frontier,61440,coarse,Ready Send,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.0169171,5.5742,frontier,61440,fine,Ready Send,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0197787,5.67083,frontier,61440,fine,Standard,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0204501,5.64623,frontier,61440,coarse,Standard,1000
+8,2,Cray-MPICH-CXI-GPU-Enabled,0.0054427,5.53573,frontier,61440,coarse,Standard,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.0235216,0.312099,frontier,16384,coarse,Ready Send,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.0208901,0.317732,frontier,16384,fine,Ready Send,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.0220914,0.32897,frontier,16384,fine,Standard,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.0234131,0.322142,frontier,16384,coarse,Standard,1000
+8,4,Cray-MPICH-CXI-GPU-Enabled,0.00595117,0.33766,frontier,16384,coarse,Standard,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.0203033,2.68206,frontier,61440,coarse,Ready Send,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.021636,2.68422,frontier,61440,fine,Ready Send,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.023766,2.68742,frontier,61440,fine,Standard,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.0239717,2.68494,frontier,61440,coarse,Standard,1000
+8,4,Cray-MPICH-CXI-GPU-Enabled,0.00857898,2.69339,frontier,61440,coarse,Standard,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.0378222,0.221165,frontier,16384,coarse,Ready Send,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.039033,0.225752,frontier,16384,fine,Ready Send,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.0396168,0.236817,frontier,16384,fine,Standard,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.0407893,0.232487,frontier,16384,coarse,Standard,1000
+8,8,Cray-MPICH-CXI-GPU-Enabled,0.018214,0.257393,frontier,16384,coarse,Standard,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.0364662,1.42909,frontier,61440,coarse,Ready Send,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.0375897,1.43102,frontier,61440,fine,Ready Send,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.0422274,1.43229,frontier,61440,fine,Standard,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.038511,1.43054,frontier,61440,coarse,Standard,1000
+8,8,Cray-MPICH-CXI-GPU-Enabled,0.0190829,1.44786,frontier,61440,coarse,Standard,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.838315,0.499351,frontier,16384,coarse,Ready Send,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.0134017,0.50473,frontier,16384,fine,Ready Send,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0177371,0.516934,frontier,16384,fine,Standard,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0191915,0.512391,frontier,16384,coarse,Standard,1000
+16,1,Cray-MPICH-CXI-GPU-Enabled,0.00349155,0.511274,frontier,16384,coarse,Standard,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.0150626,5.5875,frontier,61440,coarse,Ready Send,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.0150045,5.59672,frontier,61440,fine,Ready Send,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0185831,5.72904,frontier,61440,fine,Standard,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0179835,5.73081,frontier,61440,coarse,Standard,1000
+16,1,Cray-MPICH-CXI-GPU-Enabled,0.00502968,5.67733,frontier,61440,coarse,Standard,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0202225,0.312101,frontier,16384,coarse,Ready Send,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0167525,0.317654,frontier,16384,fine,Ready Send,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0219669,0.328835,frontier,16384,fine,Standard,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0197868,0.322222,frontier,16384,coarse,Standard,1000
+16,2,Cray-MPICH-CXI-GPU-Enabled,0.00646682,0.336537,frontier,16384,coarse,Standard,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0175998,2.68262,frontier,61440,coarse,Ready Send,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0158643,2.68431,frontier,61440,fine,Ready Send,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0211484,2.6876,frontier,61440,fine,Standard,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0202069,2.68528,frontier,61440,coarse,Standard,1000
+16,2,Cray-MPICH-CXI-GPU-Enabled,0.00821516,2.68689,frontier,61440,coarse,Standard,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.018846,0.22107,frontier,16384,coarse,Ready Send,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.0175568,0.225599,frontier,16384,fine,Ready Send,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.0288355,0.237443,frontier,16384,fine,Standard,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.024446,0.232539,frontier,16384,coarse,Standard,1000
+16,4,Cray-MPICH-CXI-GPU-Enabled,0.00651273,0.251956,frontier,16384,coarse,Standard,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.0226479,1.42666,frontier,61440,coarse,Ready Send,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.0183128,1.42761,frontier,61440,fine,Ready Send,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.024448,1.43103,frontier,61440,fine,Standard,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.0238307,1.42905,frontier,61440,coarse,Standard,1000
+16,4,Cray-MPICH-CXI-GPU-Enabled,0.00392233,1.44566,frontier,61440,coarse,Standard,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.0316582,0.16864,frontier,16384,coarse,Ready Send,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.0381056,0.178488,frontier,16384,fine,Ready Send,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0375706,0.190907,frontier,16384,fine,Standard,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0407883,0.182224,frontier,16384,coarse,Standard,1000
+16,8,Cray-MPICH-CXI-GPU-Enabled,0.0173611,0.210662,frontier,16384,coarse,Standard,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.025795,0.784241,frontier,61440,coarse,Ready Send,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.0290805,0.785858,frontier,61440,fine,Ready Send,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0390897,0.791597,frontier,61440,fine,Standard,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0443165,0.788048,frontier,61440,coarse,Standard,1000
+16,8,Cray-MPICH-CXI-GPU-Enabled,0.0235718,0.808984,frontier,61440,coarse,Standard,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.056537,0.311249,frontier,16384,coarse,Ready Send,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.0177106,0.316813,frontier,16384,fine,Ready Send,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.0188812,0.331561,frontier,16384,fine,Standard,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.0215021,0.325451,frontier,16384,coarse,Standard,1000
+32,1,Cray-MPICH-CXI-GPU-Enabled,0.0050555,0.329236,frontier,16384,coarse,Standard,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.0160934,2.67205,frontier,61440,coarse,Ready Send,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.0170834,2.67521,frontier,61440,fine,Ready Send,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.0179232,2.67936,frontier,61440,fine,Standard,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.0201214,2.67632,frontier,61440,coarse,Standard,1000
+32,1,Cray-MPICH-CXI-GPU-Enabled,0.00651269,2.68952,frontier,61440,coarse,Standard,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.026493,0.222378,frontier,16384,coarse,Ready Send,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.0233532,0.226937,frontier,16384,fine,Ready Send,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.0290322,0.236983,frontier,16384,fine,Standard,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.0279786,0.23266,frontier,16384,coarse,Standard,1000
+32,2,Cray-MPICH-CXI-GPU-Enabled,0.00759944,0.245557,frontier,16384,coarse,Standard,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.0250939,1.4261,frontier,61440,coarse,Ready Send,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.0242472,1.4266,frontier,61440,fine,Ready Send,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.0274361,1.42957,frontier,61440,fine,Standard,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.0287804,1.42818,frontier,61440,coarse,Standard,1000
+32,2,Cray-MPICH-CXI-GPU-Enabled,0.00653457,1.43611,frontier,61440,coarse,Standard,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.0195773,0.169714,frontier,16384,coarse,Ready Send,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.0243099,0.179574,frontier,16384,fine,Ready Send,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.022469,0.19126,frontier,16384,fine,Standard,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.0241344,0.180774,frontier,16384,coarse,Standard,1000
+32,4,Cray-MPICH-CXI-GPU-Enabled,0.00783736,0.200116,frontier,16384,coarse,Standard,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.0204039,0.784379,frontier,61440,coarse,Ready Send,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.0222445,0.786119,frontier,61440,fine,Ready Send,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.0236757,0.790543,frontier,61440,fine,Standard,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.0262027,0.787383,frontier,61440,coarse,Standard,1000
+32,4,Cray-MPICH-CXI-GPU-Enabled,0.00771571,0.807248,frontier,61440,coarse,Standard,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.031105,0.14527,frontier,16384,coarse,Ready Send,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.0342735,0.150291,frontier,16384,fine,Ready Send,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.0273831,0.175232,frontier,16384,fine,Standard,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.0342408,0.176504,frontier,16384,coarse,Standard,1000
+32,8,Cray-MPICH-CXI-GPU-Enabled,0.0151845,0.186796,frontier,16384,coarse,Standard,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.0279751,0.46708,frontier,61440,coarse,Ready Send,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.0251649,0.469534,frontier,61440,fine,Ready Send,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.0317623,0.478235,frontier,61440,fine,Standard,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.0409106,0.474981,frontier,61440,coarse,Standard,1000
+32,8,Cray-MPICH-CXI-GPU-Enabled,0.0199696,0.500662,frontier,61440,coarse,Standard,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.043661,0.221232,frontier,16384,coarse,Ready Send,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.0145589,0.225784,frontier,16384,fine,Ready Send,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.01884,0.239493,frontier,16384,fine,Standard,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.0249813,0.234985,frontier,16384,coarse,Standard,1000
+64,1,Cray-MPICH-CXI-GPU-Enabled,0.00804171,0.231792,frontier,16384,coarse,Standard,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.0178884,1.42016,frontier,61440,coarse,Ready Send,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.0256798,1.4217,frontier,61440,fine,Ready Send,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.0189344,1.43259,frontier,61440,fine,Standard,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.0193091,1.43091,frontier,61440,coarse,Standard,1000
+64,1,Cray-MPICH-CXI-GPU-Enabled,0.00585374,1.43865,frontier,61440,coarse,Standard,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.0191859,0.170139,frontier,16384,coarse,Ready Send,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.0188733,0.180016,frontier,16384,fine,Ready Send,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.0221549,0.191005,frontier,16384,fine,Standard,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.0229175,0.180577,frontier,16384,coarse,Standard,1000
+64,2,Cray-MPICH-CXI-GPU-Enabled,0.00748618,0.195114,frontier,16384,coarse,Standard,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.0198899,0.784211,frontier,61440,coarse,Ready Send,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.0196455,0.785875,frontier,61440,fine,Ready Send,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.0235615,0.790801,frontier,61440,fine,Standard,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.0244385,0.787134,frontier,61440,coarse,Standard,1000
+64,2,Cray-MPICH-CXI-GPU-Enabled,0.00854421,0.798317,frontier,61440,coarse,Standard,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.0240728,0.14433,frontier,16384,coarse,Ready Send,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.0212751,0.150832,frontier,16384,fine,Ready Send,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.0270231,0.165139,frontier,16384,fine,Standard,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.0320428,0.165193,frontier,16384,coarse,Standard,1000
+64,4,Cray-MPICH-CXI-GPU-Enabled,0.00798491,0.180795,frontier,16384,coarse,Standard,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.0252916,0.467574,frontier,61440,coarse,Ready Send,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.0256564,0.470094,frontier,61440,fine,Ready Send,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.0265861,0.478196,frontier,61440,fine,Standard,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.029493,0.475242,frontier,61440,coarse,Standard,1000
+64,4,Cray-MPICH-CXI-GPU-Enabled,0.00963995,0.499742,frontier,61440,coarse,Standard,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.0393427,0.143062,frontier,16384,coarse,Ready Send,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.0350052,0.140382,frontier,16384,fine,Ready Send,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.0369316,0.173375,frontier,16384,fine,Standard,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.0420963,0.175504,frontier,16384,coarse,Standard,1000
+64,8,Cray-MPICH-CXI-GPU-Enabled,0.0114413,0.171849,frontier,16384,coarse,Standard,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.027007,0.299702,frontier,61440,coarse,Ready Send,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.0322402,0.301586,frontier,61440,fine,Ready Send,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.0388751,0.311109,frontier,61440,fine,Standard,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.0417972,0.308984,frontier,61440,coarse,Standard,1000
+64,8,Cray-MPICH-CXI-GPU-Enabled,0.0179059,0.339787,frontier,61440,coarse,Standard,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.242966,0.167729,frontier,16384,coarse,Ready Send,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.0198591,0.178001,frontier,16384,fine,Ready Send,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.0218135,0.192954,frontier,16384,fine,Standard,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.0261564,0.182737,frontier,16384,coarse,Standard,1000
+128,1,Cray-MPICH-CXI-GPU-Enabled,0.00819253,0.180516,frontier,16384,coarse,Standard,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.0199708,0.779015,frontier,61440,coarse,Ready Send,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.0206085,0.781766,frontier,61440,fine,Ready Send,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.0238075,0.792629,frontier,61440,fine,Standard,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.0256935,0.789302,frontier,61440,coarse,Standard,1000
+128,1,Cray-MPICH-CXI-GPU-Enabled,0.0104091,0.796924,frontier,61440,coarse,Standard,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.0227682,0.143898,frontier,16384,coarse,Ready Send,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.0217047,0.150799,frontier,16384,fine,Ready Send,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.0283467,0.163689,frontier,16384,fine,Standard,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.026318,0.161615,frontier,16384,coarse,Standard,1000
+128,2,Cray-MPICH-CXI-GPU-Enabled,0.00750377,0.173373,frontier,16384,coarse,Standard,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.0248401,0.467478,frontier,61440,coarse,Ready Send,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.0228383,0.469898,frontier,61440,fine,Ready Send,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.0288371,0.477546,frontier,61440,fine,Standard,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.029438,0.474995,frontier,61440,coarse,Standard,1000
+128,2,Cray-MPICH-CXI-GPU-Enabled,0.0103229,0.486109,frontier,61440,coarse,Standard,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.0293825,0.132668,frontier,16384,coarse,Ready Send,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.0257767,0.135392,frontier,16384,fine,Ready Send,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.0294013,0.159181,frontier,16384,fine,Standard,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.0272099,0.16072,frontier,16384,coarse,Standard,1000
+128,4,Cray-MPICH-CXI-GPU-Enabled,0.00877213,0.166106,frontier,16384,coarse,Standard,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.0276363,0.299643,frontier,61440,coarse,Ready Send,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.0262713,0.300556,frontier,61440,fine,Ready Send,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.0337701,0.311449,frontier,61440,fine,Standard,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.0300621,0.308587,frontier,61440,coarse,Standard,1000
+128,4,Cray-MPICH-CXI-GPU-Enabled,0.0114461,0.327898,frontier,61440,coarse,Standard,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.0517665,0.14203,frontier,16384,coarse,Ready Send,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.0336954,0.139089,frontier,16384,fine,Ready Send,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.0489228,0.171729,frontier,16384,fine,Standard,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.0379769,0.175711,frontier,16384,coarse,Standard,1000
+128,8,Cray-MPICH-CXI-GPU-Enabled,0.0140287,0.151539,frontier,16384,coarse,Standard,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.0298978,0.219027,frontier,61440,coarse,Ready Send,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.0299295,0.221205,frontier,61440,fine,Ready Send,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.040771,0.232425,frontier,61440,fine,Standard,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.0423539,0.227936,frontier,61440,coarse,Standard,1000
+128,8,Cray-MPICH-CXI-GPU-Enabled,0.0159926,0.256875,frontier,61440,coarse,Standard,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.455778,0.142611,frontier,16384,coarse,Ready Send,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.0207956,0.149147,frontier,16384,fine,Ready Send,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.0236573,0.164875,frontier,16384,fine,Standard,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.0233213,0.160295,frontier,16384,coarse,Standard,1000
+256,1,Cray-MPICH-CXI-GPU-Enabled,0.00720953,0.155151,frontier,16384,coarse,Standard,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.0200726,0.464172,frontier,61440,coarse,Ready Send,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.0212602,0.466696,frontier,61440,fine,Ready Send,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.0224973,0.479462,frontier,61440,fine,Standard,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.023596,0.476534,frontier,61440,coarse,Standard,1000
+256,1,Cray-MPICH-CXI-GPU-Enabled,0.0102994,0.481719,frontier,61440,coarse,Standard,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.0252196,0.126847,frontier,16384,coarse,Ready Send,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.0222736,0.135732,frontier,16384,fine,Ready Send,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.0261973,0.156883,frontier,16384,fine,Standard,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.0276472,0.152965,frontier,16384,coarse,Standard,1000
+256,2,Cray-MPICH-CXI-GPU-Enabled,0.00857238,0.156328,frontier,16384,coarse,Standard,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.0267031,0.299817,frontier,61440,coarse,Ready Send,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.022714,0.300755,frontier,61440,fine,Ready Send,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.0255474,0.31092,frontier,61440,fine,Standard,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.0284182,0.308461,frontier,61440,coarse,Standard,1000
+256,2,Cray-MPICH-CXI-GPU-Enabled,0.00869701,0.318946,frontier,61440,coarse,Standard,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.0281944,0.130107,frontier,16384,coarse,Ready Send,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.0241538,0.128412,frontier,16384,fine,Ready Send,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0329227,0.158382,frontier,16384,fine,Standard,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0305147,0.162273,frontier,16384,coarse,Standard,1000
+256,4,Cray-MPICH-CXI-GPU-Enabled,0.0124957,0.137694,frontier,16384,coarse,Standard,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.0289162,0.217656,frontier,61440,coarse,Ready Send,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.0385368,0.221603,frontier,61440,fine,Ready Send,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0300465,0.232588,frontier,61440,fine,Standard,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0303451,0.228098,frontier,61440,coarse,Standard,1000
+256,4,Cray-MPICH-CXI-GPU-Enabled,0.00992346,0.258056,frontier,61440,coarse,Standard,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.0531936,0.142598,frontier,16384,coarse,Ready Send,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.044592,0.139172,frontier,16384,fine,Ready Send,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.0491149,0.17312,frontier,16384,fine,Standard,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.0481709,0.175591,frontier,16384,coarse,Standard,1000
+256,8,Cray-MPICH-CXI-GPU-Enabled,0.0157834,0.144173,frontier,16384,coarse,Standard,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.0459855,0.161412,frontier,61440,coarse,Ready Send,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.0420792,0.167719,frontier,61440,fine,Ready Send,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.0556222,0.180539,frontier,61440,fine,Standard,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.0545865,0.179937,frontier,61440,coarse,Standard,1000
+256,8,Cray-MPICH-CXI-GPU-Enabled,0.0226159,0.215921,frontier,61440,coarse,Standard,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,8.67013,0.844551,frontier,16384,coarse,Ready Send,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,3.97601,0.827799,frontier,16384,fine,Ready Send,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,3.97555,1.05531,frontier,16384,fine,Standard,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,3.9796,1.05841,frontier,16384,coarse,Standard,1000
+512,1,Cray-MPICH-CXI-GPU-Enabled,3.90593,0.975874,frontier,16384,coarse,Standard,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,3.98008,0.850698,frontier,61440,coarse,Ready Send,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,3.9807,0.831077,frontier,61440,fine,Ready Send,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,3.98985,1.0475,frontier,61440,fine,Standard,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,3.98513,1.06649,frontier,61440,coarse,Standard,1000
+512,1,Cray-MPICH-CXI-GPU-Enabled,3.89395,1.10496,frontier,61440,coarse,Standard,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,4.05167,0.848142,frontier,16384,coarse,Ready Send,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,4.00645,0.827568,frontier,16384,fine,Ready Send,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,4.01267,1.04597,frontier,16384,fine,Standard,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,3.9888,1.06363,frontier,16384,coarse,Standard,1000
+512,2,Cray-MPICH-CXI-GPU-Enabled,3.90726,1.01579,frontier,16384,coarse,Standard,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,3.99349,0.848588,frontier,61440,coarse,Ready Send,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,4.01394,0.829998,frontier,61440,fine,Ready Send,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,4.0091,1.04729,frontier,61440,fine,Standard,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,4.00342,1.06425,frontier,61440,coarse,Standard,1000
+512,2,Cray-MPICH-CXI-GPU-Enabled,3.92441,0.77906,frontier,61440,coarse,Standard,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,4.06561,0.863697,frontier,16384,coarse,Ready Send,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,4.06079,0.851098,frontier,16384,fine,Ready Send,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,4.03427,1.0746,frontier,16384,fine,Standard,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,4.02847,1.09196,frontier,16384,coarse,Standard,1000
+512,4,Cray-MPICH-CXI-GPU-Enabled,3.94269,0.965029,frontier,16384,coarse,Standard,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,4.06247,0.875152,frontier,61440,coarse,Ready Send,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,4.07259,0.852709,frontier,61440,fine,Ready Send,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,4.06356,1.07536,frontier,61440,fine,Standard,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,4.06266,1.0965,frontier,61440,coarse,Standard,1000
+512,4,Cray-MPICH-CXI-GPU-Enabled,3.96598,1.22907,frontier,61440,coarse,Standard,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,4.16555,0.924451,frontier,16384,coarse,Ready Send,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,4.17923,0.921138,frontier,16384,fine,Ready Send,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,4.14376,1.15638,frontier,16384,fine,Standard,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,4.19165,1.1745,frontier,16384,coarse,Standard,1000
+512,8,Cray-MPICH-CXI-GPU-Enabled,4.06515,0.988668,frontier,16384,coarse,Standard,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,4.18358,0.924031,frontier,61440,coarse,Ready Send,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,4.16914,0.919573,frontier,61440,fine,Ready Send,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,4.18371,1.15648,frontier,61440,fine,Standard,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,4.18707,1.1793,frontier,61440,coarse,Standard,1000
+512,8,Cray-MPICH-CXI-GPU-Enabled,3.98381,1.24389,frontier,61440,coarse,Standard,1000
+1024,1,MPIAdvance-CXI-Double-Buffering2,8.67331,0.846308,frontier,16384,coarse,Ready Send,1000
+1024,1,MPIAdvance-CXI-Double-Buffering2,3.98598,0.831648,frontier,16384,fine,Ready Send,1000
+1024,1,MPIAdvance-CXI-Single-Buffering2,3.9964,1.04573,frontier,16384,fine,Standard,1000
+1024,1,MPIAdvance-CXI-Single-Buffering2,3.98852,1.06299,frontier,16384,coarse,Standard,1000
+1024,1,Cray-MPICH-CXI-GPU-Enabled,3.89252,0.961471,frontier,16384,coarse,Standard,1000
+1024,1,MPIAdvance-CXI-Double-Buffering2,3.98679,0.848957,frontier,61440,coarse,Ready Send,1000
+1024,1,MPIAdvance-CXI-Double-Buffering2,4.00104,0.826345,frontier,61440,fine,Ready Send,1000
+1024,1,MPIAdvance-CXI-Single-Buffering2,3.98371,1.05039,frontier,61440,fine,Standard,1000
+1024,1,MPIAdvance-CXI-Single-Buffering2,3.99281,1.06518,frontier,61440,coarse,Standard,1000
+1024,1,Cray-MPICH-CXI-GPU-Enabled,3.90492,1.05262,frontier,61440,coarse,Standard,1000
+1024,2,MPIAdvance-CXI-Double-Buffering2,4.0363,0.838189,frontier,16384,coarse,Ready Send,1000
+1024,2,MPIAdvance-CXI-Double-Buffering2,3.9731,0.817428,frontier,16384,fine,Ready Send,1000
+1024,2,MPIAdvance-CXI-Single-Buffering2,3.99631,1.0323,frontier,16384,fine,Standard,1000
+1024,2,MPIAdvance-CXI-Single-Buffering2,4.01274,1.04913,frontier,16384,coarse,Standard,1000
+1024,2,Cray-MPICH-CXI-GPU-Enabled,3.92019,1.15906,frontier,16384,coarse,Standard,1000
+1024,2,MPIAdvance-CXI-Double-Buffering2,3.97348,0.842816,frontier,61440,coarse,Ready Send,1000
+1024,2,MPIAdvance-CXI-Double-Buffering2,3.99163,0.820266,frontier,61440,fine,Ready Send,1000
+1024,2,MPIAdvance-CXI-Single-Buffering2,3.99417,1.03469,frontier,61440,fine,Standard,1000
+1024,2,MPIAdvance-CXI-Single-Buffering2,4.02089,1.0535,frontier,61440,coarse,Standard,1000
+1024,2,Cray-MPICH-CXI-GPU-Enabled,3.90712,1.19839,frontier,61440,coarse,Standard,1000
+1024,4,MPIAdvance-CXI-Double-Buffering2,4.00466,0.870276,frontier,16384,coarse,Ready Send,1000
+1024,4,MPIAdvance-CXI-Double-Buffering2,4.04548,0.848532,frontier,16384,fine,Ready Send,1000
+1024,4,MPIAdvance-CXI-Single-Buffering2,4.04015,1.07416,frontier,16384,fine,Standard,1000
+1024,4,MPIAdvance-CXI-Single-Buffering2,4.04187,1.09251,frontier,16384,coarse,Standard,1000
+1024,4,Cray-MPICH-CXI-GPU-Enabled,3.94514,0.927072,frontier,16384,coarse,Standard,1000
+1024,4,MPIAdvance-CXI-Double-Buffering2,4.06705,0.864784,frontier,61440,coarse,Ready Send,1000
+1024,4,MPIAdvance-CXI-Double-Buffering2,4.02302,0.850984,frontier,61440,fine,Ready Send,1000
+1024,4,MPIAdvance-CXI-Single-Buffering2,4.06286,1.07752,frontier,61440,fine,Standard,1000
+1024,4,MPIAdvance-CXI-Single-Buffering2,4.03201,1.09357,frontier,61440,coarse,Standard,1000
+1024,4,Cray-MPICH-CXI-GPU-Enabled,3.94009,1.18229,frontier,61440,coarse,Standard,1000
+1024,8,MPIAdvance-CXI-Double-Buffering2,4.124,0.918083,frontier,16384,coarse,Ready Send,1000
+1024,8,MPIAdvance-CXI-Double-Buffering2,4.1231,0.89179,frontier,16384,fine,Ready Send,1000
+1024,8,MPIAdvance-CXI-Single-Buffering2,4.1241,1.12781,frontier,16384,fine,Standard,1000
+1024,8,MPIAdvance-CXI-Single-Buffering2,4.08695,1.14604,frontier,16384,coarse,Standard,1000
+1024,8,Cray-MPICH-CXI-GPU-Enabled,3.92073,0.960999,frontier,16384,coarse,Standard,1000
+1024,8,MPIAdvance-CXI-Double-Buffering2,4.15156,0.922314,frontier,61440,coarse,Ready Send,1000
+1024,8,MPIAdvance-CXI-Double-Buffering2,4.06993,0.89772,frontier,61440,fine,Ready Send,1000
+1024,8,MPIAdvance-CXI-Single-Buffering2,4.14066,1.12917,frontier,61440,fine,Standard,1000
+1024,8,MPIAdvance-CXI-Single-Buffering2,4.15695,1.13105,frontier,61440,coarse,Standard,1000
+1024,8,Cray-MPICH-CXI-GPU-Enabled,4.00156,1.14681,frontier,61440,coarse,Standard,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,0.0441529,6.37423,frontier,16384,coarse,Ready Send,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,0.0160872,6.34303,frontier,16384,fine,Ready Send,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,0.0192121,6.51367,frontier,16384,fine,Standard,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,0.0200244,6.54353,frontier,16384,coarse,Standard,1000
+1,1,Cray-MPICH-CXI-GPU-Enabled,0.00397686,6.19586,frontier,16384,coarse,Standard,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,0.0197564,88.0138,frontier,61440,coarse,Ready Send,1000
+1,1,MPIAdvance-CXI-Double-Buffering2,0.0186203,87.9961,frontier,61440,fine,Ready Send,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,1.6132,88.1261,frontier,61440,fine,Standard,1000
+1,1,MPIAdvance-CXI-Single-Buffering2,1.61239,88.3514,frontier,61440,coarse,Standard,1000
+1,1,Cray-MPICH-CXI-GPU-Enabled,1.25538,88.394,frontier,61440,coarse,Standard,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.0368026,3.01875,frontier,16384,coarse,Ready Send,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.0242317,3.02137,frontier,16384,fine,Ready Send,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.0277711,3.02351,frontier,16384,fine,Standard,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.0275529,3.01976,frontier,16384,coarse,Standard,1000
+1,2,Cray-MPICH-CXI-GPU-Enabled,0.00390589,3.09016,frontier,16384,coarse,Standard,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.0317909,42.53,frontier,61440,coarse,Ready Send,1000
+1,2,MPIAdvance-CXI-Double-Buffering2,0.0359211,42.7762,frontier,61440,fine,Ready Send,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.0351832,42.7751,frontier,61440,fine,Standard,1000
+1,2,MPIAdvance-CXI-Single-Buffering2,0.041727,43.1932,frontier,61440,coarse,Standard,1000
+1,2,Cray-MPICH-CXI-GPU-Enabled,0.0113182,42.9673,frontier,61440,coarse,Standard,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.0466429,1.58967,frontier,16384,coarse,Ready Send,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.0406222,1.5928,frontier,16384,fine,Ready Send,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.0470629,1.59788,frontier,16384,fine,Standard,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.0432737,1.59531,frontier,16384,coarse,Standard,1000
+1,4,Cray-MPICH-CXI-GPU-Enabled,0.00356142,1.61514,frontier,16384,coarse,Standard,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.0436851,21.6737,frontier,61440,coarse,Ready Send,1000
+1,4,MPIAdvance-CXI-Double-Buffering2,0.040005,21.6851,frontier,61440,fine,Ready Send,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.0472575,21.7898,frontier,61440,fine,Standard,1000
+1,4,MPIAdvance-CXI-Single-Buffering2,0.0437516,21.7953,frontier,61440,coarse,Standard,1000
+1,4,Cray-MPICH-CXI-GPU-Enabled,0.00483216,21.5862,frontier,61440,coarse,Standard,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.0767831,0.864264,frontier,16384,coarse,Ready Send,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.177002,0.86883,frontier,16384,fine,Ready Send,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.0742146,0.874201,frontier,16384,fine,Standard,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.0826502,0.869444,frontier,16384,coarse,Standard,1000
+1,8,Cray-MPICH-CXI-GPU-Enabled,0.00373358,0.894322,frontier,16384,coarse,Standard,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.074356,10.7438,frontier,61440,coarse,Ready Send,1000
+1,8,MPIAdvance-CXI-Double-Buffering2,0.0793571,10.7548,frontier,61440,fine,Ready Send,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.079664,10.8775,frontier,61440,fine,Standard,1000
+1,8,MPIAdvance-CXI-Single-Buffering2,0.0750156,10.8837,frontier,61440,coarse,Standard,1000
+1,8,Cray-MPICH-CXI-GPU-Enabled,0.00459054,10.7761,frontier,61440,coarse,Standard,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.252139,2.9995,frontier,16384,coarse,Ready Send,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.0129943,3.00073,frontier,16384,fine,Ready Send,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.0167305,3.00431,frontier,16384,fine,Standard,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.0169206,3.00273,frontier,16384,coarse,Standard,1000
+2,1,Cray-MPICH-CXI-GPU-Enabled,0.00317897,3.04608,frontier,16384,coarse,Standard,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.0162084,42.5903,frontier,61440,coarse,Ready Send,1000
+2,1,MPIAdvance-CXI-Double-Buffering2,0.0206163,42.7558,frontier,61440,fine,Ready Send,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.0193329,42.768,frontier,61440,fine,Standard,1000
+2,1,MPIAdvance-CXI-Single-Buffering2,0.0294735,43.0378,frontier,61440,coarse,Standard,1000
+2,1,Cray-MPICH-CXI-GPU-Enabled,0.0101946,42.7416,frontier,61440,coarse,Standard,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.0172082,1.58552,frontier,16384,coarse,Ready Send,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.0151165,1.58938,frontier,16384,fine,Ready Send,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.0186659,1.59209,frontier,16384,fine,Standard,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.0193455,1.58862,frontier,16384,coarse,Standard,1000
+2,2,Cray-MPICH-CXI-GPU-Enabled,0.00369968,1.60373,frontier,16384,coarse,Standard,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.0164652,21.675,frontier,61440,coarse,Ready Send,1000
+2,2,MPIAdvance-CXI-Double-Buffering2,0.0169996,21.746,frontier,61440,fine,Ready Send,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.0235441,21.6279,frontier,61440,fine,Standard,1000
+2,2,MPIAdvance-CXI-Single-Buffering2,0.02202,21.641,frontier,61440,coarse,Standard,1000
+2,2,Cray-MPICH-CXI-GPU-Enabled,0.00558399,21.5026,frontier,61440,coarse,Standard,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.0165535,0.863119,frontier,16384,coarse,Ready Send,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.0164453,0.867164,frontier,16384,fine,Ready Send,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.0200601,0.870931,frontier,16384,fine,Standard,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.022241,0.866141,frontier,16384,coarse,Standard,1000
+2,4,Cray-MPICH-CXI-GPU-Enabled,0.00379038,0.884154,frontier,16384,coarse,Standard,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.0210215,10.7405,frontier,61440,coarse,Ready Send,1000
+2,4,MPIAdvance-CXI-Double-Buffering2,0.020035,10.755,frontier,61440,fine,Ready Send,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.0216286,10.8506,frontier,61440,fine,Standard,1000
+2,4,MPIAdvance-CXI-Single-Buffering2,0.0259382,10.8454,frontier,61440,coarse,Standard,1000
+2,4,Cray-MPICH-CXI-GPU-Enabled,0.00461206,10.6381,frontier,61440,coarse,Standard,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.029032,0.503361,frontier,16384,coarse,Ready Send,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.0325299,0.508407,frontier,16384,fine,Ready Send,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0371861,0.515659,frontier,16384,fine,Standard,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0314446,0.510321,frontier,16384,coarse,Standard,1000
+2,8,Cray-MPICH-CXI-GPU-Enabled,0.0143106,0.53505,frontier,16384,coarse,Standard,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.0280386,5.56487,frontier,61440,coarse,Ready Send,1000
+2,8,MPIAdvance-CXI-Double-Buffering2,0.0303002,5.54741,frontier,61440,fine,Ready Send,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0351045,5.67704,frontier,61440,fine,Standard,1000
+2,8,MPIAdvance-CXI-Single-Buffering2,0.0344543,5.65556,frontier,61440,coarse,Standard,1000
+2,8,Cray-MPICH-CXI-GPU-Enabled,0.015723,5.61766,frontier,61440,coarse,Standard,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0266765,1.58125,frontier,16384,coarse,Ready Send,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0146361,1.5854,frontier,16384,fine,Ready Send,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.0175952,1.59086,frontier,16384,fine,Standard,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.0169591,1.58777,frontier,16384,coarse,Standard,1000
+4,1,Cray-MPICH-CXI-GPU-Enabled,0.0033065,1.59083,frontier,16384,coarse,Standard,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0152663,21.6765,frontier,61440,coarse,Ready Send,1000
+4,1,MPIAdvance-CXI-Double-Buffering2,0.0269166,21.6845,frontier,61440,fine,Ready Send,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.0183414,21.8515,frontier,61440,fine,Standard,1000
+4,1,MPIAdvance-CXI-Single-Buffering2,0.025634,21.892,frontier,61440,coarse,Standard,1000
+4,1,Cray-MPICH-CXI-GPU-Enabled,0.00586958,21.7599,frontier,61440,coarse,Standard,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.0202845,0.862315,frontier,16384,coarse,Ready Send,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.0178038,0.865994,frontier,16384,fine,Ready Send,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.0196674,0.86977,frontier,16384,fine,Standard,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.0211158,0.864997,frontier,16384,coarse,Standard,1000
+4,2,Cray-MPICH-CXI-GPU-Enabled,0.00658264,0.878001,frontier,16384,coarse,Standard,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.0180273,10.6854,frontier,61440,coarse,Ready Send,1000
+4,2,MPIAdvance-CXI-Double-Buffering2,0.01786,10.6765,frontier,61440,fine,Ready Send,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.0247744,10.7989,frontier,61440,fine,Standard,1000
+4,2,MPIAdvance-CXI-Single-Buffering2,0.0225094,10.7943,frontier,61440,coarse,Standard,1000
+4,2,Cray-MPICH-CXI-GPU-Enabled,0.00550271,10.6289,frontier,61440,coarse,Standard,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0205841,0.503833,frontier,16384,coarse,Ready Send,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0181247,0.508227,frontier,16384,fine,Ready Send,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.0269919,0.514789,frontier,16384,fine,Standard,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.0241224,0.510036,frontier,16384,coarse,Standard,1000
+4,4,Cray-MPICH-CXI-GPU-Enabled,0.00373937,0.533074,frontier,16384,coarse,Standard,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0209391,5.45659,frontier,61440,coarse,Ready Send,1000
+4,4,MPIAdvance-CXI-Double-Buffering2,0.0183255,5.4691,frontier,61440,fine,Ready Send,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.0242961,5.52706,frontier,61440,fine,Standard,1000
+4,4,MPIAdvance-CXI-Single-Buffering2,0.0220519,5.55961,frontier,61440,coarse,Standard,1000
+4,4,Cray-MPICH-CXI-GPU-Enabled,0.00460564,5.53614,frontier,61440,coarse,Standard,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.0276782,0.31244,frontier,16384,coarse,Ready Send,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.0245545,0.317626,frontier,16384,fine,Ready Send,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.0301095,0.328379,frontier,16384,fine,Standard,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.0330561,0.32222,frontier,16384,coarse,Standard,1000
+4,8,Cray-MPICH-CXI-GPU-Enabled,0.0136533,0.344115,frontier,16384,coarse,Standard,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.0313073,2.67727,frontier,61440,coarse,Ready Send,1000
+4,8,MPIAdvance-CXI-Double-Buffering2,0.0224246,2.68055,frontier,61440,fine,Ready Send,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.0381603,2.6842,frontier,61440,fine,Standard,1000
+4,8,MPIAdvance-CXI-Single-Buffering2,0.0350934,2.68052,frontier,61440,coarse,Standard,1000
+4,8,Cray-MPICH-CXI-GPU-Enabled,0.0150785,2.69165,frontier,61440,coarse,Standard,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.34577,0.858701,frontier,16384,coarse,Ready Send,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.0146114,0.863958,frontier,16384,fine,Ready Send,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0237815,0.874155,frontier,16384,fine,Standard,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0198517,0.868292,frontier,16384,coarse,Standard,1000
+8,1,Cray-MPICH-CXI-GPU-Enabled,0.00311342,0.86976,frontier,16384,coarse,Standard,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.0159233,10.8168,frontier,61440,coarse,Ready Send,1000
+8,1,MPIAdvance-CXI-Double-Buffering2,0.0169062,10.8048,frontier,61440,fine,Ready Send,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0199835,10.9948,frontier,61440,fine,Standard,1000
+8,1,MPIAdvance-CXI-Single-Buffering2,0.0203975,11.0021,frontier,61440,coarse,Standard,1000
+8,1,Cray-MPICH-CXI-GPU-Enabled,0.0075264,10.8798,frontier,61440,coarse,Standard,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.0201338,0.503885,frontier,16384,coarse,Ready Send,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.0182373,0.508801,frontier,16384,fine,Ready Send,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0208422,0.515912,frontier,16384,fine,Standard,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0207564,0.510135,frontier,16384,coarse,Standard,1000
+8,2,Cray-MPICH-CXI-GPU-Enabled,0.00490882,0.525379,frontier,16384,coarse,Standard,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.0189629,5.57302,frontier,61440,coarse,Ready Send,1000
+8,2,MPIAdvance-CXI-Double-Buffering2,0.0170092,5.59036,frontier,61440,fine,Ready Send,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0225674,5.68925,frontier,61440,fine,Standard,1000
+8,2,MPIAdvance-CXI-Single-Buffering2,0.0221213,5.66861,frontier,61440,coarse,Standard,1000
+8,2,Cray-MPICH-CXI-GPU-Enabled,0.00726008,5.53518,frontier,61440,coarse,Standard,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.0226478,0.311992,frontier,16384,coarse,Ready Send,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.0201675,0.317712,frontier,16384,fine,Ready Send,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.0230294,0.328856,frontier,16384,fine,Standard,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.0243855,0.32191,frontier,16384,coarse,Standard,1000
+8,4,Cray-MPICH-CXI-GPU-Enabled,0.00858857,0.337514,frontier,16384,coarse,Standard,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.0298236,2.67694,frontier,61440,coarse,Ready Send,1000
+8,4,MPIAdvance-CXI-Double-Buffering2,0.0219934,2.67946,frontier,61440,fine,Ready Send,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.0218054,2.6824,frontier,61440,fine,Standard,1000
+8,4,MPIAdvance-CXI-Single-Buffering2,0.0255446,2.67844,frontier,61440,coarse,Standard,1000
+8,4,Cray-MPICH-CXI-GPU-Enabled,0.0100203,2.69002,frontier,61440,coarse,Standard,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.0295639,0.220981,frontier,16384,coarse,Ready Send,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.0296228,0.225699,frontier,16384,fine,Ready Send,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.0380017,0.238164,frontier,16384,fine,Standard,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.0360544,0.232437,frontier,16384,coarse,Standard,1000
+8,8,Cray-MPICH-CXI-GPU-Enabled,0.0130419,0.25604,frontier,16384,coarse,Standard,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.0376092,1.4241,frontier,61440,coarse,Ready Send,1000
+8,8,MPIAdvance-CXI-Double-Buffering2,0.0313973,1.42473,frontier,61440,fine,Ready Send,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.0333045,1.42893,frontier,61440,fine,Standard,1000
+8,8,MPIAdvance-CXI-Single-Buffering2,0.0328245,1.42775,frontier,61440,coarse,Standard,1000
+8,8,Cray-MPICH-CXI-GPU-Enabled,0.0215297,1.45137,frontier,61440,coarse,Standard,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.0384342,0.499666,frontier,16384,coarse,Ready Send,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.0152293,0.50491,frontier,16384,fine,Ready Send,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0205898,0.516505,frontier,16384,fine,Standard,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0196117,0.511793,frontier,16384,coarse,Standard,1000
+16,1,Cray-MPICH-CXI-GPU-Enabled,0.00450897,0.511518,frontier,16384,coarse,Standard,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.0156412,5.59889,frontier,61440,coarse,Ready Send,1000
+16,1,MPIAdvance-CXI-Double-Buffering2,0.0168991,5.56624,frontier,61440,fine,Ready Send,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0189479,5.71944,frontier,61440,fine,Standard,1000
+16,1,MPIAdvance-CXI-Single-Buffering2,0.0206436,5.70987,frontier,61440,coarse,Standard,1000
+16,1,Cray-MPICH-CXI-GPU-Enabled,0.00620824,5.64835,frontier,61440,coarse,Standard,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0210999,0.311781,frontier,16384,coarse,Ready Send,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0177118,0.317693,frontier,16384,fine,Ready Send,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0203191,0.328166,frontier,16384,fine,Standard,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0217477,0.321819,frontier,16384,coarse,Standard,1000
+16,2,Cray-MPICH-CXI-GPU-Enabled,0.00773629,0.335556,frontier,16384,coarse,Standard,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0186269,2.67626,frontier,61440,coarse,Ready Send,1000
+16,2,MPIAdvance-CXI-Double-Buffering2,0.0182828,2.67909,frontier,61440,fine,Ready Send,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0228895,2.68158,frontier,61440,fine,Standard,1000
+16,2,MPIAdvance-CXI-Single-Buffering2,0.0220831,2.67806,frontier,61440,coarse,Standard,1000
+16,2,Cray-MPICH-CXI-GPU-Enabled,0.00835349,2.68964,frontier,61440,coarse,Standard,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.0241004,0.221197,frontier,16384,coarse,Ready Send,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.0190734,0.226027,frontier,16384,fine,Ready Send,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.0232807,0.238222,frontier,16384,fine,Standard,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.0244083,0.232873,frontier,16384,coarse,Standard,1000
+16,4,Cray-MPICH-CXI-GPU-Enabled,0.00735268,0.252947,frontier,16384,coarse,Standard,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.0201596,1.42549,frontier,61440,coarse,Ready Send,1000
+16,4,MPIAdvance-CXI-Double-Buffering2,0.0236777,1.42648,frontier,61440,fine,Ready Send,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.0269514,1.43005,frontier,61440,fine,Standard,1000
+16,4,MPIAdvance-CXI-Single-Buffering2,0.0247037,1.42878,frontier,61440,coarse,Standard,1000
+16,4,Cray-MPICH-CXI-GPU-Enabled,0.00502959,1.44651,frontier,61440,coarse,Standard,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.0343989,0.168827,frontier,16384,coarse,Ready Send,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.034355,0.178385,frontier,16384,fine,Ready Send,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0315918,0.190719,frontier,16384,fine,Standard,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0388189,0.182528,frontier,16384,coarse,Standard,1000
+16,8,Cray-MPICH-CXI-GPU-Enabled,0.0186898,0.205411,frontier,16384,coarse,Standard,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.0493989,0.783667,frontier,61440,coarse,Ready Send,1000
+16,8,MPIAdvance-CXI-Double-Buffering2,0.0373869,0.785267,frontier,61440,fine,Ready Send,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0406295,0.790614,frontier,61440,fine,Standard,1000
+16,8,MPIAdvance-CXI-Single-Buffering2,0.0351781,0.787235,frontier,61440,coarse,Standard,1000
+16,8,Cray-MPICH-CXI-GPU-Enabled,0.0151119,0.815038,frontier,61440,coarse,Standard,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.0966339,0.31068,frontier,16384,coarse,Ready Send,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.0155327,0.316317,frontier,16384,fine,Ready Send,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.0200988,0.33086,frontier,16384,fine,Standard,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.018046,0.325079,frontier,16384,coarse,Standard,1000
+32,1,Cray-MPICH-CXI-GPU-Enabled,0.00502635,0.329485,frontier,16384,coarse,Standard,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.0161734,2.66848,frontier,61440,coarse,Ready Send,1000
+32,1,MPIAdvance-CXI-Double-Buffering2,0.0146199,2.67269,frontier,61440,fine,Ready Send,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.0187308,2.67681,frontier,61440,fine,Standard,1000
+32,1,MPIAdvance-CXI-Single-Buffering2,0.0211607,2.67312,frontier,61440,coarse,Standard,1000
+32,1,Cray-MPICH-CXI-GPU-Enabled,0.00533796,2.68853,frontier,61440,coarse,Standard,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.0221639,0.222015,frontier,16384,coarse,Ready Send,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.0203654,0.226902,frontier,16384,fine,Ready Send,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.0247267,0.236757,frontier,16384,fine,Standard,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.0261519,0.232378,frontier,16384,coarse,Standard,1000
+32,2,Cray-MPICH-CXI-GPU-Enabled,0.00771289,0.243792,frontier,16384,coarse,Standard,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.0199922,1.42489,frontier,61440,coarse,Ready Send,1000
+32,2,MPIAdvance-CXI-Double-Buffering2,0.022744,1.42568,frontier,61440,fine,Ready Send,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.0258718,1.42867,frontier,61440,fine,Standard,1000
+32,2,MPIAdvance-CXI-Single-Buffering2,0.0261033,1.42744,frontier,61440,coarse,Standard,1000
+32,2,Cray-MPICH-CXI-GPU-Enabled,0.00619541,1.43655,frontier,61440,coarse,Standard,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.0278355,0.16961,frontier,16384,coarse,Ready Send,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.0213121,0.179527,frontier,16384,fine,Ready Send,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.0225274,0.190885,frontier,16384,fine,Standard,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.0248761,0.186811,frontier,16384,coarse,Standard,1000
+32,4,Cray-MPICH-CXI-GPU-Enabled,0.010978,0.200049,frontier,16384,coarse,Standard,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.022544,0.783983,frontier,61440,coarse,Ready Send,1000
+32,4,MPIAdvance-CXI-Double-Buffering2,0.0239684,0.785641,frontier,61440,fine,Ready Send,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.0254485,0.790021,frontier,61440,fine,Standard,1000
+32,4,MPIAdvance-CXI-Single-Buffering2,0.0288266,0.787034,frontier,61440,coarse,Standard,1000
+32,4,Cray-MPICH-CXI-GPU-Enabled,0.0106024,0.805267,frontier,61440,coarse,Standard,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.0361471,0.145807,frontier,16384,coarse,Ready Send,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.0266141,0.150334,frontier,16384,fine,Ready Send,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.0281455,0.174577,frontier,16384,fine,Standard,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.0436475,0.176492,frontier,16384,coarse,Standard,1000
+32,8,Cray-MPICH-CXI-GPU-Enabled,0.00951411,0.186475,frontier,16384,coarse,Standard,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.0372327,0.466947,frontier,61440,coarse,Ready Send,1000
+32,8,MPIAdvance-CXI-Double-Buffering2,0.025479,0.4695,frontier,61440,fine,Ready Send,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.0399405,0.478143,frontier,61440,fine,Standard,1000
+32,8,MPIAdvance-CXI-Single-Buffering2,0.0391787,0.47438,frontier,61440,coarse,Standard,1000
+32,8,Cray-MPICH-CXI-GPU-Enabled,0.0107328,0.500011,frontier,61440,coarse,Standard,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.0743562,0.221154,frontier,16384,coarse,Ready Send,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.0208399,0.225667,frontier,16384,fine,Ready Send,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.0235741,0.239147,frontier,16384,fine,Standard,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.0276333,0.234815,frontier,16384,coarse,Standard,1000
+64,1,Cray-MPICH-CXI-GPU-Enabled,0.0078528,0.231707,frontier,16384,coarse,Standard,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.020655,1.41999,frontier,61440,coarse,Ready Send,1000
+64,1,MPIAdvance-CXI-Double-Buffering2,0.020312,1.42101,frontier,61440,fine,Ready Send,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.0242812,1.42941,frontier,61440,fine,Standard,1000
+64,1,MPIAdvance-CXI-Single-Buffering2,0.0202873,1.42815,frontier,61440,coarse,Standard,1000
+64,1,Cray-MPICH-CXI-GPU-Enabled,0.0120748,1.43634,frontier,61440,coarse,Standard,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.0366924,0.169821,frontier,16384,coarse,Ready Send,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.0226651,0.179668,frontier,16384,fine,Ready Send,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.0259397,0.190825,frontier,16384,fine,Standard,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.0249796,0.180468,frontier,16384,coarse,Standard,1000
+64,2,Cray-MPICH-CXI-GPU-Enabled,0.00793667,0.194755,frontier,16384,coarse,Standard,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.0226477,0.784114,frontier,61440,coarse,Ready Send,1000
+64,2,MPIAdvance-CXI-Double-Buffering2,0.0202312,0.785898,frontier,61440,fine,Ready Send,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.027608,0.790158,frontier,61440,fine,Standard,1000
+64,2,MPIAdvance-CXI-Single-Buffering2,0.0264636,0.787184,frontier,61440,coarse,Standard,1000
+64,2,Cray-MPICH-CXI-GPU-Enabled,0.0132024,0.833769,frontier,61440,coarse,Standard,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.030966,0.144312,frontier,16384,coarse,Ready Send,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.0288932,0.150508,frontier,16384,fine,Ready Send,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.0330296,0.164868,frontier,16384,fine,Standard,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.0322528,0.163404,frontier,16384,coarse,Standard,1000
+64,4,Cray-MPICH-CXI-GPU-Enabled,0.00948407,0.180395,frontier,16384,coarse,Standard,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.0289249,0.467193,frontier,61440,coarse,Ready Send,1000
+64,4,MPIAdvance-CXI-Double-Buffering2,0.0300122,0.469693,frontier,61440,fine,Ready Send,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.0332146,0.478131,frontier,61440,fine,Standard,1000
+64,4,MPIAdvance-CXI-Single-Buffering2,0.0356096,0.475027,frontier,61440,coarse,Standard,1000
+64,4,Cray-MPICH-CXI-GPU-Enabled,0.0105284,0.509975,frontier,61440,coarse,Standard,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.0405261,0.143092,frontier,16384,coarse,Ready Send,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.0393956,0.140404,frontier,16384,fine,Ready Send,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.038941,0.172512,frontier,16384,fine,Standard,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.0526853,0.175162,frontier,16384,coarse,Standard,1000
+64,8,Cray-MPICH-CXI-GPU-Enabled,0.0211418,0.159138,frontier,16384,coarse,Standard,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.0430982,0.299379,frontier,61440,coarse,Ready Send,1000
+64,8,MPIAdvance-CXI-Double-Buffering2,0.0350676,0.301356,frontier,61440,fine,Ready Send,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.0490323,0.310345,frontier,61440,fine,Standard,1000
+64,8,MPIAdvance-CXI-Single-Buffering2,0.0361631,0.30869,frontier,61440,coarse,Standard,1000
+64,8,Cray-MPICH-CXI-GPU-Enabled,0.0219435,0.335862,frontier,61440,coarse,Standard,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.2784,0.167856,frontier,16384,coarse,Ready Send,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.0198489,0.177953,frontier,16384,fine,Ready Send,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.0234704,0.192924,frontier,16384,fine,Standard,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.0235824,0.183012,frontier,16384,coarse,Standard,1000
+128,1,Cray-MPICH-CXI-GPU-Enabled,0.00829914,0.180838,frontier,16384,coarse,Standard,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.0204251,0.779273,frontier,61440,coarse,Ready Send,1000
+128,1,MPIAdvance-CXI-Double-Buffering2,0.0207724,0.781858,frontier,61440,fine,Ready Send,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.0258955,0.792797,frontier,61440,fine,Standard,1000
+128,1,MPIAdvance-CXI-Single-Buffering2,0.0241765,0.789764,frontier,61440,coarse,Standard,1000
+128,1,Cray-MPICH-CXI-GPU-Enabled,0.00850674,0.795663,frontier,61440,coarse,Standard,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.023386,0.143753,frontier,16384,coarse,Ready Send,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.0213732,0.150693,frontier,16384,fine,Ready Send,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.0237343,0.162874,frontier,16384,fine,Standard,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.0277841,0.160513,frontier,16384,coarse,Standard,1000
+128,2,Cray-MPICH-CXI-GPU-Enabled,0.00783562,0.170807,frontier,16384,coarse,Standard,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.0228036,0.46744,frontier,61440,coarse,Ready Send,1000
+128,2,MPIAdvance-CXI-Double-Buffering2,0.0222013,0.469904,frontier,61440,fine,Ready Send,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.0263074,0.477662,frontier,61440,fine,Standard,1000
+128,2,MPIAdvance-CXI-Single-Buffering2,0.0273545,0.47505,frontier,61440,coarse,Standard,1000
+128,2,Cray-MPICH-CXI-GPU-Enabled,0.00832559,0.48587,frontier,61440,coarse,Standard,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.0280928,0.131964,frontier,16384,coarse,Ready Send,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.0272674,0.135393,frontier,16384,fine,Ready Send,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.030282,0.15912,frontier,16384,fine,Standard,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.0318563,0.161397,frontier,16384,coarse,Standard,1000
+128,4,Cray-MPICH-CXI-GPU-Enabled,0.0106826,0.162591,frontier,16384,coarse,Standard,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.0304797,0.299697,frontier,61440,coarse,Ready Send,1000
+128,4,MPIAdvance-CXI-Double-Buffering2,0.0282204,0.300328,frontier,61440,fine,Ready Send,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.030272,0.310702,frontier,61440,fine,Standard,1000
+128,4,MPIAdvance-CXI-Single-Buffering2,0.0341603,0.30852,frontier,61440,coarse,Standard,1000
+128,4,Cray-MPICH-CXI-GPU-Enabled,0.00885217,0.328267,frontier,61440,coarse,Standard,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.0547146,0.14284,frontier,16384,coarse,Ready Send,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.0243644,0.138715,frontier,16384,fine,Ready Send,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.0373469,0.172121,frontier,16384,fine,Standard,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.0371892,0.175703,frontier,16384,coarse,Standard,1000
+128,8,Cray-MPICH-CXI-GPU-Enabled,0.0161125,0.136225,frontier,16384,coarse,Standard,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.0263802,0.217252,frontier,61440,coarse,Ready Send,1000
+128,8,MPIAdvance-CXI-Double-Buffering2,0.0426595,0.221206,frontier,61440,fine,Ready Send,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.0389885,0.232484,frontier,61440,fine,Standard,1000
+128,8,MPIAdvance-CXI-Single-Buffering2,0.0354208,0.227989,frontier,61440,coarse,Standard,1000
+128,8,Cray-MPICH-CXI-GPU-Enabled,0.0103105,0.261504,frontier,61440,coarse,Standard,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.319358,0.142803,frontier,16384,coarse,Ready Send,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.0187178,0.14909,frontier,16384,fine,Ready Send,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.0216501,0.164854,frontier,16384,fine,Standard,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.0231332,0.159988,frontier,16384,coarse,Standard,1000
+256,1,Cray-MPICH-CXI-GPU-Enabled,0.00800063,0.157522,frontier,16384,coarse,Standard,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.0196056,0.463922,frontier,61440,coarse,Ready Send,1000
+256,1,MPIAdvance-CXI-Double-Buffering2,0.0198358,0.466746,frontier,61440,fine,Ready Send,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.0229399,0.479656,frontier,61440,fine,Standard,1000
+256,1,MPIAdvance-CXI-Single-Buffering2,0.0228197,0.476174,frontier,61440,coarse,Standard,1000
+256,1,Cray-MPICH-CXI-GPU-Enabled,0.00790469,0.481233,frontier,61440,coarse,Standard,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.0233587,0.129512,frontier,16384,coarse,Ready Send,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.0201661,0.135504,frontier,16384,fine,Ready Send,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.0264926,0.153093,frontier,16384,fine,Standard,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.027575,0.154077,frontier,16384,coarse,Standard,1000
+256,2,Cray-MPICH-CXI-GPU-Enabled,0.012388,0.158713,frontier,16384,coarse,Standard,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.0214629,0.299728,frontier,61440,coarse,Ready Send,1000
+256,2,MPIAdvance-CXI-Double-Buffering2,0.0226047,0.300542,frontier,61440,fine,Ready Send,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.0273678,0.310838,frontier,61440,fine,Standard,1000
+256,2,MPIAdvance-CXI-Single-Buffering2,0.0285053,0.308334,frontier,61440,coarse,Standard,1000
+256,2,Cray-MPICH-CXI-GPU-Enabled,0.00795529,0.318886,frontier,61440,coarse,Standard,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.0322248,0.130961,frontier,16384,coarse,Ready Send,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.0316223,0.127687,frontier,16384,fine,Ready Send,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0299078,0.15772,frontier,16384,fine,Standard,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0327454,0.160527,frontier,16384,coarse,Standard,1000
+256,4,Cray-MPICH-CXI-GPU-Enabled,0.0116614,0.134203,frontier,16384,coarse,Standard,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.0303174,0.217938,frontier,61440,coarse,Ready Send,1000
+256,4,MPIAdvance-CXI-Double-Buffering2,0.03419,0.221624,frontier,61440,fine,Ready Send,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0317334,0.232762,frontier,61440,fine,Standard,1000
+256,4,MPIAdvance-CXI-Single-Buffering2,0.0365547,0.228361,frontier,61440,coarse,Standard,1000
+256,4,Cray-MPICH-CXI-GPU-Enabled,0.0117594,0.250056,frontier,61440,coarse,Standard,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.0395925,0.142801,frontier,16384,coarse,Ready Send,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.0386462,0.139411,frontier,16384,fine,Ready Send,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.0504882,0.172476,frontier,16384,fine,Standard,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.0498781,0.175383,frontier,16384,coarse,Standard,1000
+256,8,Cray-MPICH-CXI-GPU-Enabled,0.0183503,0.141152,frontier,16384,coarse,Standard,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.0536859,0.161379,frontier,61440,coarse,Ready Send,1000
+256,8,MPIAdvance-CXI-Double-Buffering2,0.0403522,0.16792,frontier,61440,fine,Ready Send,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.0409163,0.181302,frontier,61440,fine,Standard,1000
+256,8,MPIAdvance-CXI-Single-Buffering2,0.065657,0.179587,frontier,61440,coarse,Standard,1000
+256,8,Cray-MPICH-CXI-GPU-Enabled,0.0227119,0.214505,frontier,61440,coarse,Standard,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,0.516886,0.12442,frontier,16384,coarse,Ready Send,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,0.01863,0.134692,frontier,16384,fine,Ready Send,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,0.0230675,0.152944,frontier,16384,fine,Standard,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,0.0229651,0.155021,frontier,16384,coarse,Standard,1000
+512,1,Cray-MPICH-CXI-GPU-Enabled,0.00682853,0.143194,frontier,16384,coarse,Standard,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,0.0224064,0.29739,frontier,61440,coarse,Ready Send,1000
+512,1,MPIAdvance-CXI-Double-Buffering2,0.0222643,0.300181,frontier,61440,fine,Ready Send,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,0.0235033,0.313052,frontier,61440,fine,Standard,1000
+512,1,MPIAdvance-CXI-Single-Buffering2,0.0239387,0.310493,frontier,61440,coarse,Standard,1000
+512,1,Cray-MPICH-CXI-GPU-Enabled,0.00941262,0.315381,frontier,61440,coarse,Standard,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,0.0271701,0.123207,frontier,16384,coarse,Ready Send,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,0.0248847,0.12065,frontier,16384,fine,Ready Send,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,0.0309877,0.149499,frontier,16384,fine,Standard,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,0.0294325,0.155258,frontier,16384,coarse,Standard,1000
+512,2,Cray-MPICH-CXI-GPU-Enabled,0.00989987,0.129121,frontier,16384,coarse,Standard,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,0.0261522,0.217541,frontier,61440,coarse,Ready Send,1000
+512,2,MPIAdvance-CXI-Double-Buffering2,0.0253373,0.221389,frontier,61440,fine,Ready Send,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,0.02829,0.231898,frontier,61440,fine,Standard,1000
+512,2,MPIAdvance-CXI-Single-Buffering2,0.0279773,0.227445,frontier,61440,coarse,Standard,1000
+512,2,Cray-MPICH-CXI-GPU-Enabled,0.0138889,0.237712,frontier,61440,coarse,Standard,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,0.0383257,0.13112,frontier,16384,coarse,Ready Send,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,0.0293387,0.127753,frontier,16384,fine,Ready Send,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,0.0439109,0.157777,frontier,16384,fine,Standard,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,0.0427673,0.160596,frontier,16384,coarse,Standard,1000
+512,4,Cray-MPICH-CXI-GPU-Enabled,0.0187835,0.140977,frontier,16384,coarse,Standard,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,0.0416922,0.161315,frontier,61440,coarse,Ready Send,1000
+512,4,MPIAdvance-CXI-Double-Buffering2,0.0341966,0.167737,frontier,61440,fine,Ready Send,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,0.0360696,0.180765,frontier,61440,fine,Standard,1000
+512,4,MPIAdvance-CXI-Single-Buffering2,0.0459722,0.172001,frontier,61440,coarse,Standard,1000
+512,4,Cray-MPICH-CXI-GPU-Enabled,0.0253133,0.200361,frontier,61440,coarse,Standard,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,0.0798067,0.141881,frontier,16384,coarse,Ready Send,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,0.073385,0.138877,frontier,16384,fine,Ready Send,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,0.0736177,0.17263,frontier,16384,fine,Standard,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,0.0691337,0.175111,frontier,16384,coarse,Standard,1000
+512,8,Cray-MPICH-CXI-GPU-Enabled,0.0412265,0.12967,frontier,16384,coarse,Standard,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,0.0771663,0.143984,frontier,61440,coarse,Ready Send,1000
+512,8,MPIAdvance-CXI-Double-Buffering2,0.0778157,0.144506,frontier,61440,fine,Ready Send,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,0.0504517,0.174317,frontier,61440,fine,Standard,1000
+512,8,MPIAdvance-CXI-Single-Buffering2,0.070275,0.176408,frontier,61440,coarse,Standard,1000
+512,8,Cray-MPICH-CXI-GPU-Enabled,0.0392459,0.191059,frontier,61440,coarse,Standard,1000
