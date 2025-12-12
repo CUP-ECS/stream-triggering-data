@@ -241,21 +241,27 @@ make_runtime_plot(data=speedupdata, x="Ranks", yscale="log", breakdown="System")
 ## Now that we have that, focus on speedup, efficiency and percent improvement
 ## broken down by Problem Size. For speedup, we use both log and linear scales
 ## so that we can see magnitude of difference at scale (linear) and detilas of
-## tradeoffs on the small problems.
-make_speedup_plot(data=speedupdata, x="Ranks", yscale="log", breakdown="System")
-make_speedup_plot(data=speedupdata, x="Ranks", yscale="linear", breakdown="System")
-make_percent_plot(data=speedupdata, x='Ranks', breakdown="System")
-make_efficiency_plot(data=speedupdata, x='Ranks', breakdown="System")
+## tradeoffs on the small problems. We start with Frontier since it has the most
+## stable data right now.
+make_speedup_plot(data=frontierdata, x="Ranks", yscale="log", breakdown="", extra="-Frontier")
+make_speedup_plot(data=frontierdata, x="Ranks", yscale="linear", breakdown="", extra="-Frontier")
+make_percent_plot(data=frontierdata, x='Ranks', breakdown="", extra="-Frontier")
+make_efficiency_plot(data=frontierdata, x='Ranks', breakdown="", extra="-Frontier")
+
+## Next, tuolumne
+make_speedup_plot(data=tuodata, x="Ranks", yscale="log", breakdown="", extra="-Tuolumne")
+make_speedup_plot(data=tuodata, x="Ranks", yscale="linear", breakdown="", extra="-Tuolumne")
+make_percent_plot(data=tuodata, x='Ranks', breakdown="", extra="-Tuolumne")
+make_efficiency_plot(data=tuodata, x='Ranks', breakdown="", extra="-Frontier")
 
 ## On tuolumne (but not Frontier), the speedup for Cray MPICH is highly dependent on PPN 
 ## Break these down separately by system since they have different PPNs they can support
 
 ### First Tuolumne
-trimmeddata = tuodata[tuodata['PPN'].isin([1,2,4])]
-make_speedup_plot(data=trimmeddata, x="Ranks", yscale="log", breakdown="PPN", extra="-Tuolumne")
-make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", breakdown="PPN", extra="-Tuolumne")
-make_percent_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
-make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
+make_speedup_plot(data=tuodata, x="Ranks", yscale="log", breakdown="PPN", extra="-Tuolumne")
+make_speedup_plot(data=tuodata, x="Ranks", yscale="linear", breakdown="PPN", extra="-Tuolumne")
+make_percent_plot(data=tuodata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
+make_efficiency_plot(data=tuodata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
 
 ### Then Frontier - Due to space limits, we don't include this data. We simply state
 ### in the text that there's no difference.
