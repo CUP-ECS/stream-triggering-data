@@ -158,6 +158,8 @@ pivot_df = pd.pivot_table(df,
                      values = ["Solve Time"],
                      aggfunc = ["min", "mean", "std"])
 pivot_df.columns = pivot_df.columns.droplevel(1)
+print("Summary of basic statistics")
+print(pivot_df)
 
 ### Now compute the speedup, parallel efficiency with the baseline as the best runtime 
 ### from an execution on the smallest number of ranks in the data set for a given problem 
@@ -303,7 +305,7 @@ startup_plot.set_titles("Startup Time for 2GB Problem Size on {col_name}")
 #startup_plot.set(ylim=(0.01, 1.05))
 plt.xscale('log', base=2)
 #plt.yscale('log', base=2)
-plt.savefig("startup-size.png")
+plt.savefig("Startup-Ranks-System-linear.png")
 plt.close()
 
 # Abandoned analyses below.
