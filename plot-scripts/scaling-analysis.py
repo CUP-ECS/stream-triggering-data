@@ -16,7 +16,7 @@ palette = {
 }
 
 system_order = ["Frontier", "Tuolumne"]
-full_backend_order = ["Cray MPICH Send", "MPI Advance RSend", "MPI Advance RSSend", "MPI Advance Send", "MPI Advance SSend"]
+full_backend_order = ["Cray MPICH Send", "MPI Advance RSend", "MPI Advance Send"]
 
 def setup_kargs_and_title(k, breakdown, hue, style):
     k["palette"] = palette
@@ -250,18 +250,19 @@ make_efficiency_plot(data=speedupdata, x='Ranks', breakdown="System")
 ## Break these down separately by system since they have different PPNs they can support
 
 ### First Tuolumne
-trimmeddata = tuodata[tuodata['PPN'].isin([2,4])]
+trimmeddata = tuodata[tuodata['PPN'].isin([1,2,4])]
 make_speedup_plot(data=trimmeddata, x="Ranks", yscale="log", breakdown="PPN", extra="-Tuolumne")
 make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", breakdown="PPN", extra="-Tuolumne")
 make_percent_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
 make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
 
-### Then Frontier
-trimmeddata = frontierdata[frontierdata['PPN'].isin([4,8])]
-make_speedup_plot(data=trimmeddata, x="Ranks", yscale="log", breakdown="PPN", extra="-Frontier")
-make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", breakdown="PPN", extra="-Frontier")
-make_percent_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Frontier")
-make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Frontier")
+### Then Frontier - Due to space limits, we don't include this data. We simply state
+### in the text that there's no difference.
+#trimmeddata = frontierdata[frontierdata['PPN'].isin([4,8])]
+#make_speedup_plot(data=trimmeddata, x="Ranks", yscale="log", breakdown="PPN", extra="-Frontier")
+#make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", breakdown="PPN", extra="-Frontier")
+#make_percent_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Frontier")
+#make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Frontier")
 
 ## To understand where the performance impacts are most significant, 
 ## we look at percent improvement by edge length, limited to Frontier 
