@@ -9,8 +9,8 @@ import glob
 
 palette = {
     'Cray MPICH Send': 'tab:green',
-    'MPI Advance RSend': 'tab:red',
-    'MPI Advance RSSend': 'tab:orange',
+    'MPI Advance RSend': 'tab:orange',
+    'MPI Advance RSSend': 'tab:red',
     'MPI Advance Send': 'tab:blue',
     'MPI Advance SSend': 'tab:purple'
 }
@@ -85,7 +85,8 @@ def make_percent_plot(data, x, breakdown, y="Speedup", style="Problem Size (GB)"
         "MPI Advance Send"]) ]
     kargs = {}
     title = setup_kargs_and_title(kargs, breakdown, "Backend", style)
-        
+    kargs["hue_order"] = ["MPI Advance RSend", "MPI Advance Send"]
+   
     percent_plot = sbn.relplot(data=mpiadvancedata, kind="line", x=x, 
                                y=f"Percent {y} Improvement",
                                errorbar=("ci", 95),
@@ -178,11 +179,11 @@ print("Summary of basic speedups")
 print(speedup_df)
 
 def relative_speedup_func(row):
-    base_speedup = speedup_df.loc[row['System'], row['Problem Size (GB)'], row['Nodes'], row['Ranks'], "Cray MPICH Send"]["max"]
+    base_speedup = speedup_df.loc[row['System'], row['Problem Size (GB)'], row['Nodes'], row['Ranks'], "Cray MPICH Send"]["mean"]
     return 100 * (row['Speedup'] - base_speedup) / base_speedup
 
 def relative_efficiency_func(row):
-    base_efficiency = speedup_df.loc[row['System'], row['Problem Size (GB)'], row['Nodes'], row['Ranks'], "Cray MPICH Send"]["max"] / row['Ranks']
+    base_efficiency = speedup_df.loc[row['System'], row['Problem Size (GB)'], row['Nodes'], row['Ranks'], "Cray MPICH Send"]["mean"] / row['Ranks']
     return 100 * (row['Efficiency'] - base_efficiency) / base_efficiency
 
 df['Percent Speedup Improvement'] = df.apply(relative_speedup_func, axis=1)
@@ -266,11 +267,19 @@ make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Tuolu
 
 ## To understand where the performance impacts are most significant, 
 ## we look at percent improvement by edge length, limited to Frontier 
-## data where the data is most stable. This shows that the main advantage
-## is on mid-sized messages. For largemewssages, both systems are bandwidth-bound.
-## For small messages, Cray can leverage unexpected message hardware that
-## our GPU implementation does not.
+## data where the data is most stable and the 1-2 PPN runs on Tuolumne. 
+## This shows that the main advantage is on mid-sized messages. For 
+## largemewssages, both systems are bandwidth-bound. For small messages, 
+## Cray can leverage unexpected message hardware that our GPU implementation 
+## does not. We generate both the graph of both and hte graph of just the 
+## Frontier data since its not clear which we want in the paper.
+trimmeddata = speedupdata[ (speedupdata["System"].isin(["Tuolumne"]) & speedupdata['PPN'].isin([1,2]) )
+    | speedupdata["System"].isin(["Frontier"]) ]
+
+make_percent_plot(data=trimmeddata, x='Edge Length', breakdown="System")
 make_percent_plot(data=frontierdata, x='Edge Length', breakdown="", extra="-Frontier")
+trimmeddata = speedupdata[ (speedupdata["System"].isin(["Tuolumne"]) & speedupdata['PPN'].isin([1,2]) )]
+make_percent_plot(data=trimmeddata, x='Edge Length', breakdown="", extra="-Tuolumne")
 
 ## Finally, look at the startup time for the different systems
 startupdata=df[  df['Backend'].isin([
