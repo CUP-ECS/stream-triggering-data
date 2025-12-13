@@ -9,14 +9,14 @@ import glob
 
 palette = {
     'Cray MPICH Send': 'tab:green',
-    'MPI Advance RSend': 'tab:orange',
-    'MPI Advance RSSend': 'tab:red',
-    'MPI Advance Send': 'tab:blue',
-    'MPI Advance SSend': 'tab:purple'
+    'Stream-Triggered Rsend': 'tab:orange',
+    'Stream-Triggered Rssend': 'tab:red',
+    'Stream-Triggered Send': 'tab:blue',
+    'Stream-Triggered Ssend': 'tab:purple'
 }
 
 system_order = ["Frontier", "Tuolumne"]
-full_backend_order = ["Cray MPICH Send", "MPI Advance RSend", "MPI Advance Send"]
+full_backend_order = ["Cray MPICH Send", "Stream-Triggered Rsend", "Stream-Triggered Send"]
 
 def setup_kargs_and_title(k, breakdown, hue, style):
     k["palette"] = palette
@@ -79,13 +79,13 @@ def make_speedup_plot(data, x, yscale, breakdown, style="Problem Size (GB)", hue
 def make_percent_plot(data, x, breakdown, y="Speedup", style="Problem Size (GB)", invertx=False, extra=""):
     ### Relative improvement in speedup by Problem Size
     mpiadvancedata = data[ data['Backend'].isin([
-        "MPI Advance RSSend", 
-        "MPI Advance SSend", 
-        "MPI Advance RSend", 
-        "MPI Advance Send"]) ]
+        "Stream-Triggered Rssend", 
+        "Stream-Triggered Ssend", 
+        "Stream-Triggered Rsend", 
+        "Stream-Triggered Send"]) ]
     kargs = {}
     title = setup_kargs_and_title(kargs, breakdown, "Backend", style)
-    kargs["hue_order"] = ["MPI Advance RSend", "MPI Advance Send"]
+    kargs["hue_order"] = ["Stream-Triggered Rsend", "Stream-Triggered Send"]
    
     percent_plot = sbn.relplot(data=mpiadvancedata, kind="line", x=x, 
                                y=f"Percent {y} Improvement",
@@ -127,10 +127,10 @@ df = df.rename(columns={'nodes':'Nodes', 'ntasks':'PPN', 'ranks':'Ranks',
 
 # Fix the names of the backends to be more readable
 df['Backend'] = df['Backend'].replace({
-                                       "MPIAdvance-CXI-Double-Buffering":"MPI Advance RSSend",
-                                       "MPIAdvance-CXI-Single-Buffering":"MPI Advance SSend",
-                                       "MPIAdvance-CXI-Double-Buffering2":"MPI Advance RSend",
-                                       "MPIAdvance-CXI-Single-Buffering2":"MPI Advance Send",
+                                       "MPIAdvance-CXI-Double-Buffering":"Stream-Triggered Rssend",
+                                       "MPIAdvance-CXI-Single-Buffering":"Stream-Triggered Ssend",
+                                       "MPIAdvance-CXI-Double-Buffering2":"Stream-Triggered Rsend",
+                                       "MPIAdvance-CXI-Single-Buffering2":"Stream-Triggered Send",
                                        "Cray-MPICH-CXI-GPU-Enabled":"Cray MPICH Send"})
 # Fix the names of the backends to be more readable
 df['System'] = df['System'].replace({"tioga":"Tioga",
@@ -172,14 +172,23 @@ def speedup_func(row):
 df['Speedup'] = df.apply(speedup_func, axis=1)
 df['Parallel Efficiency'] = df['Speedup'] / df['Ranks']
 
+# Now summarize/compute averages by node/rank combination
 speedup_df = pd.pivot_table(df,
                      index = ["System", "Problem Size (GB)", 'Nodes', 'Ranks', 'Backend'],
                      values = ["Speedup"],
                      aggfunc = ["min", "mean", "max"])
 speedup_df.columns = speedup_df.columns.droplevel(1)
-print("Summary of basic speedups")
-print(speedup_df)
 
+# As well as aggregating across different node/rank pairs with the same
+# total number of ranks.
+speedup_rank_df = pd.pivot_table(df,
+                     index = ["System", "Problem Size (GB)", 'Ranks', 'Backend'],
+                     values = ["Speedup"],
+                     aggfunc = ["min", "mean", "max"])
+speedup_rank_df.columns = speedup_rank_df.columns.droplevel(1)
+
+# Calculate speedup and efficiency on a node/rank basis compared to the
+# identical node/rank configuration.
 def relative_speedup_func(row):
     base_speedup = speedup_df.loc[row['System'], row['Problem Size (GB)'], row['Nodes'], row['Ranks'], "Cray MPICH Send"]["mean"]
     return 100 * (row['Speedup'] - base_speedup) / base_speedup
@@ -191,6 +200,17 @@ def relative_efficiency_func(row):
 df['Percent Speedup Improvement'] = df.apply(relative_speedup_func, axis=1)
 df['Percent Efficiency Improvement'] = df.apply(relative_speedup_func, axis=1)
 
+# Now print basic summary statistics
+def best_speedup_by_backend(df):
+    idx = df.groupby('Backend')['mean'].idxmax()
+    largest_rows = df.loc[idx]
+    print(largest_rows)
+
+for i in [ ["Frontier", 2.0], ["Frontier", 30.0], ["Tuolumne", 2.0], ["Tuolumne", 62.0] ]:
+    print(f"\nBest Speedup by Node/Rank and Rank for {i[0]} Problem Size {i[1]}")
+    best_speedup_by_backend(speedup_df.loc[i[0], i[1]])
+    best_speedup_by_backend(speedup_rank_df.loc[i[0], i[1]])
+
 
 # Initial pathfinding analyses. Commented out as we don't use this data in
 # the main paper, but included here for reference.
@@ -198,10 +218,10 @@ df['Percent Efficiency Improvement'] = df.apply(relative_speedup_func, axis=1)
 ## First, let;s compare RSSend, RSend, SSend, and Send on the two systems
 ## to see if there's a reason to prefer one to the other
 mpiadvancedata=df[  df['Backend'].isin([
-    "MPI Advance RSSend",
-    "MPI Advance SSend",
-    "MPI Advance RSend", 
-    "MPI Advance Send", 
+    "Stream-Triggered Rssend",
+    "Stream-Triggered Ssend",
+    "Stream-Triggered Rsend", 
+    "Stream-Triggered Send", 
     "Cray MPICH Send"]) 
                & df['Memory Type'].isin(["coarse","fine"])
               ]
@@ -215,10 +235,10 @@ mpiadvancedata=df[  df['Backend'].isin([
 ## focus on rsend and send as it provides more semantic flexibility and more
 ## balanced resource iusage between sends and receives
 speedupdata=df[  df['Backend'].isin([
-    "MPI Advance RSend", 
-    "MPI Advance Send", 
+    "Stream-Triggered Rsend", 
+    "Stream-Triggered Send", 
     "Cray MPICH Send"]) 
-               & df['Memory Type'].isin(["coarse","fine"])
+               & df['Memory Type'].isin(["coarse"])
               ]
 tuodata=speedupdata[ speedupdata['System'].isin(["Tuolumne"]) ]
 frontierdata=speedupdata[ speedupdata['System'].isin(["Frontier"]) ]
@@ -291,8 +311,8 @@ make_percent_plot(data=trimmeddata, x='Edge Length', breakdown="", extra="-Tuolu
 
 ## Finally, look at the startup time for the different systems
 startupdata=df[  df['Backend'].isin([
-    "MPI Advance RSend",
-    "MPI Advance Send",
+    "Stream-Triggered Rsend",
+    "Stream-Triggered Send",
     "Cray MPICH Send"]) 
                & df['Size'].isin([16384])
               ]
