@@ -43,22 +43,27 @@ for key, group in df.groupby("GPU"):
     # Less than 2^20
     latency_df=group[group['Buffer Size'] < 1048576]
     # Plot
-    plt.figure()
+    plt.figure(figsize=(6,4))
     sbn.lineplot(data=latency_df, x='Buffer Size',y='Latency', hue='Test Type', style='Test Type',
                  errorbar=("ci", 95), markers=True, palette=custom_palette, hue_order=custom_order)
     plt.xscale('log', base=2)
     plt.xlabel("Buffer Size (bytes)")
     plt.yscale('log', base=10)
     plt.ylabel("Latency (seconds)")
+    plt.legend(title="Backend")
+    plt.grid(which="both")
     plt.tight_layout()
     plt.savefig(f"pingpong-latency-logY-{key}.png")
 
-    plt.figure()
+    plt.figure(figsize=(6,3))
     sbn.lineplot(data=group, x='Buffer Size',y='Bandwidth', hue='Test Type', style='Test Type',
                  errorbar=("ci", 95), markers=True, palette=custom_palette, hue_order=custom_order)
     plt.xscale('log', base=2)
     plt.xlabel("Buffer Size (bytes)")
     plt.ylabel("Bandwidth (GB/second)")
+    plt.legend(title="Backend")
+    plt.xlim(right=2147483648)
+    plt.grid()
     plt.tight_layout()
     plt.savefig(f"pingpong-bandwidth-linearY-{key}.png")
 
