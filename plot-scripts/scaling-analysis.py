@@ -19,10 +19,10 @@ system_order = ["Frontier", "Tuolumne"]
 full_backend_order = ["Cray MPICH Send", "Stream-Triggered Rsend", "Stream-Triggered Send"]
 
 def setup_kargs_and_title(k, breakdown, hue, style):
-    k["palette"] = palette
 
     if hue != "":
         k["hue"] = hue
+        k["palette"] = palette
     if style != "":
         k["style"] = style
 
@@ -61,7 +61,6 @@ def make_runtime_plot(data, x, yscale, breakdown, style="Problem Size (GB)", hue
 def make_speedup_plot(data, x, yscale, breakdown, style="Problem Size (GB)", hue="Backend", extra=""):
     kargs = {}
     title = setup_kargs_and_title(kargs, breakdown, hue, style)
-
     speedup_plot = sbn.relplot(data=data, kind="line", x=x, y="Speedup", 
                                errorbar=("ci", 95), 
                                markers=True, **kargs)
@@ -158,6 +157,7 @@ pivot_df = pd.pivot_table(df,
                      values = ["Solve Time"],
                      aggfunc = ["min", "mean", "std"])
 pivot_df.columns = pivot_df.columns.droplevel(1)
+print(pivot_df)
 
 ### Now compute the speedup, parallel efficiency with the baseline as the best runtime 
 ### from an execution on the smallest number of ranks in the data set for a given problem 
@@ -174,7 +174,7 @@ df['Parallel Efficiency'] = df['Speedup'] / df['Ranks']
 speedup_df = pd.pivot_table(df,
                      index = ["System", "Problem Size (GB)", 'Nodes', 'Ranks', 'Backend'],
                      values = ["Speedup"],
-                     aggfunc = ["min", "mean", "max"])
+                     aggfunc = ["min", "mean", "std", "max"])
 speedup_df.columns = speedup_df.columns.droplevel(1)
 
 # As well as aggregating across different node/rank pairs with the same
@@ -182,7 +182,7 @@ speedup_df.columns = speedup_df.columns.droplevel(1)
 speedup_rank_df = pd.pivot_table(df,
                      index = ["System", "Problem Size (GB)", 'Ranks', 'Backend'],
                      values = ["Speedup"],
-                     aggfunc = ["min", "mean", "max"])
+                     aggfunc = ["min", "mean", "std", "max"])
 speedup_rank_df.columns = speedup_rank_df.columns.droplevel(1)
 
 # Calculate speedup and efficiency on a node/rank basis compared to the
@@ -236,30 +236,10 @@ speedupdata=df[  df['Backend'].isin([
     "Stream-Triggered Rsend", 
     "Stream-Triggered Send", 
     "Cray MPICH Send"]) 
-               & df['Memory Type'].isin(["coarse, fine"])
+               & df['Memory Type'].isin(["coarse"])
               ]
 tuodata=speedupdata[ speedupdata['System'].isin(["Tuolumne"]) ]
 frontierdata=speedupdata[ speedupdata['System'].isin(["Frontier"]) ]
-
-## Next, look and see if there's a perfomrance difference between 
-## coarse and fine memory on Frontier - if there's no clear difference, we 
-## jusrt use the coarse data to make sure there's no hidden bias
-# make_speedup_plot(data=frontierdata, x="Ranks", yscale="log", breakdown="Backend", hue="Memory Type", extra="-Frontier")
-# make_speedup_plot(data=frontierdata, x="Ranks", yscale="linear", breakdown="Backend", hue="Memory Type", extra="-Frontier")
-# make_speedup_plot(data=tuodata, x="Ranks", yscale="log", breakdown="Backend", hue="Memory Type", extra="-Tuolumne")
-# make_speedup_plot(data=tuodata, x="Ranks", yscale="linear", breakdown="Backend", hue="Memory Type", extra="-Tuolumne")
-
-## No real difference between memory type, so use both coarse, regenerating
-## our base data frames.
-speedupdata=speedupdata[ speedupdata['Memory Type'].isin(["coarse"]) ]
-tuodata=speedupdata[ speedupdata['System'].isin(["Tuolumne"]) ]
-frontierdata=speedupdata[ speedupdata['System'].isin(["Frontier"]) ]
-
-# Now we have the base data we'll use in the paper. Start generating graphs.
-
-## Start with actual runtime, not speedup so that people can see actual
-## runtimes, not just relative numbers.
-make_runtime_plot(data=speedupdata, x="Ranks", yscale="log", breakdown="System")
 
 ## Now that we have that, focus on speedup, efficiency and percent improvement
 ## broken down by Problem Size. For speedup, we use both log and linear scales
@@ -330,6 +310,14 @@ plt.savefig("Startup-Ranks-System-linear.png")
 plt.close()
 
 # Abandoned analyses below.
+## Look and see if there's a perfomrance difference between 
+## coarse and fine memory on Frontier - if there's no clear difference, we 
+## jusrt use the coarse data to make sure there's no hidden bias
+# make_speedup_plot(data=frontierdata, x="Ranks", yscale="log", breakdown="Backend", hue="Memory Type", extra="-Frontier")
+# make_speedup_plot(data=frontierdata, x="Ranks", yscale="linear", breakdown="Backend", hue="Memory Type", extra="-Frontier")
+# make_speedup_plot(data=tuodata, x="Ranks", yscale="log", breakdown="Backend", hue="Memory Type", extra="-Tuolumne")
+# make_speedup_plot(data=tuodata, x="Ranks", yscale="linear", breakdown="Backend", hue="Memory Type", extra="-Tuolumne")
+
 ## Analyze data from frontier by memory type to see if coarse versus fine grain memory made
 ## a difference. It did not, so we're not showing these graphs.
 
