@@ -158,8 +158,6 @@ pivot_df = pd.pivot_table(df,
                      values = ["Solve Time"],
                      aggfunc = ["min", "mean", "std"])
 pivot_df.columns = pivot_df.columns.droplevel(1)
-print("Summary of basic statistics")
-print(pivot_df)
 
 ### Now compute the speedup, parallel efficiency with the baseline as the best runtime 
 ### from an execution on the smallest number of ranks in the data set for a given problem 
@@ -238,23 +236,26 @@ speedupdata=df[  df['Backend'].isin([
     "Stream-Triggered Rsend", 
     "Stream-Triggered Send", 
     "Cray MPICH Send"]) 
-               & df['Memory Type'].isin(["coarse"])
+               & df['Memory Type'].isin(["coarse, fine"])
               ]
 tuodata=speedupdata[ speedupdata['System'].isin(["Tuolumne"]) ]
 frontierdata=speedupdata[ speedupdata['System'].isin(["Frontier"]) ]
 
 ## Next, look and see if there's a perfomrance difference between 
-## coarse and fine memory on Frontier - if there's no difference, we 
-## treat the data points as the same
+## coarse and fine memory on Frontier - if there's no clear difference, we 
+## jusrt use the coarse data to make sure there's no hidden bias
 # make_speedup_plot(data=frontierdata, x="Ranks", yscale="log", breakdown="Backend", hue="Memory Type", extra="-Frontier")
 # make_speedup_plot(data=frontierdata, x="Ranks", yscale="linear", breakdown="Backend", hue="Memory Type", extra="-Frontier")
 # make_speedup_plot(data=tuodata, x="Ranks", yscale="log", breakdown="Backend", hue="Memory Type", extra="-Tuolumne")
 # make_speedup_plot(data=tuodata, x="Ranks", yscale="linear", breakdown="Backend", hue="Memory Type", extra="-Tuolumne")
 
-## No real difference between memory type, so use both coarse and fine data as
-## measureing the same thing. As a result, we now have 10 data points at each sample 
+## No real difference between memory type, so use both coarse, regenerating
+## our base data frames.
+speedupdata=speedupdata[ speedupdata['Memory Type'].isin(["coarse"]) ]
+tuodata=speedupdata[ speedupdata['System'].isin(["Tuolumne"]) ]
+frontierdata=speedupdata[ speedupdata['System'].isin(["Frontier"]) ]
 
-# Generate the main analyses that we'll use inthe paper.
+# Now we have the base data we'll use in the paper. Start generating graphs.
 
 ## Start with actual runtime, not speedup so that people can see actual
 ## runtimes, not just relative numbers.
