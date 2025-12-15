@@ -120,7 +120,7 @@ all_files = glob.glob("../data/*/scaling-data*.csv")
 df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
 
 # Fix the labels of the columns to be more readable
-df = df.rename(columns={'nodes':'Nodes', 'ntasks':'PPN', 'ranks':'Ranks', 
+df = df.rename(columns={'nodes':'Nodes', 'ntasks':'GPUs per Node', 'ranks':'Ranks', 
           'solver_time':'Solve Time', 'solver_creation':'Startup Time',
           'size':'Size', 'system':'System', 'backend':'Backend', 'memory_type':'Memory Type'})
 
@@ -140,7 +140,7 @@ df['System'] = df['System'].replace({"tioga":"Tioga",
 # Compute derived values to use to generate data to plot from measured terms
 ## The total number of MPI ranks used in a sample
 df['Problem Size (GB)'] = round(df['Size'] * df['Size'] * 8 / 10**9, 0)
-df['Ranks'] = df['Nodes'] * df['PPN']
+df['Ranks'] = df['Nodes'] * df['GPUs per Node']
 df['Edge Length'] = np.sqrt(df['Size']*df['Size']/df['Ranks']) * 8
 df = df.sort_values(['Ranks','Nodes'])
 
@@ -261,18 +261,23 @@ make_efficiency_plot(data=tuodata, x='Ranks', breakdown="", extra="-Frontier")
 ## Break these down separately by system since they have different PPNs they can support
 
 ### First Tuolumne
-make_speedup_plot(data=tuodata, x="Ranks", yscale="log", breakdown="PPN", extra="-Tuolumne")
-make_speedup_plot(data=tuodata, x="Ranks", yscale="linear", breakdown="PPN", extra="-Tuolumne")
-make_percent_plot(data=tuodata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
-make_efficiency_plot(data=tuodata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
+make_speedup_plot(data=tuodata, x="Ranks", yscale="log", breakdown="GPUs per Node", extra="-Tuolumne")
+make_speedup_plot(data=tuodata, x="Ranks", yscale="linear", breakdown="GPUs per Node", extra="-Tuolumne")
+make_percent_plot(data=tuodata, x='Ranks', breakdown="GPUs per Node", extra="-Tuolumne")
+make_efficiency_plot(data=tuodata, x='Ranks', breakdown="GPUs per Node", extra="-Tuolumne")
+
+trimmeddata = frontierdata[frontierdata['Size'].isin([61440])]
+make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", style="GPUs per Node", breakdown="", extra="-PPN-Frontier")
+trimmeddata = tuodata[tuodata['Size'].isin([88320])]
+make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", style="GPUs per Node", breakdown="", extra="-PPN-Tuolumne")
 
 ### Then Frontier - Due to space limits, we don't include this data. We simply state
 ### in the text that there's no difference.
-#trimmeddata = frontierdata[frontierdata['PPN'].isin([4,8])]
-#make_speedup_plot(data=trimmeddata, x="Ranks", yscale="log", breakdown="PPN", extra="-Frontier")
-#make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", breakdown="PPN", extra="-Frontier")
-#make_percent_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Frontier")
-#make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Frontier")
+#trimmeddata = frontierdata[frontierdata['GPUs per Node'].isin([4,8])]
+#make_speedup_plot(data=trimmeddata, x="Ranks", yscale="log", breakdown="GPUs per Node", extra="-Frontier")
+#make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", breakdown="GPUs per Node", extra="-Frontier")
+#make_percent_plot(data=trimmeddata, x='Ranks', breakdown="GPUs per Node", extra="-Frontier")
+#make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="GPUs per Node", extra="-Frontier")
 
 ## To understand where the performance impacts are most significant, 
 ## we look at percent improvement by edge length, limited to Frontier 
@@ -282,12 +287,12 @@ make_efficiency_plot(data=tuodata, x='Ranks', breakdown="PPN", extra="-Tuolumne"
 ## Cray can leverage unexpected message hardware that our GPU implementation 
 ## does not. We generate both the graph of both and hte graph of just the 
 ## Frontier data since its not clear which we want in the paper.
-trimmeddata = speedupdata[ (speedupdata["System"].isin(["Tuolumne"]) & speedupdata['PPN'].isin([1,2]) )
+trimmeddata = speedupdata[ (speedupdata["System"].isin(["Tuolumne"]) & speedupdata['GPUs per Node'].isin([1,2]) )
     | speedupdata["System"].isin(["Frontier"]) ]
 
 make_percent_plot(data=trimmeddata, x='Edge Length', breakdown="System")
 make_percent_plot(data=frontierdata, x='Edge Length', breakdown="", extra="-Frontier")
-trimmeddata = speedupdata[ (speedupdata["System"].isin(["Tuolumne"]) & speedupdata['PPN'].isin([1,2]) )]
+trimmeddata = speedupdata[ (speedupdata["System"].isin(["Tuolumne"]) & speedupdata['GPUs per Node'].isin([1,2]) )]
 make_percent_plot(data=trimmeddata, x='Edge Length', breakdown="", extra="-Tuolumne")
 
 ## Finally, look at the startup time for the different systems
