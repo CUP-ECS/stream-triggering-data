@@ -19,7 +19,8 @@ system_order = ["Frontier", "Tuolumne"]
 full_backend_order = ["Cray MPICH Send", "Stream-Triggered Rsend", "Stream-Triggered Send"]
 
 def setup_kargs_and_title(k, breakdown, hue, style):
-
+    k["height"] = 3.5
+    k["aspect"] = 1.25
     if hue != "":
         k["hue"] = hue
         k["palette"] = palette
