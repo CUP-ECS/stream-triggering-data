@@ -116,14 +116,14 @@ if [ ! -d $GIT_PATH ]; then
     echo -e "${RED}Unable to locate top level folder for repositories:${RESET} $GIT_PATH"
     exit 1
 else
-    echo -e "Git repository locaitons: $GIT_PATH" 
+    echo -e "Git repository locations: $GIT_PATH" 
 fi
 
 cd $GIT_PATH
 echo -e "Collecting repositories" 
-# Very simple version -- does not checkout branches or specific versions!
+# Very simple version -- be sure to check everything when running for first time!
 clone_repo "Silo" "https://github.com/LLNL/Silo.git" 
-clone_repo "kokkos" "https://github.com/kokkos/kokkos.git" "4.6.02" 
+clone_repo "Kokkos" "https://github.com/kokkos/kokkos.git" "4.6.02" 
 clone_repo "stream-triggering" "https://github.com/mpi-advance/stream-triggering.git" 
 clone_repo "Cabana" "https://github.com/CUP-ECS/Cabana.git" "mpi-advance-stream-halo"
 clone_repo "CabanaGhost" "https://github.com/CUP-ECS/CabanaGhost.git" "stream-halo"
@@ -149,7 +149,7 @@ fi
 
 cd ../../kokkos
 if [ -z $SKIP_KOKKOS ]; then
-echo -e " -> ${CYAN}Building kokkos${RESET}"
+echo -e " -> ${CYAN}Building Kokkos${RESET}"
 build_build_dir
 cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/kokkos \

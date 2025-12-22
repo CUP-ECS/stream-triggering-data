@@ -1,6 +1,5 @@
 #!/bin/bash
 #flux: --gpus-per-slot=1
-#flux: --output=TIOGA-{{nnodes}}.out
 #flux: --exclusive
 #flux: --env=FLUX_TEST={{nnodes}}
 
