@@ -1,6 +1,5 @@
 #!/bin/bash
 #flux: --gpus-per-slot=1
-#flux: --output=TUO-{{nnodes}}.out
 #flux: --exclusive
 #flux: --env=FLUX_TEST={{nnodes}}
 
@@ -49,8 +48,7 @@ run_test()
     sed -i "1i$STRING" $RUN_FILE
 }
 
-matrix_sizes=(16384 90112)
-export MPICH_OFI_NIC_POLICY=GPU
+matrix_sizes=(88320 16384)
 
 for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
     PPN=$((2 ** $exp))
@@ -64,9 +62,9 @@ for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
         unset MPI_ADVANCE_DOUBLE_BUFFERING
 
         export MPI_ADVANCE_FINEGRAIN_MEMORY=1
-        run_test "a-fg-db" "MPI Advance Double Fine-grained Buffer"
+        #run_test "a-fg-db" "MPI Advance Double Fine-grained Buffer"
         export MPI_ADVANCE_DOUBLE_BUFFERING=0
-        run_test "a-fg-sb" "MPI Advance Single Fine-grained Buffer"
+        #run_test "a-fg-sb" "MPI Advance Single Fine-grained Buffer"
         unset MPI_ADVANCE_DOUBLE_BUFFERING
         unset MPI_ADVANCE_FINEGRAIN_MEMORY
 

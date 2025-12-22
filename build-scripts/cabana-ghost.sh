@@ -12,7 +12,7 @@ usage() {
     echo " -T Integer that specifies build system: 0 (Tioga), 1 (Tuoloumne), 2 (Frontier) (default TIOGA version)"
     echo " -S Skip Silo build"
     echo " -K Skip Kokkos build"
-    echo " -F [path] Where the script should attempt to install all libraries (optional, default = \"/usr/workspace/$USER/apps/<system>\")"
+    echo " -F [path] Where the script should attempt to install all libraries (optional, default depends on system)"
     echo " -B [path] Base directory where all the git repos are cloned to (optional, default = \"$HOME/git\")"
 }
 

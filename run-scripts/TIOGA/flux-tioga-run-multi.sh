@@ -51,9 +51,6 @@ run_test()
 
 matrix_sizes=(16384 61440)
 
-export MPICH_OFI_CXI_COUNTER_REPORT=4
-export MPICH_OFI_NIC_POLICY=GPU
-
 for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
     PPN=$((2 ** $exp))
     for j in "${matrix_sizes[@]}"; do
