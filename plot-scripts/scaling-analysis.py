@@ -7,20 +7,61 @@ import matplotlib.pyplot as plt
 import seaborn as sbn
 import glob
 
-def make_speedup_plot(data, x, yscale, breakdown, style="Problem Size (GB)", hue="Backend", extra=""):
-    
-    kargs = {"hue" : hue}
-    if style != "":
-        kargs["style"] = style
+palette = {
+    'Cray MPICH Send': 'tab:green',
+    'Stream-Triggered Rsend': 'tab:orange',
+    'Stream-Triggered Rssend': 'tab:red',
+    'Stream-Triggered Send': 'tab:blue',
+    'Stream-Triggered Ssend': 'tab:purple'
+}
 
-    if breakdown != "System":
-        title = "{row_name}" + " {col_name} " + breakdown
-        kargs["row"] = "System"
-        kargs["col"] = breakdown
-    else:
+system_order = ["Frontier", "Tuolumne"]
+full_backend_order = ["Cray MPICH Send", "Stream-Triggered Rsend", "Stream-Triggered Send"]
+
+def setup_kargs_and_title(k, breakdown, hue, style):
+    k["height"] = 3.5
+    k["aspect"] = 1.25
+    if hue != "":
+        k["hue"] = hue
+        k["palette"] = palette
+    if style != "":
+        k["style"] = style
+
+    if breakdown == "System":
+        k["col_order"] = system_order
+        k["col"] = "System"
         title = "{col_name}"
-        kargs["col"] = "System"
-        
+    elif breakdown != "":
+        title = "{row_name}" + " {col_name} " + breakdown
+        k["row"] = "System"
+        k["col"] = breakdown
+    else:
+        title = ""
+
+    if hue == "Backend":
+        k["hue_order"] = full_backend_order
+
+    return title
+
+def make_runtime_plot(data, x, yscale, breakdown, style="Problem Size (GB)", hue="Backend", extra=""):
+    kargs = {}
+    title = setup_kargs_and_title(kargs, breakdown, hue, style)
+ 
+    runtime_plot = sbn.relplot(data=data, kind="line", x=x, y="Solve Time", 
+                               errorbar=("ci", 95), 
+                               markers=True, **kargs)
+    runtime_plot.set_titles(title)
+    for ax in runtime_plot.axes.ravel():
+        ax.grid(True, axis='both', ls=':')
+    plt.xscale('log', base=2)
+    if yscale == 'log':
+        plt.yscale('log', base=10)
+    plt.savefig(f"Runtime-{x}-{breakdown}-{yscale}{extra}.png")
+    plt.close()
+
+def make_speedup_plot(data, x, yscale, breakdown, style="Problem Size (GB)", hue="Backend", extra=""):
+    kargs = {}
+    title = setup_kargs_and_title(kargs, breakdown, hue, style)
     speedup_plot = sbn.relplot(data=data, kind="line", x=x, y="Speedup", 
                                errorbar=("ci", 95), 
                                markers=True, **kargs)
@@ -38,25 +79,17 @@ def make_speedup_plot(data, x, yscale, breakdown, style="Problem Size (GB)", hue
 def make_percent_plot(data, x, breakdown, y="Speedup", style="Problem Size (GB)", invertx=False, extra=""):
     ### Relative improvement in speedup by Problem Size
     mpiadvancedata = data[ data['Backend'].isin([
-        "MPI Advance RSSend", 
-        "MPI Advance SSend", 
-        "MPI Advance RSend", 
-        "MPI Advance Send"]) ]
-    kargs = {"hue": "Backend"}
-    if style != "":
-        kargs["style"] = style
-
-    if breakdown != "System":
-        title = "{row_name}" + " {col_name} " + breakdown
-        kargs["row"] = "System"
-        kargs["col"] = breakdown
-    else:
-        title = "{col_name}"
-        kargs["col"] = "System"
-        
+        "Stream-Triggered Rssend", 
+        "Stream-Triggered Ssend", 
+        "Stream-Triggered Rsend", 
+        "Stream-Triggered Send"]) ]
+    kargs = {}
+    title = setup_kargs_and_title(kargs, breakdown, "Backend", style)
+    kargs["hue_order"] = ["Stream-Triggered Rsend", "Stream-Triggered Send"]
+   
     percent_plot = sbn.relplot(data=mpiadvancedata, kind="line", x=x, 
                                y=f"Percent {y} Improvement",
-                               errorbar=("ci", 95), 
+                               errorbar=("ci", 95),
                                markers=True, **kargs)
     percent_plot.set_titles(title)
     plt.xscale('log', base=2)
@@ -68,17 +101,8 @@ def make_percent_plot(data, x, breakdown, y="Speedup", style="Problem Size (GB)"
     plt.close()
 
 def make_efficiency_plot(data, x, breakdown, style="Problem Size (GB)", extra=""):
-    kargs = {"hue": "Backend"}
-    if style != "":
-        kargs["style"] = style
-
-    if breakdown != "System":
-        title = "{row_name}" + " {col_name} " + breakdown
-        kargs["row"] = "System"
-        kargs["col"] = breakdown
-    else:
-        title = "{col_name}"
-        kargs["col"] = "System"
+    kargs = {}
+    title = setup_kargs_and_title(kargs, breakdown, "Backend", style)
         
     efficiency_plot = sbn.relplot(data=data, kind="line", x=x, y='Parallel Efficiency', 
                                   errorbar=("ci", 95), 
@@ -97,16 +121,16 @@ all_files = glob.glob("../data/*/scaling-data*.csv")
 df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
 
 # Fix the labels of the columns to be more readable
-df = df.rename(columns={'nodes':'Nodes', 'ntasks':'PPN', 'ranks':'Ranks', 
+df = df.rename(columns={'nodes':'Nodes', 'ntasks':'GPUs per Node', 'ranks':'Ranks', 
           'solver_time':'Solve Time', 'solver_creation':'Startup Time',
           'size':'Size', 'system':'System', 'backend':'Backend', 'memory_type':'Memory Type'})
 
 # Fix the names of the backends to be more readable
 df['Backend'] = df['Backend'].replace({
-                                       "MPIAdvance-CXI-Double-Buffering":"MPI Advance RSSend",
-                                       "MPIAdvance-CXI-Single-Buffering":"MPI Advance SSend",
-                                       "MPIAdvance-CXI-Double-Buffering2":"MPI Advance RSend",
-                                       "MPIAdvance-CXI-Single-Buffering2":"MPI Advance Send",
+                                       "MPIAdvance-CXI-Double-Buffering":"Stream-Triggered Rssend",
+                                       "MPIAdvance-CXI-Single-Buffering":"Stream-Triggered Ssend",
+                                       "MPIAdvance-CXI-Double-Buffering2":"Stream-Triggered Rsend",
+                                       "MPIAdvance-CXI-Single-Buffering2":"Stream-Triggered Send",
                                        "Cray-MPICH-CXI-GPU-Enabled":"Cray MPICH Send"})
 # Fix the names of the backends to be more readable
 df['System'] = df['System'].replace({"tioga":"Tioga",
@@ -117,7 +141,7 @@ df['System'] = df['System'].replace({"tioga":"Tioga",
 # Compute derived values to use to generate data to plot from measured terms
 ## The total number of MPI ranks used in a sample
 df['Problem Size (GB)'] = round(df['Size'] * df['Size'] * 8 / 10**9, 0)
-df['Ranks'] = df['Nodes'] * df['PPN']
+df['Ranks'] = df['Nodes'] * df['GPUs per Node']
 df['Edge Length'] = np.sqrt(df['Size']*df['Size']/df['Ranks']) * 8
 df = df.sort_values(['Ranks','Nodes'])
 
@@ -134,7 +158,6 @@ pivot_df = pd.pivot_table(df,
                      values = ["Solve Time"],
                      aggfunc = ["min", "mean", "std"])
 pivot_df.columns = pivot_df.columns.droplevel(1)
-print("Summary of basic data statistics")
 print(pivot_df)
 
 ### Now compute the speedup, parallel efficiency with the baseline as the best runtime 
@@ -148,120 +171,159 @@ def speedup_func(row):
 df['Speedup'] = df.apply(speedup_func, axis=1)
 df['Parallel Efficiency'] = df['Speedup'] / df['Ranks']
 
+# Now summarize/compute averages by node/rank combination
 speedup_df = pd.pivot_table(df,
                      index = ["System", "Problem Size (GB)", 'Nodes', 'Ranks', 'Backend'],
                      values = ["Speedup"],
-                     aggfunc = ["min", "mean", "max"])
+                     aggfunc = ["min", "mean", "std", "max"])
 speedup_df.columns = speedup_df.columns.droplevel(1)
 
+# As well as aggregating across different node/rank pairs with the same
+# total number of ranks.
+speedup_rank_df = pd.pivot_table(df,
+                     index = ["System", "Problem Size (GB)", 'Ranks', 'Backend'],
+                     values = ["Speedup"],
+                     aggfunc = ["min", "mean", "std", "max"])
+speedup_rank_df.columns = speedup_rank_df.columns.droplevel(1)
+
+# Calculate speedup and efficiency on a node/rank basis compared to the
+# identical node/rank configuration.
 def relative_speedup_func(row):
-    base_speedup = speedup_df.loc[row['System'], row['Problem Size (GB)'], row['Nodes'], row['Ranks'], "Cray MPICH Send"]["max"]
+    base_speedup = speedup_df.loc[row['System'], row['Problem Size (GB)'], row['Nodes'], row['Ranks'], "Cray MPICH Send"]["mean"]
     return 100 * (row['Speedup'] - base_speedup) / base_speedup
 
 def relative_efficiency_func(row):
-    base_efficiency = speedup_df.loc[row['System'], row['Problem Size (GB)'], row['Nodes'], row['Ranks'], "Cray MPICH Send"]["max"] / row['Ranks']
+    base_efficiency = speedup_df.loc[row['System'], row['Problem Size (GB)'], row['Nodes'], row['Ranks'], "Cray MPICH Send"]["mean"] / row['Ranks']
     return 100 * (row['Efficiency'] - base_efficiency) / base_efficiency
 
 df['Percent Speedup Improvement'] = df.apply(relative_speedup_func, axis=1)
 df['Percent Efficiency Improvement'] = df.apply(relative_speedup_func, axis=1)
 
+# Now print basic summary statistics
+def best_speedup_by_backend(df):
+    idx = df.groupby('Backend')['mean'].idxmax()
+    largest_rows = df.loc[idx]
+    print(largest_rows)
 
-# Now generate the actual plots we want using Seaborn
+for i in [ ["Frontier", 2.0], ["Frontier", 30.0], ["Tuolumne", 2.0], ["Tuolumne", 62.0] ]:
+    print(f"\nBest Speedup by Node/Rank and Rank for {i[0]} Problem Size {i[1]}")
+    best_speedup_by_backend(speedup_df.loc[i[0], i[1]])
+    best_speedup_by_backend(speedup_rank_df.loc[i[0], i[1]])
 
-## Start by getting data frames wit the subsets of data we want.
+
+# Initial pathfinding analyses. Commented out as we don't use this data in
+# the main paper, but included here for reference.
+
+## First, let;s compare RSSend, RSend, SSend, and Send on the two systems
+## to see if there's a reason to prefer one to the other
 mpiadvancedata=df[  df['Backend'].isin([
-    "MPI Advance RSSend",
-    "MPI Advance SSend",
-    "MPI Advance RSend", 
-    "MPI Advance Send", 
+    "Stream-Triggered Rssend",
+    "Stream-Triggered Ssend",
+    "Stream-Triggered Rsend", 
+    "Stream-Triggered Send", 
     "Cray MPICH Send"]) 
                & df['Memory Type'].isin(["coarse","fine"])
               ]
 
-## First, let;s compare RSSend, RSend, SSend, and Send on the two systems
-## to see if there's a reason to prefer one to the other
-make_speedup_plot(data=mpiadvancedata, x="Ranks", yscale="log", breakdown="System", extra="-Full")
-make_speedup_plot(data=mpiadvancedata, x="Ranks", yscale="linear", breakdown="System", extra="-Full")
-make_percent_plot(data=mpiadvancedata, x='Ranks', breakdown="System", extra="-Full")
-make_efficiency_plot(data=mpiadvancedata, x='Ranks', breakdown="System", extra="-Full")
+# make_speedup_plot(data=mpiadvancedata, x="Ranks", yscale="log", breakdown="System", extra="-Full")
+# make_speedup_plot(data=mpiadvancedata, x="Ranks", yscale="linear", breakdown="System", extra="-Full")
+# make_percent_plot(data=mpiadvancedata, x='Ranks', breakdown="System", extra="-Full")
+# make_efficiency_plot(data=mpiadvancedata, x='Ranks', breakdown="System", extra="-Full")
 
 ## This data shows no consistent reason to prefer one to the other, so we
 ## focus on rsend and send as it provides more semantic flexibility and more
 ## balanced resource iusage between sends and receives
 speedupdata=df[  df['Backend'].isin([
-    "MPI Advance RSend", 
-    "MPI Advance Send", 
+    "Stream-Triggered Rsend", 
+    "Stream-Triggered Send", 
     "Cray MPICH Send"]) 
-               & df['Memory Type'].isin(["coarse","fine"])
+               & df['Memory Type'].isin(["coarse"])
               ]
 tuodata=speedupdata[ speedupdata['System'].isin(["Tuolumne"]) ]
 frontierdata=speedupdata[ speedupdata['System'].isin(["Frontier"]) ]
 
-## Next, look and see if there's a perfomrance difference between 
-## coarse and fine memory on Frontier - if there's no difference, we 
-## treat the data points as the same
-make_speedup_plot(data=frontierdata, x="Ranks", yscale="log", breakdown="Backend", hue="Memory Type", extra="-Frontier")
-make_speedup_plot(data=frontierdata, x="Ranks", yscale="linear", breakdown="Backend", hue="Memory Type", extra="-Frontier")
+## Now that we have that, focus on speedup, efficiency and percent improvement
+## broken down by Problem Size. For speedup, we use both log and linear scales
+## so that we can see magnitude of difference at scale (linear) and detilas of
+## tradeoffs on the small problems. We start with Frontier since it has the most
+## stable data right now.
+make_speedup_plot(data=frontierdata, x="Ranks", yscale="log", breakdown="", extra="-Frontier")
+make_speedup_plot(data=frontierdata, x="Ranks", yscale="linear", breakdown="", extra="-Frontier")
+make_percent_plot(data=frontierdata, x='Ranks', breakdown="", extra="-Frontier")
+make_efficiency_plot(data=frontierdata, x='Ranks', breakdown="", extra="-Frontier")
 
-## So now we know what we have - 10 data points at each sample since we treat
-## coarse and fine the same. Generate the main speedup analyses.
-
-## As first plots, we want speedup, efficiency and percent improvement
-## broken down by Problem Size
-
-### For Speedup, we use both log and linear scales.
-make_speedup_plot(data=speedupdata, x="Ranks", yscale="log", breakdown="System")
-make_speedup_plot(data=speedupdata, x="Ranks", yscale="linear", breakdown="System")
-make_percent_plot(data=speedupdata, x='Ranks', breakdown="System")
-make_efficiency_plot(data=speedupdata, x='Ranks', breakdown="System")
+## Next, tuolumne
+make_speedup_plot(data=tuodata, x="Ranks", yscale="log", breakdown="", extra="-Tuolumne")
+make_speedup_plot(data=tuodata, x="Ranks", yscale="linear", breakdown="", extra="-Tuolumne")
+make_percent_plot(data=tuodata, x='Ranks', breakdown="", extra="-Tuolumne")
+make_efficiency_plot(data=tuodata, x='Ranks', breakdown="", extra="-Frontier")
 
 ## On tuolumne (but not Frontier), the speedup for Cray MPICH is highly dependent on PPN 
 ## Break these down separately by system since they have different PPNs they can support
 
 ### First Tuolumne
-trimmeddata = tuodata[tuodata['PPN'].isin([2,4])]
-make_speedup_plot(data=trimmeddata, x="Ranks", yscale="log", breakdown="PPN", extra="-Tuolumne")
-make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", breakdown="PPN", extra="-Tuolumne")
-make_percent_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
-make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Tuolumne")
+make_speedup_plot(data=tuodata, x="Ranks", yscale="log", breakdown="GPUs per Node", extra="-Tuolumne")
+make_speedup_plot(data=tuodata, x="Ranks", yscale="linear", breakdown="GPUs per Node", extra="-Tuolumne")
+make_percent_plot(data=tuodata, x='Ranks', breakdown="GPUs per Node", extra="-Tuolumne")
+make_efficiency_plot(data=tuodata, x='Ranks', breakdown="GPUs per Node", extra="-Tuolumne")
 
-### Then Frontier
-trimmeddata = frontierdata[frontierdata['PPN'].isin([4,8])]
-make_speedup_plot(data=trimmeddata, x="Ranks", yscale="log", breakdown="PPN", extra="-Frontier")
-make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", breakdown="PPN", extra="-Frontier")
-make_percent_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Frontier")
-make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="PPN", extra="-Frontier")
+trimmeddata = frontierdata[frontierdata['Size'].isin([61440])]
+make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", style="GPUs per Node", breakdown="", extra="-PPN-Frontier")
+trimmeddata = tuodata[tuodata['Size'].isin([88320])]
+make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", style="GPUs per Node", breakdown="", extra="-PPN-Tuolumne")
+
+### Then Frontier - Due to space limits, we don't include this data. We simply state
+### in the text that there's no difference.
+#trimmeddata = frontierdata[frontierdata['GPUs per Node'].isin([4,8])]
+#make_speedup_plot(data=trimmeddata, x="Ranks", yscale="log", breakdown="GPUs per Node", extra="-Frontier")
+#make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", breakdown="GPUs per Node", extra="-Frontier")
+#make_percent_plot(data=trimmeddata, x='Ranks', breakdown="GPUs per Node", extra="-Frontier")
+#make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="GPUs per Node", extra="-Frontier")
 
 ## To understand where the performance impacts are most significant, 
 ## we look at percent improvement by edge length, limited to Frontier 
-## data where the data is most stable. This shows that the main advantage
-## is on mid-sized messages. For largemewssages, both systems are bandwidth-bound.
-## For small messages, Cray can leverage unexpected message hardware that
-## our GPU implementation does not.
-make_percent_plot(data=frontierdata, x='Edge Length', breakdown="System", extra="-Frontier")
+## data where the data is most stable and the 1-2 PPN runs on Tuolumne. 
+## This shows that the main advantage is on mid-sized messages. For 
+## largemewssages, both systems are bandwidth-bound. For small messages, 
+## Cray can leverage unexpected message hardware that our GPU implementation 
+## does not. We generate both the graph of both and hte graph of just the 
+## Frontier data since its not clear which we want in the paper.
+trimmeddata = speedupdata[ (speedupdata["System"].isin(["Tuolumne"]) & speedupdata['GPUs per Node'].isin([1,2]) )
+    | speedupdata["System"].isin(["Frontier"]) ]
+
+make_percent_plot(data=trimmeddata, x='Edge Length', breakdown="System")
+make_percent_plot(data=frontierdata, x='Edge Length', breakdown="", extra="-Frontier")
+trimmeddata = speedupdata[ (speedupdata["System"].isin(["Tuolumne"]) & speedupdata['GPUs per Node'].isin([1,2]) )]
+make_percent_plot(data=trimmeddata, x='Edge Length', breakdown="", extra="-Tuolumne")
 
 ## Finally, look at the startup time for the different systems
 startupdata=df[  df['Backend'].isin([
-    #"MPI Advance RSSend",
-    #"MPI Advance SSend",
-    "MPI Advance RSend",
-    "MPI Advance Send",
+    "Stream-Triggered Rsend",
+    "Stream-Triggered Send",
     "Cray MPICH Send"]) 
                & df['Size'].isin([16384])
               ]
+kargs={}
+setup_kargs_and_title(kargs, "System", "Backend", "")
 startup_plot = sbn.relplot(data=startupdata, kind='line', x='Ranks', 
-                              y='Startup Time', hue='Backend', col='System',
-                              errorbar=("ci", 95), 
-                              markers=True)
-startup_plot.set_titles("Startup Time for 2GB Problem on {col_name}")
+                              y='Startup Time', errorbar=("ci", 95), 
+                              markers=True, **kargs)
+startup_plot.set_titles("Startup Time for 2GB Problem Size on {col_name}")
 #startup_plot.set(ylim=(0.01, 1.05))
-startup_plot.set(xlim=(0.8, 1100))
 plt.xscale('log', base=2)
 #plt.yscale('log', base=2)
-plt.savefig("startup-size.png")
+plt.savefig("Startup-Ranks-System-linear.png")
 plt.close()
 
 # Abandoned analyses below.
+## Look and see if there's a perfomrance difference between 
+## coarse and fine memory on Frontier - if there's no clear difference, we 
+## jusrt use the coarse data to make sure there's no hidden bias
+# make_speedup_plot(data=frontierdata, x="Ranks", yscale="log", breakdown="Backend", hue="Memory Type", extra="-Frontier")
+# make_speedup_plot(data=frontierdata, x="Ranks", yscale="linear", breakdown="Backend", hue="Memory Type", extra="-Frontier")
+# make_speedup_plot(data=tuodata, x="Ranks", yscale="log", breakdown="Backend", hue="Memory Type", extra="-Tuolumne")
+# make_speedup_plot(data=tuodata, x="Ranks", yscale="linear", breakdown="Backend", hue="Memory Type", extra="-Tuolumne")
+
 ## Analyze data from frontier by memory type to see if coarse versus fine grain memory made
 ## a difference. It did not, so we're not showing these graphs.
 
