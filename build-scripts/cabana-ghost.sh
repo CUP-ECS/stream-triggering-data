@@ -186,8 +186,7 @@ cmake \
  -DCMAKE_BUILD_TYPE=Release \
  -DCMAKE_PREFIX_PATH="$BUILD_PATH/kokkos;$BUILD_PATH/stream_trigger/" \
  -DCabana_ENABLE_MPI=ON \
- -DCabana_ENABLE_MPI_ADVANCE=ON \
- -DCabana_ENABLE_STREAMCOMM=ON  ..
+ -DCabana_BUILD_STREAM_HALO=ON ..
 
 make -j$THREADS install
 
