@@ -19,6 +19,7 @@ ITERS=1000
 
 run_test()
 {
+    echo "Test: ${2} $NODES $PPN $SIZE" >> $CBG_OUT
     if [[ "$1" == "mpich" ]]; then
         flux run -x -N$NODES --tasks-per-node=$PPN       \
                  --output=$CBG_OUT -o output.mode=append \
@@ -28,8 +29,6 @@ run_test()
                  --output=$CBG_OUT -o output.mode=append \
                  $TEST -n $SIZE -c mpi-advance -t $ITERS
     fi
-    STRING="Test: ${2} $NODES $PPN $SIZE"
-    sed -i "1i$STRING" $CBG_OUT
 }
 
 # Add hostnames to file
