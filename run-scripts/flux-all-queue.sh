@@ -85,9 +85,8 @@ fi
 
 echo "Job node range (powers of 2): $START_EXP:$END_EXP ( for $TIME, on $QUEUE, repeated $REPEATS time(s))"
 
-prev_job_id=""
-
 for (( i=0; i<$REPEATS; i++ )); do
+    prev_job_id=""
     for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
         NODES=$((2 ** $exp))
         SLOTS=$((4 * $NODES))

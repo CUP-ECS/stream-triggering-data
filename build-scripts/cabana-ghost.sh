@@ -8,12 +8,13 @@ RESET='\033[0m'
 
 # Long term -- use spack instead of this script!
 usage() {
-    echo "Usage: $0 [-T value] [-SK] [-Q queue] [-E power] [-S power] [-I time]"
+    echo "Usage: $0 [-T value] [-SK] [-F <install location>] [-B <repo location>] [-R version]"
     echo " -T Integer that specifies build system: 0 (Tioga), 1 (Tuoloumne), 2 (Frontier) (default TIOGA version)"
     echo " -S Skip Silo build"
     echo " -K Skip Kokkos build"
     echo " -F [path] Where the script should attempt to install all libraries (optional, default depends on system)"
     echo " -B [path] Base directory where all the git repos are cloned to (optional, default = \"$HOME/git\")"
+    echo " -R [string] ROCM version to load (will do \"module load rocm/<version>\")"
 }
 
 clone_repo() {
@@ -40,7 +41,7 @@ build_build_dir() {
 	mkdir $DIR_TO_BUILD && cd $DIR_TO_BUILD
 }
 
-while getopts ":T:SKF:B:" opt; do
+while getopts ":T:SKF:B:R:" opt; do
     case $opt in
         T)
             VERSION="$OPTARG"
@@ -57,12 +58,19 @@ while getopts ":T:SKF:B:" opt; do
         B)
             GIT_PATH="$OPTARG"
             ;;
+        R)
+            ROCM_MODULE="$OPTARG"
+            ;;
         *)
             usage
             exit
             ;;
     esac
 done
+
+if [ -z $ROCM_MODULE ]; then
+    ROCM_MODULE=rocm
+fi
 
 if [ -z $VERSION ]; then
     VERSION=0
@@ -80,6 +88,7 @@ elif [ "$VERSION" -eq 1 ]; then
     SYSTEM=tuolumne
     GPU_ARCH=gfx942
     KOKKOS_FLAG="-DKokkos_ARCH_AMD_GFX942_APU=ON"
+    module load libfabric/2.1
     LIBFABRIC=/opt/cray/libfabric/2.1/
     if [ -z $BUILD_PATH ]; then
         BUILD_PATH=/usr/workspace/$USER/apps/$SYSTEM
@@ -95,7 +104,7 @@ else
 fi
 
 echo -e "Running ${CYAN}$SYSTEM${RESET} version:"
-module load rocm "craype-accel-amd-${GPU_ARCH}"
+module load "$ROCM_MODULE" "craype-accel-amd-${GPU_ARCH}"
 module list
 
 # Setup location for where to install everything (technically everything is build in the git folders)
@@ -126,7 +135,7 @@ clone_repo "Silo" "https://github.com/LLNL/Silo.git"
 clone_repo "kokkos" "https://github.com/kokkos/kokkos.git" "4.6.02" 
 clone_repo "stream-triggering" "https://github.com/mpi-advance/stream-triggering.git" 
 clone_repo "Cabana" "https://github.com/CUP-ECS/Cabana.git" "mpi-advance-stream-halo"
-clone_repo "CabanaGhost" "https://github.com/CUP-ECS/CabanaGhost.git" "stream-halo"
+clone_repo "CabanaGhost" "https://github.com/CUP-ECS/CabanaGhost.git" "develop"
 
 echo "Building all projects:"
 THREADS=8
@@ -186,7 +195,9 @@ cmake \
  -DCMAKE_BUILD_TYPE=Release \
  -DCMAKE_PREFIX_PATH="$BUILD_PATH/kokkos;$BUILD_PATH/stream_trigger/" \
  -DCabana_ENABLE_MPI=ON \
- -DCabana_BUILD_STREAM_HALO=ON ..
+ -DCabana_BUILD_STREAM_HALO=ON \
+ -DCabana_REQUIRE_STREAM-TRIGGERING=ON \
+..
 
 make -j$THREADS install
 
@@ -199,6 +210,6 @@ cmake \
  -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE \
  -DCMAKE_PREFIX_PATH="$BUILD_PATH/kokkos;$BUILD_PATH/stream_trigger/;$BUILD_PATH/silo;$BUILD_PATH/cabana" ..
 
-make install
+make VERBOSE=1 install
 
 echo -e "${BLUE}Done.${RESET}"

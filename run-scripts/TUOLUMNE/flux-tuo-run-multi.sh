@@ -9,8 +9,7 @@ NODES=$FLUX_TEST
 
 SYSTEM=TUO
 export HSA_XNACK=1
-module load craype-accel-amd-gfx942
-module load rocm
+module load rocm craype-accel-amd-gfx942 libfabric/2.1
 
 COLLECTION_DIR=outputs
 FILENAME_BASE="./$COLLECTION_DIR/$SYSTEM-$NODES-$(date +%m-%d)"
@@ -41,9 +40,9 @@ run_test()
     RUN_FILE="$COLLECTION_DIR/$1.tmp"
     STRING="Test: ${2} $NODES $PPN $SIZE"
     if [[ "$1" == "mpich" ]]; then
-        flux run -N$NODES --tasks-per-node=$PPN --output="$RUN_FILE" $TEST -n $SIZE -c mpi -t $ITERS
+        flux run -x -N$NODES --tasks-per-node=$PPN --output="$RUN_FILE" $TEST -n $SIZE -c mpi -t $ITERS
     else
-        flux run -N$NODES --tasks-per-node=$PPN --output="$RUN_FILE" $TEST -n $SIZE -c mpi-advance -t $ITERS
+        flux run -x -N$NODES --tasks-per-node=$PPN --output="$RUN_FILE" $TEST -n $SIZE -c mpi-advance -t $ITERS
     fi
     sed -i "1i$STRING" $RUN_FILE
 }
@@ -69,10 +68,10 @@ for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
         unset MPI_ADVANCE_FINEGRAIN_MEMORY
 
         export MPICH_GPU_SUPPORT_ENABLED=1
-        # export MPICH_GPU_IPC_ENABLED=0
+        #export MPICH_GPU_IPC_ENABLED=0
         run_test "mpich" "MPI Single Buffer"            
         unset MPICH_GPU_SUPPORT_ENABLED
-        # unset MPICH_GPU_IPC_ENABLED
+        #unset MPICH_GPU_IPC_ENABLED
 
         cat $COLLECTION_DIR/*.tmp >> $TARGET
         rm -f $COLLECTION_DIR/*.tmp
