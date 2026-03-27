@@ -84,27 +84,41 @@ if [ -z $TIME ]; then
 fi
 
 echo "Job node range (powers of 2): $START_EXP:$END_EXP ( for $TIME, on $QUEUE, repeated $REPEATS time(s))"
+COLLECTION_DIR=outputs
 
 for (( i=0; i<$REPEATS; i++ )); do
     prev_job_id=""
     for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
         NODES=$((2 ** $exp))
         SLOTS=$((4 * $NODES))
-        if [ -z "$prev_job_id" ]; then
-            set -x
-            prev_job_id=$(flux batch --time-limit=$TIME --queue=$QUEUE \
-                                     --output=$SYSTEM-$NODES-$i.out    \
-                                     --nodes=$NODES --nslots=$SLOTS    \
-                                     ./$SCRIPT)
-            set +x
+
+        if [ -n "$prev_job_id" ]; then
+            dependency_option="--dependency=afterany:$prev_job_id"
         else
-            set -x
-            prev_job_id=$(flux batch --time-limit=$TIME --queue=$QUEUE  \
-                                     --output=$SYSTEM-$NODES-$i.out     \
-                                     --dependency=afterany:$prev_job_id \
-                                     --nodes=$NODES --nslots=$SLOTS     \
-                                     ./$SCRIPT)
-            set +x
+            dependency_option=""
         fi
+
+        # Create files for specific run
+        FILENAME_BASE="./$COLLECTION_DIR/$SYSTEM-$NODES-$(date +%m-%d)"
+        COUNT=1
+        TARGET="${FILENAME_BASE}-${COUNT}.out"
+
+        while [[ -e $TARGET ]]; do
+            ((COUNT++))
+            TARGET="${FILENAME_BASE}-${COUNT}.out"
+        done
+
+        touch "$TARGET"
+        echo $TARGET
+
+        set -x
+        prev_job_id=$(flux batch --time-limit=$TIME --queue=$QUEUE     \
+                                    --output=$SYSTEM-$NODES-$i.out     \
+                                    --nodes=$NODES --nslots=$SLOTS     \
+                                    --job-name="CBG-${NODES}"          \
+                                    --env=CBG_OUT=$TARGET              \
+                                    $dependency_option                 \
+                                    ./$SCRIPT)
+        set +x
     done
 done

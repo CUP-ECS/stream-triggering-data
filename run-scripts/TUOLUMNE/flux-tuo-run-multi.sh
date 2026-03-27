@@ -11,24 +11,6 @@ SYSTEM=TUO
 export HSA_XNACK=1
 module load rocm craype-accel-amd-gfx942 libfabric/2.1
 
-COLLECTION_DIR=outputs
-FILENAME_BASE="./$COLLECTION_DIR/$SYSTEM-$NODES-$(date +%m-%d)"
-COUNT=1
-TARGET="${FILENAME_BASE}-${COUNT}.out"
-
-while [[ -e $TARGET ]]; do
-    ((COUNT++))
-    TARGET="${FILENAME_BASE}-${COUNT}.out"
-done
-
-touch "$TARGET"
-echo $TARGET
-
-HOSTNAMES_FILE="$COLLECTION_DIR/0-hostnames.tmp"
-VAR_MOD_FILE="$COLLECTION_DIR/0-var-mod.tmp"
-module list >> $VAR_MOD_FILE 2>&1
-srun --nodes=$NODES --ntasks-per-node=1 --output=$HOSTNAMES_FILE hostname
-
 TEST="/usr/workspace/$USER/apps/tuolumne/CabanaGhost/bin/gol"
 
 START_EXP=0
@@ -37,15 +19,24 @@ ITERS=1000
 
 run_test()
 {
-    RUN_FILE="$COLLECTION_DIR/$1.tmp"
-    STRING="Test: ${2} $NODES $PPN $SIZE"
     if [[ "$1" == "mpich" ]]; then
-        flux run -x -N$NODES --tasks-per-node=$PPN --output="$RUN_FILE" $TEST -n $SIZE -c mpi -t $ITERS
+        flux run -x -N$NODES --tasks-per-node=$PPN       \
+                 --output=$CBG_OUT -o output.mode=append \
+                 $TEST -n $SIZE -c mpi -t $ITERS
     else
-        flux run -x -N$NODES --tasks-per-node=$PPN --output="$RUN_FILE" $TEST -n $SIZE -c mpi-advance -t $ITERS
+        flux run -x -N$NODES --tasks-per-node=$PPN       \
+                 --output=$CBG_OUT -o output.mode=append \
+                 $TEST -n $SIZE -c mpi-advance -t $ITERS
     fi
-    sed -i "1i$STRING" $RUN_FILE
+    STRING="Test: ${2} $NODES $PPN $SIZE"
+    sed -i "1i$STRING" $CBG_OUT
 }
+
+# Add hostnames to file
+srun --nodes=$NODES --ntasks-per-node=1 --output=$CBG_OUT hostname
+# Save modules
+VAR_MOD_FILE=$CBG_OUT
+module list >> $VAR_MOD_FILE 2>&1
 
 matrix_sizes=(88320 16384)
 
@@ -72,8 +63,5 @@ for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
         run_test "mpich" "MPI Single Buffer"            
         unset MPICH_GPU_SUPPORT_ENABLED
         #unset MPICH_GPU_IPC_ENABLED
-
-        cat $COLLECTION_DIR/*.tmp >> $TARGET
-        rm -f $COLLECTION_DIR/*.tmp
     done
 done
