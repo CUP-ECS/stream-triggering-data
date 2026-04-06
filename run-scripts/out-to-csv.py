@@ -9,13 +9,19 @@ import statistics
 reset = "\033[0m"
 blue  = "\033[94m"
 
+valid_dates = None
+
 def parse_directory(dir_to_parse, cluster, writer):
     for entry in dir_to_parse.iterdir():
         if entry.is_file():
-            print(f"{blue}Found: {reset}{entry}")
-
             nodes = entry.name.split("-")[1]
-
+            month = entry.name.split("-")[2]
+            day   = entry.name.split("-")[3]
+            comb = month+ "-"+ day
+            if valid_dates is not None and not (comb in valid_dates):
+                continue
+            
+            print(f"{blue}Found: {reset}{entry}")
             tests = []
             start_lines = []
             solve_lines = []
@@ -43,9 +49,9 @@ def parse_directory(dir_to_parse, cluster, writer):
                                        .replace("grained ", "grained-")
                                        .replace("MPI ", "Cray-MPICH-CXI-GPU-Enabled ")
                                        .replace("MPIAdvance-CXI Single",
-                                                "MPIAdvance-CXI-Single-Buffering Single")
+                                                "MPIAdvance-CXI-Single-Buffering2 Single")
                                        .replace("MPIAdvance-CXI Double",
-                                                "MPIAdvance-CXI-Double-Buffering Double")
+                                                "MPIAdvance-CXI-Double-Buffering2 Double")
                             )
 
                 backend, buffer_type, nodes, ppn, buff_size = test_data.split(" ")

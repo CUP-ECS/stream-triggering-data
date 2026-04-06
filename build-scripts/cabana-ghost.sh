@@ -98,6 +98,15 @@ elif [ "$VERSION" -eq 2 ]; then
     GPU_ARCH=gfx90a
     KOKKOS_FLAG="-DKokkos_ARCH_AMD_GFX90A=ON"
     LIBFABRIC=/opt/cray/libfabric/1.22.0/
+elif [ "$VERSION" -eq 3 ]; then
+    SYSTEM=tuolumne
+    GPU_ARCH=gfx942
+    KOKKOS_FLAG="-DKokkos_ARCH_AMD_GFX942_APU=ON"
+    #module load libfabric/2.1
+    LIBFABRIC=/usr/lib64
+    if [ -z $BUILD_PATH ]; then
+        BUILD_PATH=/usr/workspace/$USER/apps/$SYSTEM
+    fi
 else
     echo "Invalid system specified, stopping."
     exit 1

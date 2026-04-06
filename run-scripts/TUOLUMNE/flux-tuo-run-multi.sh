@@ -9,7 +9,8 @@ NODES=$FLUX_TEST
 
 SYSTEM=TUO
 export HSA_XNACK=1
-module load rocm craype-accel-amd-gfx942 libfabric/2.1
+#module load rocm craype-accel-amd-gfx942 libfabric/2.1
+module load rocm/6.4.3 craype-accel-amd-gfx942
 
 TEST="/usr/workspace/$USER/apps/tuolumne/CabanaGhost/bin/gol"
 
