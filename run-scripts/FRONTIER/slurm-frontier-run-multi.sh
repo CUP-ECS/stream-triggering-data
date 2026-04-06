@@ -4,27 +4,12 @@ NODES=$SLURM_NNODES
 
 SYSTEM=FRONTIER
 export HSA_XNACK=1
-module load craype-accel-amd-gfx90a
-module load rocm
+module load cce/20.0.0 rocm/6.4.2 craype-accel-amd-gfx90a
 
-COLLECTION_DIR=outputs
-FILENAME_BASE="./$COLLECTION_DIR/$SYSTEM-$NODES-$(date +%m-%d)"
-COUNT=1
-TARGET="${FILENAME_BASE}-${COUNT}.out"
-
-while [[ -e $TARGET ]]; do
-    ((COUNT++))
-    TARGET="${FILENAME_BASE}-${COUNT}.out"
-done
-
-pwd
-touch "$TARGET"
-echo $TARGET
-
-HOSTNAMES_FILE="$COLLECTION_DIR/0-hostnames.tmp"
-VAR_MOD_FILE="$COLLECTION_DIR/0-var-mod.tmp"
-module list >> $VAR_MOD_FILE 2>&1
-srun --nodes=$NODES --ntasks-per-node=1 --output=$HOSTNAMES_FILE hostname
+# Add hostnames to file
+srun --nodes=$NODES --ntasks-per-node=1 --output=$CBG_OUT hostname
+# Save modules
+module list >> $CBG_OUT 2>&1
 
 TEST="/ccs/home/$USER/apps/CabanaGhost/bin/gol"
 
@@ -34,15 +19,16 @@ ITERS=1000
 
 run_test()
 {
-    RUN_FILE="$COLLECTION_DIR/$1.tmp"
-    STRING="Test: ${2} $NODES $PPN $SIZE"
+    echo "Test: ${2} $NODES $PPN $SIZE" >> $CBG_OUT
     if [[ "$1" == "mpich" ]]; then
-        srun -N$NODES --ntasks-per-node=$PPN --output="$RUN_FILE" $TEST -n $SIZE -c mpi -t $ITERS
+        srun -N$NODES --ntasks-per-node=$PPN --output="$CBG_OUT" \
+             $TEST -n $SIZE -c mpi -t $ITERS
     else
         TLES=$((1024 / $PPN))
-        srun --network=single_node_vni,job_vni,def_tles=$TLES -N$NODES --ntasks-per-node=$PPN --output="$RUN_FILE" $TEST -n $SIZE -c mpi-advance -t $ITERS
+        srun --network=single_node_vni,job_vni,def_tles=$TLES    \
+             -N$NODES --ntasks-per-node=$PPN --output="$CBG_OUT" \
+             $TEST -n $SIZE -c mpi-advance -t $ITERS
     fi
-    sed -i "1i$STRING" $RUN_FILE
 }
 
 matrix_sizes=(16384 61440)
@@ -70,8 +56,5 @@ for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
         run_test "mpich" "MPI Single Buffer"            
         unset MPICH_GPU_SUPPORT_ENABLED
         # unset MPICH_GPU_IPC_ENABLED
-
-        cat $COLLECTION_DIR/*.tmp >> $TARGET
-        rm -f $COLLECTION_DIR/*.tmp
     done
 done

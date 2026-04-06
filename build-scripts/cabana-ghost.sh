@@ -98,6 +98,7 @@ elif [ "$VERSION" -eq 2 ]; then
     GPU_ARCH=gfx90a
     KOKKOS_FLAG="-DKokkos_ARCH_AMD_GFX90A=ON"
     LIBFABRIC=/opt/cray/libfabric/1.22.0/
+    module load cce/20.0.0
 elif [ "$VERSION" -eq 3 ]; then
     SYSTEM=tuolumne
     GPU_ARCH=gfx942

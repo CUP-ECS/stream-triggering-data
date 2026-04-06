@@ -1,7 +1,7 @@
 #!/bin/bash
 
 usage() {
-    echo "Usage: $0 [-T] [-Q queue] [-E power] [-S power] [-I time]"
+    echo "Usage: $0 [-T] [-E power] [-S power] [-I time]"
     echo " -E [power] The power of 2 number of nodes to stop at (inclusive, default 2 (4 nodes))"
     echo " -S [power] The power of 2 number of nodes to start at (inclusive, default 0 (1 node))"
     echo " -I [time] The time for the TOTAL job length, in slurm notation (Default \"00:10:00\")"
@@ -32,7 +32,8 @@ done
 # Setup for the specific clusters (this script is specific to Frontier)
 echo "Running FRONTIER Script"
 SCRIPT=slurm-frontier-run-multi.sh
-cd FRONTIER
+SYSTEM=FRONTIER
+cd $SYSTEM
 
 # Determine how many times to repeat
 if [ -z $REPEATS ]; then
@@ -64,27 +65,40 @@ if [ -z $TIME ]; then
 fi
 
 echo "Job node range (powers of 2): $START_EXP:$END_EXP ( for $TIME, repeated $REPEATS time(s))"
-
-prev_job_id=""
+COLLECTION_DIR=outputs
 
 for (( i=0; i<$REPEATS; i++ )); do
+    prev_job_id=""
     for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
         NODES=$((2 ** $exp))
-        if [ -z "$prev_job_id" ]; then
-            set -x
-            prev_job_id=$(sbatch --parsable --time=$TIME --partition=batch \
-                                 --account=csc698  --nodes=$NODES          \
-                                 --output=FRONTIER-$NODES-$i.out           \
-                                 --exclusive ./$SCRIPT)
-            set +x
+
+        if [ -n "$prev_job_id" ]; then
+            dependency_option="--dependency=afterany:$prev_job_id"
         else
-            set -x
-            prev_job_id=$(sbatch --parsable --time=$TIME --partition=batch \
-                                 --dependency=afterany:$prev_job_id        \
-                                 --account=csc698  --nodes=$NODES          \
-                                 --output=FRONTIER-$NODES-$i.out           \
-                                 --exclusive ./$SCRIPT)
-            set +x
+            dependency_option=""
         fi
+
+        # Create files for specific run
+        FILENAME_BASE="./$COLLECTION_DIR/$SYSTEM-$NODES-$(date +%m-%d)"
+        COUNT=1
+        TARGET="${FILENAME_BASE}-${COUNT}.out"
+
+        while [[ -e $TARGET ]]; do
+            ((COUNT++))
+            TARGET="${FILENAME_BASE}-${COUNT}.out"
+        done
+
+        touch "$TARGET"
+        echo $TARGET
+
+        set -x
+        prev_job_id=$(sbatch --parsable --time=$TIME --partition=batch \
+                             --output=$SYSTEM-$NODES-$i.out            \
+                             --nodes=$NODES --job-name="CBG-${NODES}"  \
+                             --account=csc698 --exclusive              \
+                             --export=ALL,CBG_OUT=$TARGET              \
+                             ${dependency_option}                      \
+                             ./$SCRIPT)
+        set +x
     done
 done
