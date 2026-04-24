@@ -16,19 +16,22 @@ TEST="/ccs/home/$USER/apps/CabanaGhost/bin/gol"
 START_EXP=0
 END_EXP=3
 ITERS=1000
+PRINT_FREQ=200
 
 run_test()
 {
     echo "Test: ${2} $NODES $PPN $SIZE" >> $CBG_OUT
     if [[ "$1" == "mpich" ]]; then
-        srun -N$NODES --ntasks-per-node=$PPN --output="$CBG_OUT" \
-             $TEST -n $SIZE -c mpi -t $ITERS
+        BACKEND="mpi"
+        NETWORK_OPS=""
     else
-        TLES=$((1024 / $PPN))
-        srun --network=single_node_vni,job_vni,def_tles=$TLES    \
-             -N$NODES --ntasks-per-node=$PPN --output="$CBG_OUT" \
-             $TEST -n $SIZE -c mpi-advance -t $ITERS
+        BACKEND="mpi-advance"
+        TLES=$((1024 / PPN))
+        NETWORK_OPS="--network=single_node_vni,job_vni,def_tles=$TLES"
     fi
+
+    srun $NETWORK_OPS -N"$NODES" --ntasks-per-node="$PPN" --output="$CBG_OUT" \
+         "$TEST" -n "$SIZE" -c "$BACKEND" -t "$ITERS" -p "$PRINT_FREQ"
 }
 
 matrix_sizes=(16384 61440)
