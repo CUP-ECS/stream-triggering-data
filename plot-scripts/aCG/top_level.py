@@ -2,6 +2,12 @@ import argparse
 import subprocess
 import os
 
+## Example usages:
+# For parsing only:
+# python3 top_level.py --parse --input-dir=${HOME}/git/aCG/run/outputs --csv-dir=../../data/aCG/
+# For plotting only:
+# python3 top_level.py --plot --csv-dir=../../data/aCG/ --plot-dir=figs --matrix-filter=Serena,Bump_2911,Queen_4147,audikw_1 
+
 def main():
     ### Define parameters script can accept
     parser = argparse.ArgumentParser(description="Run greps, generate CSVs from MPI logs, and/or plot them.")
