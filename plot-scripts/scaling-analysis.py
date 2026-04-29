@@ -205,7 +205,7 @@ def best_speedup_by_backend(df):
     largest_rows = df.loc[idx]
     print(largest_rows)
 
-for i in [ ["Frontier", 2.0], ["Frontier", 30.0], ["Tuolumne", 2.0], ["Tuolumne", 62.0] ]:
+for i in [ ["Frontier", 2.0], ["Frontier", 30.0], ["Tuolumne", 2.0], ["Tuolumne", 30.0] ]:
     print(f"\nBest Speedup by Node/Rank and Rank for {i[0]} Problem Size {i[1]}")
     best_speedup_by_backend(speedup_df.loc[i[0], i[1]])
     best_speedup_by_backend(speedup_rank_df.loc[i[0], i[1]])
@@ -269,7 +269,7 @@ make_efficiency_plot(data=tuodata, x='Ranks', breakdown="GPUs per Node", extra="
 
 trimmeddata = frontierdata[frontierdata['Size'].isin([61440])]
 make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", style="GPUs per Node", breakdown="", extra="-PPN-Frontier")
-trimmeddata = tuodata[tuodata['Size'].isin([88320])]
+trimmeddata = tuodata[tuodata['Size'].isin([61440])]
 make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", style="GPUs per Node", breakdown="", extra="-PPN-Tuolumne")
 
 ### Then Frontier - Due to space limits, we don't include this data. We simply state
