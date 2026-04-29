@@ -117,7 +117,8 @@ def make_efficiency_plot(data, x, breakdown, style="Problem Size (GB)", extra=""
 
 
 # Read the raw data into a Pandas Data Frame
-all_files = glob.glob("../data/*/scaling-data*.csv")
+CSV_LOCATION="../../data/CabanaGhost/*/scaling-data*.csv"
+all_files = glob.glob(CSV_LOCATION)
 df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
 
 # Fix the labels of the columns to be more readable

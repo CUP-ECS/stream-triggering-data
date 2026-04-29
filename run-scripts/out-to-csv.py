@@ -85,7 +85,7 @@ def main():
             device = entry.name
             data_folder = entry/"outputs"
             if(data_folder.exists()):
-                outfile = f"../data/{entry.name}/scaling-data.csv"
+                outfile = f"../data/CabanaGhost/{entry.name}/scaling-data.csv"
                 print(f"{blue}Found: {reset}{data_folder} - {blue}Making: {reset}{outfile}")
                 with open(outfile, 'a') as output:
                     writer=csv.DictWriter(output, fieldnames=fieldnames)

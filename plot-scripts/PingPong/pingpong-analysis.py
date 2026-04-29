@@ -7,7 +7,9 @@ import seaborn as sbn
 import glob
 
 # Read the raw data into a Pandas Data Frame
-all_files = glob.glob("../data/PingPong/*.csv")
+CSV_LOCATION="../../data/PingPong/*.csv"
+all_files = glob.glob(CSV_LOCATION)
+
 df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
 
 # Filter out HIP runs (not used in paper)
