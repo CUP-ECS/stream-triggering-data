@@ -13,23 +13,26 @@ export HSA_XNACK=1
 module load rocm/6.4.3 craype-accel-amd-gfx942
 
 TEST="/usr/workspace/$USER/apps/tuolumne/CabanaGhost/bin/gol"
+#ROCPROF_EXE="rocprofv3 --sys-trace --output-format pftrace --" 
 
 START_EXP=0
 END_EXP=2
 ITERS=1000
+PRINT_FREQ=200
 
 run_test()
 {
     echo "Test: ${2} $NODES $PPN $SIZE" >> $CBG_OUT
     if [[ "$1" == "mpich" ]]; then
-        flux run -x -N$NODES --tasks-per-node=$PPN       \
-                 --output=$CBG_OUT -o output.mode=append \
-                 $TEST -n $SIZE -c mpi -t $ITERS
+        BACKEND="mpi"
     else
-        flux run -x -N$NODES --tasks-per-node=$PPN       \
-                 --output=$CBG_OUT -o output.mode=append \
-                 $TEST -n $SIZE -c mpi-advance -t $ITERS
+        BACKEND="mpi-advance"
     fi
+    
+    flux run -x -N"$NODES" --tasks-per-node="$PPN"        \
+             --output="$CBG_OUT" -o output.mode=append    \
+             "$TEST" -n "$SIZE" -c "$BACKEND" -t "$ITERS" \
+             -p "$PRINT_FREQ"
 }
 
 # Add hostnames to file
@@ -38,7 +41,9 @@ srun --nodes=$NODES --ntasks-per-node=1 --output=$CBG_OUT hostname
 VAR_MOD_FILE=$CBG_OUT
 module list >> $VAR_MOD_FILE 2>&1
 
-matrix_sizes=(88320 16384)
+matrix_sizes=(16384 61440)
+#export FI_LOG_LEVEL=warn 
+#export FI_LOG_PROV=cxi
 
 for (( exp=START_EXP; exp<=END_EXP; exp++ )); do
     PPN=$((2 ** $exp))
