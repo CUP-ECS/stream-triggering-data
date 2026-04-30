@@ -96,10 +96,10 @@ def acg_plot(x_data, x_data_name, x_data_label, curr_system=""):
     plt.grid()
     plt.axhline(0, color="black", linestyle="--", linewidth=1, alpha=0.5)
     plt.xlabel(f"{x_data_label} [Log Scale]")
-    plt.ylabel(f"Point Change in Speedup vs {BASELINE_BACKEND}")
-    plt.title(
-        f"Change in Parallel Efficiency vs {x_data_label} relative to {BASELINE_BACKEND}"
-    )
+    plt.ylabel(f"Percent Change in Speedup vs {BASELINE_BACKEND}")
+    #plt.title(
+    #    f"Change in Parallel Efficiency vs {x_data_label} relative to {BASELINE_BACKEND}"
+    #)
 
     plt.legend(title="Legend", bbox_to_anchor=(1.05, 1), loc="upper left")
     plt.tight_layout()
