@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
@@ -64,19 +63,41 @@ print("Using filter:", MATRICES)
 
 
 # ==========================================
-# Plot function
+# Helper filter to prepare data for plots
 # ==========================================
-def acg_plot(x_data, x_data_name, x_data_label, curr_system=""):
-    # 4. Merge X and Y data
+def plot_data_prep(x_data, curr_system):
+    # Merge X and Y data
     plot_data = pd.merge(
         df_solver, x_data, on=["system", "total_ranks", "Matrix"], how="inner"
     )
-
     # Filter for the plots
     plot_data = plot_data[plot_data["Backend"].isin(OTHER_BACKENDS)]
-    if MATRICES:
-        plot_data = plot_data[plot_data["Matrix"].isin(MATRICES)]
     plot_data = plot_data[plot_data["system"] == curr_system]
+
+    return plot_data
+
+
+# ==========================================
+# Helper filter to save the plots
+# ==========================================
+def save_to_file(file_name_base, curr_system=""):
+    plt.tight_layout()
+
+    if curr_system:
+        curr_system = f"{curr_system}-"
+    output_file = (f"{curr_system}speedup-{file_name_base}.png").replace(" ", "_")
+    plt.savefig(os.path.join(FIGURE_DIR, output_file), dpi=300, bbox_inches="tight")
+    print(
+        f"Plot successfully generated and saved to {os.path.join(FIGURE_DIR, output_file)}"
+    )
+
+
+# ==========================================
+# Plot function
+# ==========================================
+def acg_plot(x_data, x_data_name, x_data_label, curr_system):
+
+    plot_data = plot_data_prep(x_data, curr_system)
 
     plt.figure(figsize=(10, 6))
 
@@ -97,20 +118,69 @@ def acg_plot(x_data, x_data_name, x_data_label, curr_system=""):
     plt.axhline(0, color="black", linestyle="--", linewidth=1, alpha=0.5)
     plt.xlabel(f"{x_data_label} [Log Scale]")
     plt.ylabel(f"Percent Change in Speedup vs {BASELINE_BACKEND}")
-    #plt.title(
-    #    f"Change in Parallel Efficiency vs {x_data_label} relative to {BASELINE_BACKEND}"
-    #)
 
     plt.legend(title="Legend", bbox_to_anchor=(1.05, 1), loc="upper left")
-    plt.tight_layout()
+    save_to_file(x_data_name, curr_system)
 
-    if curr_system:
-        curr_system = f"{curr_system}-"
-    output_file = (f"{curr_system}speedup-{x_data_name}.png").replace(" ", "_")
-    plt.savefig(os.path.join(FIGURE_DIR, output_file), dpi=300, bbox_inches="tight")
-    print(
-        f"Plot successfully generated and saved to {os.path.join(FIGURE_DIR, output_file)}"
+
+# ==========================================
+# Side-by-side plots
+# ==========================================
+def acg_msg_size_comm_partner(
+    x_data, x_data_name, x_data_label, x2_data, x2_data_name, x2_data_label, curr_system
+):
+    plot_data = plot_data_prep(x_data, curr_system)
+    plot_data2 = plot_data_prep(x2_data, curr_system)
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
+
+    sns.lineplot(
+        data=plot_data,
+        x=x_data_name,
+        y="Percent Speedup Improvement",
+        hue="Backend",
+        style="Matrix",
+        palette=BACKEND_COLORS,
+        markers=MATRIX_MARKERS,
+        dashes=False,
+        errorbar=("ci", 95),
+        ax=axes[0],
+        legend=False,
     )
+
+    sns.lineplot(
+        data=plot_data2,
+        x=x2_data_name,
+        y="Percent Speedup Improvement",
+        hue="Backend",
+        style="Matrix",
+        palette=BACKEND_COLORS,
+        markers=MATRIX_MARKERS,
+        dashes=False,
+        errorbar=("ci", 95),
+        ax=axes[1],
+    )
+
+    handles, labels = axes[1].get_legend_handles_labels()
+    axes[1].get_legend().remove()
+
+    axes[1].legend(
+        handles,
+        labels,
+        loc="upper left",
+        bbox_to_anchor=(1.05, 1.0),
+        title="Legend",
+    )
+
+    for ax in axes:
+        ax.set_xscale("log", base=2)
+        ax.grid(True, linestyle="--", linewidth=1, alpha=0.5)
+        ax.set_ylabel(f"Percent Change in Speedup vs {BASELINE_BACKEND}")
+
+    axes[0].set_xlabel(x_data_label)
+    axes[1].set_xlabel(x2_data_label)
+
+    save_to_file(f"{x_data_name}-{x2_data_name}", curr_system)
 
 
 # ==========================================
@@ -138,63 +208,52 @@ df_solver["Backend"] = df_solver["Backend"].replace(
 df_solver["total_ranks"] = df_solver["nodes"] * df_solver["ppn"]
 df_mpi["total_ranks"] = df_mpi["nodes"] * df_mpi["ppn"]
 
-# 2. Process MPI Stats for X-axis (Average Message Size)
+# Apply matrices filter
 if MATRICES:
     df_mpi = df_mpi[df_mpi["Matrix"].isin(MATRICES)]
+    df_solver = df_solver[df_solver["Matrix"].isin(MATRICES)]
+
+# Process MPI Stats for X-axis (Average Message Size)
 df_mpi["rank_avg_msg_size"] = df_mpi["bytes sent per iteration"] / df_mpi[
     "messages sent per iteration"
 ].replace(0, np.nan)
 
 # For Plot 1
 x_data_avg_msg_size = (
-    df_mpi.groupby(["system", "total_ranks", "Matrix"])["rank_avg_msg_size"]
-    .mean()
+    df_mpi.groupby(["system", "total_ranks", "Matrix"])
+    .agg(avg_msg_size=("rank_avg_msg_size", "mean"))
     .reset_index()
 )
-x_data_avg_msg_size.rename(columns={"rank_avg_msg_size": "avg_msg_size"}, inplace=True)
+
+
+def get_value_avg_per_rank(column_name):
+    return (
+        # First, filter out 1 rank runs, as those don't send anything
+        df_mpi[df_mpi["total_ranks"] > 1]
+        # Then get average of all runs for a given rank
+        .groupby(["system", "total_ranks", "Matrix", "rank"])[column_name]
+        .mean()
+        # Then do average across all ranks
+        .groupby(level=["system", "total_ranks", "Matrix"])
+        .mean()
+        .reset_index()
+    )
+
 
 # For Plot 2
-# Filter out 1 rank runs, as those don't send anything
-x_data_tbs = df_mpi[df_mpi["total_ranks"] > 1]
-x_data_tbs = (
-    x_data_tbs.groupby(["system", "total_ranks", "Matrix", "rank"])[
-        "bytes sent per iteration"
-    ]
-    .mean()
-    .reset_index()
-)
-x_data_tbs = (
-    x_data_tbs.groupby(["system", "total_ranks", "Matrix"])["bytes sent per iteration"]
-    .mean()
-    .reset_index()
-)
-
+x_data_tbs = get_value_avg_per_rank("bytes sent per iteration")
 # For Plot 3
-# Filter out 1 rank runs, as those don't send anything
-x_data_msg_count = df_mpi[df_mpi["total_ranks"] > 1]
-x_data_msg_count = (
-    x_data_msg_count.groupby(["system", "total_ranks", "Matrix", "rank"])[
-        "messages sent per iteration"
-    ]
-    .mean()
-    .reset_index()
-)
-x_data_msg_count = (
-    x_data_msg_count.groupby(["system", "total_ranks", "Matrix"])[
-        "messages sent per iteration"
-    ]
-    .mean()
-    .reset_index()
-)
+x_data_msg_count = get_value_avg_per_rank("messages sent per iteration")
 
-# 3. Process Solver Times for Y-axis (User's Parallel Efficiency/Speedup)
-# Create the pivot_df as requested to find the 'min' runtime
+
+# Process Solver Times for Y-axis (User's Parallel Efficiency/Speedup)
+# Create the pivot_df to find the 'min' runtime
 pivot_df = (
     df_solver.groupby(["system", "Matrix", "total_ranks", "Backend"])["solver_time"]
     .agg(["min", "mean"])
     .reset_index()
+    .set_index(["system", "Matrix", "total_ranks", "Backend"])
 )
-pivot_df.set_index(["system", "Matrix", "total_ranks", "Backend"], inplace=True)
 
 # Isolate baseline data to find the minimum ranks per problem
 df_base = df_solver[df_solver["Backend"] == BASELINE_BACKEND]
@@ -232,7 +291,7 @@ def relative_speedup_func(row):
     return 100 * (row["speedup"] - base_speedup) / base_speedup
 
 
-# Apply your speedup function
+# Apply speedup function
 df_solver["speedup"] = df_solver.apply(speedup_func, axis=1)
 
 speedup_df = pd.pivot_table(
@@ -265,78 +324,12 @@ for curr_system in CLI_SYSTEMS:
         "Messages Sent Per Iteration (averaged across all ranks)",
         curr_system,
     )
-
-    all_data = pd.merge(
-        df_solver, x_data_avg_msg_size, on=["total_ranks", "Matrix"], how="inner"
+    acg_msg_size_comm_partner(
+        x_data_avg_msg_size,
+        "avg_msg_size",
+        "Average Message Size (Bytes)",
+        x_data_msg_count,
+        "messages sent per iteration",
+        "Messages Sent Per Iteration (averaged across all ranks)",
+        curr_system,
     )
-    all_data = pd.merge(
-        all_data, x_data_msg_count, on=["total_ranks", "Matrix"], how="inner"
-    )
-
-    # Filter for the plots
-    all_data = all_data[all_data["Backend"].isin(OTHER_BACKENDS)]
-    if MATRICES:
-        all_data = all_data[all_data["Matrix"].isin(MATRICES)]
-    all_data = all_data[all_data["system"] == curr_system]
-
-    fig = plt.figure(figsize=(10, 6))
-    ax = fig.add_subplot(projection="3d")
-
-    grouped = all_data.groupby(["Matrix", "Backend"])
-    for value, group_df in grouped:
-        matrix, backend = value
-        sc = ax.scatter(
-            xs=group_df["avg_msg_size"],
-            zs=group_df["messages sent per iteration"],
-            ys=group_df["Percent Speedup Improvement"],
-            marker=MATRIX_MARKERS[matrix],
-            color=BACKEND_COLORS[backend],
-            label=f"Matrix: {matrix}, Backend: {backend}",
-        )
-
-    backendLegend = []
-    for x, y in BACKEND_COLORS.items():
-        legend_patch = mlines.Line2D(
-            [], [], color=y, marker="_", linestyle="None", markersize=10, label=f"{x}"
-        )
-        backendLegend.append(legend_patch)
-    matrixLegend = []
-    for x, y in MATRIX_MARKERS.items():
-        legend_patch = mlines.Line2D(
-            [],
-            [],
-            color="black",
-            marker=y,
-            linestyle="None",
-            markersize=8,
-            label=f"{x}",
-        )
-        matrixLegend.append(legend_patch)
-
-    ax.set_xlabel("avg_msg_size")
-    ax.set_zlabel("messages sent per iteration")
-    ax.set_ylabel("Percent Speedup Improvement")
-    first_legend = ax.legend(handles=backendLegend, loc="upper left", title="Backend")
-    ax.add_artist(first_legend)  # This keeps the first legend from being deleted
-
-    # 5. Add the second legend (Colors)
-    ax.legend(handles=matrixLegend, loc="upper right", title="Matrix")
-    plt.savefig(
-        os.path.join(FIGURE_DIR, f"{curr_system}-test.png"),
-        dpi=300,
-        bbox_inches="tight",
-    )
-
-    # plt.xscale('log', base=2)
-    # plt.grid()
-    # plt.axhline(0, color='black', linestyle='--', linewidth=1, alpha=0.5)
-    # plt.xlabel(f'{x_data_label} [Log Scale]')
-    # plt.ylabel(f'Point Change in Speedup vs {BASELINE_BACKEND}')
-    # plt.title(f'Change in Parallel Efficiency vs {x_data_label} relative to {BASELINE_BACKEND}')
-
-    # plt.legend(title='Legend', bbox_to_anchor=(1.05, 1), loc='upper left')
-    # plt.tight_layout()
-
-    # output_file=(f'speedup-{x_data_name}.png').replace(" ", "_")
-
-    # print(f"Plot successfully generated and saved to {os.path.join(FIGURE_DIR, output_file)}")
