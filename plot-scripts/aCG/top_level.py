@@ -37,6 +37,14 @@ def main():
     )
 
     parser.add_argument(
+        "--date-filter",
+        help='Comma separated list of dates on data files to parse (format: "<month>-<day>"; default is to grab all; Requires --parse)'
+    )
+    parser.add_argument(
+        "--backend-filter",
+        help="Comma separated list of backends to use (mpi, st, rccl; default is all; Requires --parse)"
+    )
+    parser.add_argument(
         "--matrix-filter",
         help="Comma separated list of matrices to show in plots. Does nothing if --plot is not used.",
     )
@@ -96,6 +104,14 @@ def main():
                 stdout=f,
             )
 
+        backend_filter_string = ""
+        if args.backend_filter:
+            backend_filter_string = f"--backends={args.backend_filter}"
+        
+        dates_filter_string = ""
+        if args.date_filter:
+            dates_filter_string = f"--dates={args.date_filter}"
+
         print("Parsing statistics to CSV...")
         subprocess.run(
             [
@@ -117,6 +133,8 @@ def main():
                 times_grep_out,
                 "--output",
                 times_csv,
+                backend_filter_string,
+                dates_filter_string
             ]
         )
 
