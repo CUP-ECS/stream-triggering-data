@@ -12,7 +12,11 @@ palette = {
     'Stream-Triggered Rsend': 'tab:orange',
     'Stream-Triggered Rssend': 'tab:red',
     'Stream-Triggered Send': 'tab:blue',
-    'Stream-Triggered Ssend': 'tab:purple'
+    'Stream-Triggered Ssend': 'tab:purple',
+    1: 'tab:green',
+    2: 'tab:orange',
+    4: 'tab:blue',
+    8: 'tab:red',
 }
 
 system_order = ["Frontier", "Tuolumne"]
@@ -274,11 +278,11 @@ make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", style="GPUs per 
 
 ### Then Frontier - Due to space limits, we don't include this data. We simply state
 ### in the text that there's no difference.
-#trimmeddata = frontierdata[frontierdata['GPUs per Node'].isin([4,8])]
-#make_speedup_plot(data=trimmeddata, x="Ranks", yscale="log", breakdown="GPUs per Node", extra="-Frontier")
-#make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", breakdown="GPUs per Node", extra="-Frontier")
-#make_percent_plot(data=trimmeddata, x='Ranks', breakdown="GPUs per Node", extra="-Frontier")
-#make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="GPUs per Node", extra="-Frontier")
+trimmeddata = frontierdata[frontierdata['GPUs per Node'].isin([1,2,4,8])]
+make_speedup_plot(data=trimmeddata, x="Ranks", yscale="log", breakdown="GPUs per Node", extra="-Frontier")
+make_speedup_plot(data=trimmeddata, x="Ranks", yscale="linear", breakdown="GPUs per Node", extra="-Frontier")
+make_percent_plot(data=trimmeddata, x='Ranks', breakdown="GPUs per Node", extra="-Frontier")
+make_efficiency_plot(data=trimmeddata, x='Ranks', breakdown="GPUs per Node", extra="-Frontier")
 
 ## To understand where the performance impacts are most significant, 
 ## we look at percent improvement by edge length, limited to Frontier 
