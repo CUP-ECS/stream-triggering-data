@@ -140,11 +140,11 @@ def get_max_speedup(data):
     # Get averages first
     avg_df = (
         data.groupby(["System", "Matrix", "Ranks", "Backend"])["Speedup"]
-        .mean()
+        .agg(['mean', 'std'])
         .reset_index()
     )
 
-    result_indices = avg_df.groupby(["Backend", "Matrix"])["Speedup"].idxmax()
+    result_indices = avg_df.groupby(["Backend", "Matrix"])["mean"].idxmax()
     final_df = avg_df.loc[result_indices]
     print(final_df)
 
@@ -153,7 +153,7 @@ def get_1_node_runs(data):
     # Get averages first
     avg_df = (
         data.groupby(["System", "Matrix", "Ranks", "Backend"])["Solve Time"]
-        .mean()
+        .agg(['mean', 'std'])
         .reset_index()
     )
 
