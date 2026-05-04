@@ -32,7 +32,7 @@ df['Test_Type'] = df['Test_Type'].replace({
 # Calculate true buffer size, bandwidth and latency
 df['Buffer Size'] = df['Items'] * 4
 df['Bandwidth'] = (df['Iters'] * 2 * df['Buffer Size']) / df['Time'] / 1073741824 
-df['Latency'] = df['Time'] / df['Iters']
+df['Latency'] = (df['Time'] / df['Iters']) * 1e+6
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -75,12 +75,12 @@ for key, group in df.groupby("GPU"):
                  errorbar=("ci", 95), markers=True, palette=custom_palette, hue_order=custom_order)
     plt.xscale('log', base=2)
     plt.xlabel("Buffer Size (bytes)")
-    plt.yscale('log', base=10)
-    plt.ylabel("Latency (seconds)")
+    #plt.yscale('log', base=10)
+    plt.ylabel("Latency (microseconds)")
     plt.legend(title="Backend")
     plt.grid(which="both")
     plt.tight_layout()
-    plt.savefig(f"pingpong-latency-logY-{key}.png")
+    plt.savefig(f"pingpong-latency-linearY-{key}.png")
 
     plt.figure(figsize=(6,3))
     sbn.lineplot(data=group, x='Buffer Size',y='Bandwidth', hue='Test_Type', style='Test_Type',
@@ -94,15 +94,3 @@ for key, group in df.groupby("GPU"):
     plt.tight_layout()
     plt.savefig(f"pingpong-bandwidth-linearY-{key}.png")
 
-# latency_pivot_df = pd.pivot_table(df, 
-#                      index = ["Test Type", "Buffer Size"],
-#                      values = ["Latency"],
-#                      aggfunc = ["min", "mean", "std"])
-# latency_pivot_df.columns = latency_pivot_df.columns.droplevel(1)
-# print(latency_pivot_df)
-# bw_pivot_df = pd.pivot_table(df, 
-#                      index = ["Test Type", "Buffer Size"],
-#                      values = ["Bandwidth"],
-#                      aggfunc = ["min", "mean", "std"])
-# bw_pivot_df.columns = bw_pivot_df.columns.droplevel(1)
-# print(bw_pivot_df)

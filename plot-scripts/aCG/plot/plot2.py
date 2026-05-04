@@ -31,6 +31,12 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+# Pandas printing options:
+pd.set_option("display.max_rows", None)
+pd.set_option("display.max_columns", None)
+pd.set_option("display.max_colwidth", None)
+pd.set_option("display.width", 100)
+
 FIGURE_DIR = args.plot_dir
 CLI_SYSTEMS = args.systems.split(",")
 
@@ -139,7 +145,7 @@ def make_runtime_plot(
 def get_max_speedup(data):
     # Get averages first
     avg_df = (
-        data.groupby(["System", "Matrix", "Ranks", "Backend"])["Speedup"]
+        data.groupby(["System", "Matrix", "GPUs per Node", "Ranks", "Backend"])["Speedup"]
         .agg(['mean', 'std'])
         .reset_index()
     )
@@ -278,9 +284,6 @@ df = df.sort_values(["Ranks", "Nodes"])
 ### Aggregate the minimum, mean, and variance of the solver time using
 ### a pivot table to calculate a base value to use for calculating speedup
 ### calculations using a pivot table
-pd.set_option("display.max_rows", None)
-pd.set_option("display.max_columns", None)
-pd.set_option("display.max_colwidth", None)
 pivot_df = pd.pivot_table(
     df,
     index=["System", "Matrix", "Ranks", "Backend"],
