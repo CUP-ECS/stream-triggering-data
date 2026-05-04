@@ -38,15 +38,23 @@ def main():
 
     parser.add_argument(
         "--date-filter",
-        help='Comma separated list of dates on data files to parse (format: "<month>-<day>"; default is to grab all; Requires --parse)'
+        help='Comma separated list of dates on data files to parse (format: "<month>-<day>"; default is to grab all; Requires --parse)',
     )
     parser.add_argument(
         "--backend-filter",
-        help="Comma separated list of backends to use (mpi, st, rccl; default is all; Requires --parse)"
+        help="Comma separated list of backends to use (mpi, st, rccl; default is all; Requires --parse)",
     )
     parser.add_argument(
         "--matrix-filter",
         help="Comma separated list of matrices to show in plots. Does nothing if --plot is not used.",
+    )
+    parser.add_argument(
+        "--system-filter",
+        help="Comma separated list of systems to show in plots. Does nothing if --plot is not used.",
+    )
+    parser.add_argument(
+        "--baseline-backend",
+        help="Choose the baseline backend to compare against. Does nothing if --plot is not used.",
     )
     args = parser.parse_args()
 
@@ -107,7 +115,7 @@ def main():
         backend_filter_string = ""
         if args.backend_filter:
             backend_filter_string = f"--backends={args.backend_filter}"
-        
+
         dates_filter_string = ""
         if args.date_filter:
             dates_filter_string = f"--dates={args.date_filter}"
@@ -134,7 +142,7 @@ def main():
                 "--output",
                 times_csv,
                 backend_filter_string,
-                dates_filter_string
+                dates_filter_string,
             ]
         )
 
@@ -150,11 +158,43 @@ def main():
 
     ### Run code for creating plots
     if args.plot:
+        ## Base line commands
+        first_plot = [
+            "python3",
+            "plot/plots.py",
+        ]
+        second_plot = [
+            "python3",
+            "plot/plot2.py",
+        ]
+
+        ## Add CSV Directory
+        first_plot.extend(
+            [
+                "--csv-dir",
+                args.csv_dir,
+                "--plot-dir",
+                args.plot_dir,
+                "--matrix-filter",
+            ]
+        )
+        second_plot.extend(
+            [
+                "--csv-dir",
+                args.csv_dir,
+                "--plot-dir",
+                args.plot_dir,
+                "--matrix-filter",
+            ]
+        )
+
         ## Check if matrix selection present:
         if args.matrix_filter:
-            matrix_flag = f"{args.matrix_filter}"
+            first_plot.append(args.matrix_filter)
+            second_plot.append(args.matrix_filter)
         else:
-            matrix_flag = "all"
+            first_plot.append("all")
+            second_plot.append("all")
 
         ## Figure out which systems have data present:
         unique_prefixes = set()
@@ -163,37 +203,22 @@ def main():
             if os.path.isdir(os.path.join(args.csv_dir, filename)):
                 a_part = filename.capitalize()
                 unique_prefixes.add(a_part)
-        comma_separated_systems = ",".join(sorted(unique_prefixes))
+        if args.system_filter:
+            comma_separated_systems = args.system_filter
+        else:
+            comma_separated_systems = ",".join(sorted(unique_prefixes))
         print(f"Creating plots for {comma_separated_systems}...")
         os.makedirs(args.plot_dir, exist_ok=True)
-        subprocess.run(
-            [
-                "python3",
-                "plot/plots.py",
-                "--csv-dir",
-                args.csv_dir,
-                "--plot-dir",
-                args.plot_dir,
-                "--systems",
-                comma_separated_systems,
-                "--matrix-filter",
-                matrix_flag,
-            ]
-        )
-        subprocess.run(
-            [
-                "python3",
-                "plot/plot2.py",
-                "--csv-dir",
-                args.csv_dir,
-                "--plot-dir",
-                args.plot_dir,
-                "--systems",
-                comma_separated_systems,
-                "--matrix-filter",
-                matrix_flag,
-            ]
-        )
+
+        if args.baseline_backend:
+            first_plot.extend(["--baseline-backend", args.baseline_backend])
+            second_plot.extend(["--baseline-backend", args.baseline_backend])
+
+        first_plot.extend(["--systems", comma_separated_systems])
+        second_plot.extend(["--systems", comma_separated_systems])
+
+        subprocess.run(first_plot)
+        subprocess.run(second_plot)
         print(f"Done! Plots saved in {os.path.abspath(args.plot_dir)}")
 
 

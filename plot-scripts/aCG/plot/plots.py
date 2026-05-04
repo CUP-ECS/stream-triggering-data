@@ -27,13 +27,20 @@ parser.add_argument(
     help="Comma-separated list of systems to look for data from.",
 )
 parser.add_argument("--matrix-filter", help="Comma-separated list of matrices to show.")
+parser.add_argument(
+    "--baseline-backend", help="Choose the baseline backend to compare against."
+)
 args = parser.parse_args()
 
 FIGURE_DIR = args.plot_dir
 CLI_SYSTEMS = args.systems.split(",")
 
 # Experiment configurations
-BASELINE_BACKEND = "Cray MPICH"
+if args.baseline_backend:
+    BASELINE_BACKEND = args.baseline_backend
+else:
+    BASELINE_BACKEND = "Cray MPICH"
+
 OTHER_BACKENDS = ["RCCL", "Stream-Triggered"]
 
 # Visual customizations
@@ -188,11 +195,18 @@ def acg_msg_size_comm_partner(
 # ==========================================
 
 # 1. Read CSVs
-MPI_CSV = os.path.join(args.csv_dir, "*/mpi_stats.csv")
-SOLVER_CSV = os.path.join(args.csv_dir, "*/solver_times.csv")
-all_files = glob.glob(SOLVER_CSV)
+all_files = [
+    file
+    for d in CLI_SYSTEMS
+    for file in glob.glob(os.path.join(args.csv_dir, d.upper(), "solver_times*.csv"))
+]
 df_solver = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
-all_files = glob.glob(MPI_CSV)
+
+all_files = [
+    file
+    for d in CLI_SYSTEMS
+    for file in glob.glob(os.path.join(args.csv_dir, d.upper(), "mpi_stats.csv"))
+]
 df_mpi = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
 
 # Clean up some of the fields:
@@ -201,7 +215,12 @@ df_mpi = df_mpi.rename(columns={"matrix": "Matrix"})
 
 # Fix the names of the backends to be more readable
 df_solver["Backend"] = df_solver["Backend"].replace(
-    {"st": "Stream-Triggered", "rccl": "RCCL", "mpi": "Cray MPICH"}
+    {
+        "st": "Stream-Triggered",
+        "rccl": "RCCL",
+        "mpi": "Cray MPICH",
+        "mpi-no-ipc": "Cray MPICH 2",
+    }
 )
 
 # Calculate total ranks
