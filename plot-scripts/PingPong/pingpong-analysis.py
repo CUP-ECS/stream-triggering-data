@@ -77,6 +77,7 @@ for key, group in df.groupby("GPU"):
     plt.xlabel("Buffer Size (bytes)")
     #plt.yscale('log', base=10)
     plt.ylabel("Latency (microseconds)")
+    plt.ylim(bottom=0)
     plt.legend(title="Backend")
     plt.grid(which="both")
     plt.tight_layout()
