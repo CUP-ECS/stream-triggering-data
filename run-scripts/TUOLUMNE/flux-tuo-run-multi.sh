@@ -10,13 +10,14 @@ NODES=$FLUX_TEST
 SYSTEM=TUO
 export HSA_XNACK=1
 #module load rocm craype-accel-amd-gfx942 libfabric/2.1
-module load rocm/6.4.3 craype-accel-amd-gfx942
+#module load rocm/6.4.3 craype-accel-amd-gfx942
+module load craype/2.7.36 rocm/7.14beta1 rocmcc/7.14beta1-cce-21.0.2d-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
 
 TEST="/usr/workspace/$USER/apps/tuolumne/CabanaGhost/bin/gol"
 #ROCPROF_EXE="rocprofv3 --sys-trace --output-format pftrace --" 
 
 START_EXP=0
-END_EXP=2
+END_EXP=0
 ITERS=1000
 PRINT_FREQ=200
 
@@ -31,7 +32,7 @@ run_test()
     
     flux run -x -N"$NODES" --tasks-per-node="$PPN"        \
              --output="$CBG_OUT" -o output.mode=append    \
-             "$TEST" -n "$SIZE" -c "$BACKEND" -t "$ITERS" \
+             ${ROCPROF_EXE} "$TEST" -n "$SIZE" -c "$BACKEND" -t "$ITERS" \
              -p "$PRINT_FREQ"
 }
 
@@ -41,6 +42,7 @@ srun --nodes=$NODES --ntasks-per-node=1 --output=$CBG_OUT hostname
 VAR_MOD_FILE=$CBG_OUT
 module list >> $VAR_MOD_FILE 2>&1
 
+ulimit -c 0
 matrix_sizes=(16384 61440)
 #export FI_LOG_LEVEL=warn 
 #export FI_LOG_PROV=cxi

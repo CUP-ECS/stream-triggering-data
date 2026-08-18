@@ -9,7 +9,8 @@ import statistics
 reset = "\033[0m"
 blue  = "\033[94m"
 
-valid_dates = None
+valid_dates = ["08-14"]
+outfile_name = "scaling_data_rocm7.csv"
 
 def parse_directory(dir_to_parse, cluster, writer):
     for entry in dir_to_parse.iterdir():
@@ -85,7 +86,7 @@ def main():
             device = entry.name
             data_folder = entry/"outputs"
             if(data_folder.exists()):
-                outfile = f"../data/CabanaGhost/{entry.name}/scaling-data.csv"
+                outfile = f"../data/CabanaGhost/{entry.name}/{outfile_name}"
                 print(f"{blue}Found: {reset}{data_folder} - {blue}Making: {reset}{outfile}")
                 with open(outfile, 'a') as output:
                     writer=csv.DictWriter(output, fieldnames=fieldnames)

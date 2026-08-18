@@ -12,6 +12,7 @@ usage() {
     echo " -T Integer that specifies build system: 0 (Tioga), 1 (Tuoloumne), 2 (Frontier) (default TIOGA version)"
     echo " -S Skip Silo build"
     echo " -K Skip Kokkos build"
+    echo " -A Skip MPI Advance ST build"
     echo " -F [path] Where the script should attempt to install all libraries (optional, default depends on system)"
     echo " -B [path] Base directory where all the git repos are cloned to (optional, default = \"$HOME/git\")"
     echo " -R [string] ROCM version to load (will do \"module load rocm/<version>\")"
@@ -41,7 +42,7 @@ build_build_dir() {
 	mkdir $DIR_TO_BUILD && cd $DIR_TO_BUILD
 }
 
-while getopts ":T:SKF:B:R:" opt; do
+while getopts ":T:SKAF:B:R:" opt; do
     case $opt in
         T)
             VERSION="$OPTARG"
@@ -51,6 +52,9 @@ while getopts ":T:SKF:B:R:" opt; do
             ;;
         K)
             SKIP_KOKKOS=1
+            ;;
+        A)
+            SKIP_ST=1
             ;;
         F)
             BUILD_PATH="$OPTARG"
@@ -113,6 +117,10 @@ else
     exit 1
 fi
 
+C_COMP=mpiamdclang
+CXX_COMP=mpiamdclang++
+MODE=Release
+
 echo -e "Running ${CYAN}$SYSTEM${RESET} version:"
 module load "$ROCM_MODULE" "craype-accel-amd-${GPU_ARCH}"
 module list
@@ -157,8 +165,9 @@ build_build_dir
 cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/silo \
  -DSILO_ENABLE_HDF5=OFF                  \
- -DCMAKE_BUILD_TYPE=Release              \
- -DCMAKE_CXX_COMPILER=CC ..
+ -DCMAKE_BUILD_TYPE=$MODE                \
+ -DCMAKE_CXX_COMPILER=$CXX_COMP          \
+ -DCMAKE_C_COMPILER=$C_COMP ..
 
 make -j$THREADS install
 else
@@ -172,10 +181,11 @@ echo -e " -> ${CYAN}Building Kokkos${RESET}"
 build_build_dir
 cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/kokkos \
- -DCMAKE_BUILD_TYPE=Release \
+ -DCMAKE_BUILD_TYPE=$MODE \
  -DKokkos_ENABLE_HIP=ON \
  $KOKKOS_FLAG \
- -DCMAKE_CXX_COMPILER=CC \
+ -DCMAKE_CXX_COMPILER=$CXX_COMP \
+ -DCMAKE_C_COMPILER=$C_COMP \
  -DBUILD_SHARED_LIBS=ON ..
 
 make -j$THREADS install
@@ -185,6 +195,7 @@ cd build
 fi
 
 cd ../../stream-triggering
+if [ -z $SKIP_ST ]; then
 echo -e " -> ${CYAN}Building stream-triggering${RESET}"
 build_build_dir
 cmake \
@@ -193,20 +204,26 @@ cmake \
  -DUSE_CXI_BACKEND=ON \
  -DLIBFABRIC_PREFIX=$LIBFABRIC \
  -DCMAKE_HIP_ARCHITECTURES=$GPU_ARCH \
- -DCMAKE_BUILD_TYPE=Release ..
+ -DCMAKE_BUILD_TYPE=$MODE ..
 
 make -j$THREADS install
+else
+echo -e " -> ${BLUE}Skipping stream-triggering build${RESET}"
+cd build
+fi
 
 cd ../../Cabana
 echo -e " -> ${CYAN}Building Cabana${RESET}"
 build_build_dir
 cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/cabana \
- -DCMAKE_BUILD_TYPE=Release \
+ -DCMAKE_BUILD_TYPE=$MODE \
  -DCMAKE_PREFIX_PATH="$BUILD_PATH/kokkos;$BUILD_PATH/stream_trigger/" \
  -DCabana_ENABLE_MPI=ON \
  -DCabana_BUILD_STREAM_HALO=ON \
  -DCabana_REQUIRE_STREAM-TRIGGERING=ON \
+ -DCMAKE_CXX_COMPILER=$CXX_COMP \
+ -DCMAKE_C_COMPILER=$C_COMP \
 ..
 
 make -j$THREADS install
@@ -216,8 +233,10 @@ echo -e " -> ${CYAN}Building CabanaGhost${RESET}"
 build_build_dir
 cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/CabanaGhost \
- -DCMAKE_BUILD_TYPE=Release \
+ -DCMAKE_BUILD_TYPE=$MODE \
  -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE \
+ -DCMAKE_CXX_COMPILER=$CXX_COMP \
+ -DCMAKE_C_COMPILER=$C_COMP \
  -DCMAKE_PREFIX_PATH="$BUILD_PATH/kokkos;$BUILD_PATH/stream_trigger/;$BUILD_PATH/silo;$BUILD_PATH/cabana" ..
 
 make VERBOSE=1 install
