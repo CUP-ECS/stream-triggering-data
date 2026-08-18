@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import seaborn as sbn
 import glob
 
-
 parser = argparse.ArgumentParser(
     description="Create plots comparing MPI, ST, and RCCL backends in aCG"
 )
@@ -27,7 +26,16 @@ parser.add_argument(
     help="Comma-separated list of systems to look for data from.",
 )
 parser.add_argument("--matrix-filter", help="Comma-separated list of matrices to show.")
+parser.add_argument(
+    "--baseline-backend", help="Choose the baseline backend to compare against."
+)
 args = parser.parse_args()
+
+# Pandas printing options:
+pd.set_option("display.max_rows", None)
+pd.set_option("display.max_columns", None)
+pd.set_option("display.max_colwidth", None)
+pd.set_option("display.width", 100)
 
 FIGURE_DIR = args.plot_dir
 CLI_SYSTEMS = args.systems.split(",")
@@ -36,6 +44,7 @@ palette = {
     "Cray MPICH": "tab:green",
     "Stream-Triggered": "tab:blue",
     "RCCL": "tab:red",
+    "Cray MPICH 2": "tab:purple",
     "audikw_1": "tab:blue",
     "Bump_2911": "tab:green",
     "Cube_Coup_dt0": "tab:orange",
@@ -49,7 +58,12 @@ palette = {
 }
 
 system_order = ["Frontier", "Tuolumne"]
-full_backend_order = ["Cray MPICH", "Stream-Triggered", "RCCL"]
+full_backend_order = ["Cray MPICH", "Cray MPICH 2", "Stream-Triggered", "RCCL"]
+
+if args.baseline_backend:
+    BASELINE_BACKEND = args.baseline_backend
+else:
+    BASELINE_BACKEND = "Cray MPICH"
 
 if args.matrix_filter and args.matrix_filter == "all":
     matrix_filter = []
@@ -102,14 +116,6 @@ def setup_kargs_and_title(k, breakdown, hue, style):
     return title
 
 
-def filter_matrices(df):
-    if matrix_filter:
-        some_data = df[df["Matrix"].isin(matrix_filter)]
-    else:
-        some_data = df
-    return some_data
-
-
 def make_runtime_plot(
     data, x, yscale, breakdown, style="Problem Size (GB)", hue="Backend", extra=""
 ):
@@ -137,27 +143,23 @@ def make_runtime_plot(
 
 
 def get_max_speedup(data):
-    some_data = filter_matrices(data)
-
     # Get averages first
     avg_df = (
-        some_data.groupby(["System", "Matrix", "Ranks", "Backend"])["Speedup"]
-        .mean()
+        data.groupby(["System", "Matrix", "GPUs per Node", "Ranks", "Backend"])["Speedup"]
+        .agg(['mean', 'std'])
         .reset_index()
     )
 
-    result_indices = avg_df.groupby(["Backend", "Matrix"])["Speedup"].idxmax()
+    result_indices = avg_df.groupby(["Backend", "Matrix"])["mean"].idxmax()
     final_df = avg_df.loc[result_indices]
     print(final_df)
 
 
 def get_1_node_runs(data):
-    some_data = filter_matrices(data)
-
     # Get averages first
     avg_df = (
-        some_data.groupby(["System", "Matrix", "Ranks", "Backend"])["Solve Time"]
-        .mean()
+        data.groupby(["System", "Matrix", "Ranks", "Backend"])["Solve Time"]
+        .agg(['mean', 'std'])
         .reset_index()
     )
 
@@ -176,16 +178,15 @@ def make_speedup_plot(
     print_data=False,
 ):
     kargs = {}
-    some_data = filter_matrices(data)
 
     title = setup_kargs_and_title(kargs, breakdown, hue, style)
 
     if print_data:
         pd.set_option("display.width", 200)
-        print(some_data)
+        print(data)
 
     speedup_plot = sbn.relplot(
-        data=some_data,
+        data=data,
         kind="line",
         x=x,
         y="Speedup",
@@ -213,7 +214,6 @@ def make_percent_plot(
     kargs = {}
 
     mpiadvancedata = data[data["Backend"].isin(["Stream-Triggered", "RCCL"])]
-    mpiadvancedata = filter_matrices(mpiadvancedata)
 
     title = setup_kargs_and_title(kargs, breakdown, "Matrix", style)
 
@@ -241,8 +241,11 @@ def make_percent_plot(
 
 
 # Read the raw data into a Pandas Data Frame
-SOLVER_CSV = os.path.join(args.csv_dir, "*/solver_times.csv")
-all_files = glob.glob(SOLVER_CSV)
+all_files = [
+    file
+    for d in CLI_SYSTEMS
+    for file in glob.glob(os.path.join(args.csv_dir, d.upper(), "solver_times*.csv"))
+]
 df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
 
 # Fix the labels of the columns to be more readable
@@ -258,9 +261,18 @@ df = df.rename(
     }
 )
 
+# Filter out irrelevant matrices
+if matrix_filter:
+    df = df[df["Matrix"].isin(matrix_filter)]
+
 # Fix the names of the backends to be more readable
 df["Backend"] = df["Backend"].replace(
-    {"st": "Stream-Triggered", "rccl": "RCCL", "mpi": "Cray MPICH"}
+    {
+        "st": "Stream-Triggered",
+        "rccl": "RCCL",
+        "mpi": "Cray MPICH",
+        "mpi-no-ipc": "Cray MPICH 2",
+    }
 )
 
 # Compute derived values to use to generate data to plot from measured terms
@@ -272,9 +284,6 @@ df = df.sort_values(["Ranks", "Nodes"])
 ### Aggregate the minimum, mean, and variance of the solver time using
 ### a pivot table to calculate a base value to use for calculating speedup
 ### calculations using a pivot table
-pd.set_option("display.max_rows", None)
-pd.set_option("display.max_columns", None)
-pd.set_option("display.max_colwidth", None)
 pivot_df = pd.pivot_table(
     df,
     index=["System", "Matrix", "Ranks", "Backend"],
@@ -290,9 +299,9 @@ speedup_base = 1
 
 
 def speedup_func(row):
-    base_rt = pivot_df.loc[row["System"], row["Matrix"], speedup_base, "Cray MPICH"][
-        "min"
-    ]
+    base_rt = pivot_df.loc[
+        row["System"], row["Matrix"], speedup_base, BASELINE_BACKEND
+    ]["min"]
     return speedup_base * base_rt / row["Solve Time"]
 
 
@@ -312,14 +321,16 @@ speedup_df.columns = speedup_df.columns.droplevel(1)
 # # identical node/rank configuration.
 def relative_speedup_func(row):
     base_speedup = speedup_df.loc[
-        row["System"], row["Matrix"], row["Nodes"], row["Ranks"], "Cray MPICH"
+        row["System"], row["Matrix"], row["Nodes"], row["Ranks"], BASELINE_BACKEND
     ]["mean"]
     return 100 * (row["Speedup"] - base_speedup) / base_speedup
 
 
 df["Percent Speedup Improvement"] = df.apply(relative_speedup_func, axis=1)
 
-speedupdata = df[df["Backend"].isin(["Stream-Triggered", "RCCL", "Cray MPICH"])]
+speedupdata = df[
+    df["Backend"].isin(["Stream-Triggered", "RCCL", "Cray MPICH", "Cray MPICH 2"])
+]
 
 for graph_system in CLI_SYSTEMS:
     graph_system = graph_system.capitalize()
