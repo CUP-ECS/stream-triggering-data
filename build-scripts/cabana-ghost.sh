@@ -8,7 +8,7 @@ RESET='\033[0m'
 
 # Long term -- use spack instead of this script!
 usage() {
-    echo "Usage: $0 [-T value] [-SK] [-F <install location>] [-B <repo location>] [-R version]"
+    echo "Usage: $0 [-T value] [-SKA] [-F <install location>] [-B <repo location>] [-R version] [-M mode]"
     echo " -T Integer that specifies build system: 0 (Tioga), 1 (Tuoloumne), 2 (Frontier) (default TIOGA version)"
     echo " -S Skip Silo build"
     echo " -K Skip Kokkos build"
@@ -16,6 +16,7 @@ usage() {
     echo " -F [path] Where the script should attempt to install all libraries (optional, default depends on system)"
     echo " -B [path] Base directory where all the git repos are cloned to (optional, default = \"$HOME/git\")"
     echo " -R [string] ROCM version to load (will do \"module load rocm/<version>\")"
+    echo " -M [string] CMake build mode to use (default: Release)"
 }
 
 clone_repo() {
@@ -42,7 +43,7 @@ build_build_dir() {
 	mkdir $DIR_TO_BUILD && cd $DIR_TO_BUILD
 }
 
-while getopts ":T:SKAF:B:R:" opt; do
+while getopts ":T:SKAF:B:R:M:" opt; do
     case $opt in
         T)
             VERSION="$OPTARG"
@@ -65,6 +66,9 @@ while getopts ":T:SKAF:B:R:" opt; do
         R)
             ROCM_MODULE="$OPTARG"
             ;;
+        M)
+            CMAKE_MODE="$OPTARG"
+            ;;
         *)
             usage
             exit
@@ -74,6 +78,10 @@ done
 
 if [ -z $ROCM_MODULE ]; then
     ROCM_MODULE=rocm
+fi
+
+if [ -z $CMAKE_MODE ]; then
+    CMAKE_MODE=Release
 fi
 
 if [ -z $VERSION ]; then
@@ -88,6 +96,8 @@ if [ "$VERSION" -eq 0 ]; then
     if [ -z $BUILD_PATH ]; then
         BUILD_PATH=/usr/workspace/$USER/apps/$SYSTEM
     fi
+    C_COMP=cc
+    CXX_COMP=CC
 elif [ "$VERSION" -eq 1 ]; then
     SYSTEM=tuolumne
     GPU_ARCH=gfx942
@@ -97,6 +107,8 @@ elif [ "$VERSION" -eq 1 ]; then
     if [ -z $BUILD_PATH ]; then
         BUILD_PATH=/usr/workspace/$USER/apps/$SYSTEM
     fi
+    C_COMP=cc
+    CXX_COMP=CC
 elif [ "$VERSION" -eq 2 ]; then
     SYSTEM=frontier
     GPU_ARCH=gfx90a
@@ -104,6 +116,8 @@ elif [ "$VERSION" -eq 2 ]; then
     LIBFABRIC=/opt/cray/libfabric/2.3.1
     #module load cce/20.0.0
     CMAKE_EXTRA_VARS="-DCMAKE_EXE_LINKER_FLAGS=${PE_MPICH_GTL_DIR_amd_gfx90a} ${PE_MPICH_GTL_LIBS_amd_gfx90a}"
+    C_COMP=amdclang
+    CXX_COMP=amdclang++
 elif [ "$VERSION" -eq 3 ]; then
     SYSTEM=tuolumne
     GPU_ARCH=gfx942
@@ -113,14 +127,14 @@ elif [ "$VERSION" -eq 3 ]; then
     if [ -z $BUILD_PATH ]; then
         BUILD_PATH=/usr/workspace/$USER/apps/$SYSTEM
     fi
+    C_COMP=mpiamdclang
+    CXX_COMP=mpiamdclang++
 else
     echo "Invalid system specified, stopping."
     exit 1
 fi
 
-C_COMP=amdclang
-CXX_COMP=amdclang++
-MODE=Release
+
 
 echo -e "Running ${CYAN}$SYSTEM${RESET} version:"
 module load "$ROCM_MODULE" "craype-accel-amd-${GPU_ARCH}"
@@ -166,7 +180,7 @@ build_build_dir
 cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/silo \
  -DSILO_ENABLE_HDF5=OFF                  \
- -DCMAKE_BUILD_TYPE=$MODE                \
+ -DCMAKE_BUILD_TYPE=$CMAKE_MODE          \
  -DCMAKE_CXX_COMPILER=$CXX_COMP          \
  -DCMAKE_C_COMPILER=$C_COMP ..
 
@@ -182,7 +196,7 @@ echo -e " -> ${CYAN}Building Kokkos${RESET}"
 build_build_dir
 cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/kokkos \
- -DCMAKE_BUILD_TYPE=$MODE \
+ -DCMAKE_BUILD_TYPE=$CMAKE_MODE \
  -DKokkos_ENABLE_HIP=ON \
  $KOKKOS_FLAG \
  -DCMAKE_CXX_COMPILER=$CXX_COMP \
@@ -205,7 +219,7 @@ cmake \
  -DUSE_CXI_BACKEND=ON \
  -DLIBFABRIC_PREFIX=$LIBFABRIC \
  -DCMAKE_HIP_ARCHITECTURES=$GPU_ARCH \
- -DCMAKE_BUILD_TYPE=$MODE ..
+ -DCMAKE_BUILD_TYPE=$CMAKE_MODE ..
 
 make -j$THREADS install
 else
@@ -218,13 +232,12 @@ echo -e " -> ${CYAN}Building Cabana${RESET}"
 build_build_dir
 cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/cabana \
- -DCMAKE_BUILD_TYPE=$MODE \
+ -DCMAKE_BUILD_TYPE=$CMAKE_MODE \
  -DCMAKE_PREFIX_PATH="$BUILD_PATH/kokkos;$BUILD_PATH/stream-trigger/" \
  -DCabana_ENABLE_MPI=ON \
  -DCabana_BUILD_STREAM_HALO=ON \
  -DCabana_REQUIRE_STREAM-TRIGGERING=ON \
  -DCMAKE_CXX_COMPILER=$CXX_COMP \
- -DCMAKE_C_COMPILER=$C_COMP \
 ..
 
 make -j$THREADS install
@@ -234,7 +247,7 @@ echo -e " -> ${CYAN}Building CabanaGhost${RESET}"
 build_build_dir
 cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/CabanaGhost \
- -DCMAKE_BUILD_TYPE=$MODE \
+ -DCMAKE_BUILD_TYPE=$CMAKE_MODE \
  -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE \
  -DCMAKE_CXX_COMPILER=$CXX_COMP \
  -DCMAKE_C_COMPILER=$C_COMP \
