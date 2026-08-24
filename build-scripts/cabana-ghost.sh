@@ -101,8 +101,9 @@ elif [ "$VERSION" -eq 2 ]; then
     SYSTEM=frontier
     GPU_ARCH=gfx90a
     KOKKOS_FLAG="-DKokkos_ARCH_AMD_GFX90A=ON"
-    LIBFABRIC=/opt/cray/libfabric/1.22.0/
-    module load cce/20.0.0
+    LIBFABRIC=/opt/cray/libfabric/2.3.1
+    #module load cce/20.0.0
+    CMAKE_EXTRA_VARS="-DCMAKE_EXE_LINKER_FLAGS=${PE_MPICH_GTL_DIR_amd_gfx90a} ${PE_MPICH_GTL_LIBS_amd_gfx90a}"
 elif [ "$VERSION" -eq 3 ]; then
     SYSTEM=tuolumne
     GPU_ARCH=gfx942
@@ -117,8 +118,8 @@ else
     exit 1
 fi
 
-C_COMP=mpiamdclang
-CXX_COMP=mpiamdclang++
+C_COMP=amdclang
+CXX_COMP=amdclang++
 MODE=Release
 
 echo -e "Running ${CYAN}$SYSTEM${RESET} version:"
@@ -199,7 +200,7 @@ if [ -z $SKIP_ST ]; then
 echo -e " -> ${CYAN}Building stream-triggering${RESET}"
 build_build_dir
 cmake \
- -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/stream_trigger \
+ -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/stream-trigger \
  -DUSE_HIP_BACKEND=ON \
  -DUSE_CXI_BACKEND=ON \
  -DLIBFABRIC_PREFIX=$LIBFABRIC \
@@ -218,7 +219,7 @@ build_build_dir
 cmake \
  -DCMAKE_INSTALL_PREFIX=$BUILD_PATH/cabana \
  -DCMAKE_BUILD_TYPE=$MODE \
- -DCMAKE_PREFIX_PATH="$BUILD_PATH/kokkos;$BUILD_PATH/stream_trigger/" \
+ -DCMAKE_PREFIX_PATH="$BUILD_PATH/kokkos;$BUILD_PATH/stream-trigger/" \
  -DCabana_ENABLE_MPI=ON \
  -DCabana_BUILD_STREAM_HALO=ON \
  -DCabana_REQUIRE_STREAM-TRIGGERING=ON \
@@ -237,7 +238,8 @@ cmake \
  -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE \
  -DCMAKE_CXX_COMPILER=$CXX_COMP \
  -DCMAKE_C_COMPILER=$C_COMP \
- -DCMAKE_PREFIX_PATH="$BUILD_PATH/kokkos;$BUILD_PATH/stream_trigger/;$BUILD_PATH/silo;$BUILD_PATH/cabana" ..
+ "${CMAKE_EXTRA_VARS[@]}" \
+ -DCMAKE_PREFIX_PATH="$BUILD_PATH/kokkos;$BUILD_PATH/stream-trigger/;$BUILD_PATH/silo;$BUILD_PATH/cabana" ..
 
 make VERBOSE=1 install
 

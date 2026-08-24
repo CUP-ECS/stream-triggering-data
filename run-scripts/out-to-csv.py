@@ -9,7 +9,7 @@ import statistics
 reset = "\033[0m"
 blue  = "\033[94m"
 
-valid_dates = ["08-14"]
+valid_dates = ["08-20"]
 outfile_name = "scaling_data_rocm7.csv"
 
 def parse_directory(dir_to_parse, cluster, writer):
@@ -27,20 +27,34 @@ def parse_directory(dir_to_parse, cluster, writer):
             start_lines = []
             solve_lines = []
             with open(entry, 'r') as file:
+                phase = 1
+                temp_start_time=""
+                temp_test_name=""
                 for line in file:
                     if "Solver creation time" in line:
-                        start_lines.append(line.split(":")[1].strip())
+                        if phase != 3:
+                            print("Unexpected text, skipping test")
+                            continue
+                        temp_start_times=line.split(":")[1].strip()
+                        phase=4
                     elif "Solver solve time" in line:
+                        if phase != 4:
+                            print("Unexpected text, skipping test")
+                            continue
+                        tests.append(temp_test_name)
+                        start_lines.append(temp_start_time)
                         solve_lines.append(line.split(":")[1].strip())
+                        phase=1 # Not super needed tbh
                     elif "Total Simulation Time:" in line:
+                        if phase != 2:
+                            print("Unexpected text, omitting run!")
+                            continue
                         num_cycles = line.split(":")[1].strip()
+                        phase=3
                     elif "Test:" in line:
-                        tests.append(line.split(":")[1].strip())
+                        temp_test_name = line.split(":")[1].strip()
+                        phase=2
 
-            if len(tests) != len(start_lines) and len(start_lines) != len(solve_lines):
-                print("Sizes not the same!")
-                exit(1)
-            
             lines_written = 0
             line_dictionary = {"system":cluster.lower(), "nodes":nodes, "cycles":num_cycles}
             for test_data, start_time, solve_time in zip(tests, start_lines, solve_lines):

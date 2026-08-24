@@ -3,15 +3,19 @@
 usage() {
     echo "Usage: $0 [-T] [-E power] [-S power] [-I time]"
     echo " -E [power] The power of 2 number of nodes to stop at (inclusive, default 2 (4 nodes))"
+    echo " -Q Add QOS to slurm submission (default: none)"
     echo " -S [power] The power of 2 number of nodes to start at (inclusive, default 0 (1 node))"
     echo " -I [time] The time for the TOTAL job length, in slurm notation (Default \"00:10:00\")"
     echo " -R [number] How many times to repeat the sweep (in x,y,z,x,y,z order, not x,x,y,y,z,z) (default 1)"
 }
 
-while getopts ":E:S:I:R:" opt; do
+while getopts ":E:QS:I:R:" opt; do
     case $opt in
         E)
             END_EXP="$OPTARG"
+            ;;
+        Q)
+            SLURM_QOS="$OPTARG"
             ;;
         S)
             START_EXP="$OPTARG"
@@ -64,6 +68,11 @@ if [ -z $TIME ]; then
     TIME=00:10:00
 fi
 
+# Determing QOS
+if [ -n $SLURM_QOS ]; then
+    SLURM_OPTIONS="-q $SLURM_QOS"
+fi
+
 echo "Job node range (powers of 2): $START_EXP:$END_EXP ( for $TIME, repeated $REPEATS time(s))"
 COLLECTION_DIR=outputs
 
@@ -97,6 +106,7 @@ for (( i=0; i<$REPEATS; i++ )); do
                              --nodes=$NODES --job-name="CBG-${NODES}"  \
                              --account=csc698 --exclusive              \
                              --export=ALL,CBG_OUT=$TARGET              \
+                             ${SLURM_QOS}                              \
                              ${dependency_option}                      \
                              ./$SCRIPT)
         set +x

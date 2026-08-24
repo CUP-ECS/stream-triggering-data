@@ -4,7 +4,9 @@ NODES=$SLURM_NNODES
 
 SYSTEM=FRONTIER
 export HSA_XNACK=1
-module load cce/20.0.0 rocm/6.4.2 craype-accel-amd-gfx90a
+#module load cce/20.0.0 rocm/6.4.2 craype-accel-amd-gfx90a
+module load libfabric/2.3.1 PrgEnv-cray cpe/26.03 cce/21.0.2 rocm/7.13 craype-accel-amd-gfx90a
+export LD_LIBRARY_PATH=${CRAY_LD_LIBRARY_PATH}:${LD_LIBRARY_PATH}
 
 # Add hostnames to file
 srun --nodes=$NODES --ntasks-per-node=1 --output=$CBG_OUT hostname
