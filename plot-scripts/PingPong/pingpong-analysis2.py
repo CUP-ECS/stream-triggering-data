@@ -5,9 +5,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sbn
 import glob
+import sys
+from pathlib import Path
 
 # Read the raw data into a Pandas Data Frame
-CSV_LOCATION="../../data/PingPong/NewTuo.csv"
+# Usage: pingpong-analysis2.py [CSV file] (default: the 2026-09 Tuolumne rerun)
+CSV_LOCATION = sys.argv[1] if len(sys.argv) > 1 else "../../data/PingPong/TUOLUMNE/2026-09-rerun.csv"
+CSV_NAME = Path(CSV_LOCATION).stem
 all_files = glob.glob(CSV_LOCATION)
 
 df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
@@ -20,6 +24,8 @@ df = df.query("not (Backend == 'mpi' and Buffering == 'db')")
 df = df.query("not (IPC == 'ON-NODE')")
 # Filter out any special runs
 df = df.query("not (Backend == 'cxi-coarse-no-credit')")
+# Filter out raw (no stream-triggering library) runs
+df = df[df.Buffering != "raw"]
 
 # Clean up names
 df['Test_Type'] = df['Buffering'] + "_" + df['Backend']
@@ -83,7 +89,7 @@ for key, group in df.groupby("GPU"):
     plt.legend(title="Backend")
     plt.grid(which="both")
     plt.tight_layout()
-    plt.savefig(f"pingpong-latency-linearY-{key}.png")
+    plt.savefig(f"pingpong-latency-linearY-{key}-{CSV_NAME}.png")
 
     plt.figure(figsize=(6,3))
     sbn.lineplot(data=group, x='Buffer Size',y='Bandwidth', hue='Test_Type', style='Test_Type',
@@ -95,5 +101,5 @@ for key, group in df.groupby("GPU"):
     plt.xlim(right=2147483648)
     plt.grid()
     plt.tight_layout()
-    plt.savefig(f"pingpong-bandwidth-linearY-{key}.png")
+    plt.savefig(f"pingpong-bandwidth-linearY-{key}-{CSV_NAME}.png")
 

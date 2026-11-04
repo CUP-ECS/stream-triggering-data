@@ -4,11 +4,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sbn
-import glob
 
 # Read the raw data into a Pandas Data Frame
-CSV_LOCATION="../../data/PingPong/*.csv"
-all_files = glob.glob(CSV_LOCATION)
+# Only the runs used in the paper
+all_files = ["../../data/PingPong/FRONTIER/sc-paper.csv", "../../data/PingPong/TUOLUMNE/sc-paper.csv"]
 
 df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
 

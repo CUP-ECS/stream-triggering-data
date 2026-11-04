@@ -89,8 +89,8 @@ print("Using filter:", matrix_filter)
 
 
 def setup_kargs_and_title(k, breakdown, hue, style):
-    k["height"] = 3.5
-    k["aspect"] = 1.25
+    k["height"] = 1.65
+    k["aspect"] = 1.75
     if hue != "":
         k["hue"] = hue
         k["palette"] = palette
@@ -217,21 +217,35 @@ def make_percent_plot(
 
     title = setup_kargs_and_title(kargs, breakdown, "Matrix", style)
 
-    percent_plot = sbn.relplot(
-        data=mpiadvancedata,
-        kind="line",
-        x=x,
-        y=f"Percent {y} Improvement",
-        errorbar=("ci", 95),
-        markers=True,
-        **kargs,
-    )
-    percent_plot.set_titles(title)
-    plt.xscale("log", base=2)
-    for ax in percent_plot.axes.ravel():
-        ax.grid(True, axis="both", ls=":")
-        if invertx:
-            ax.invert_xaxis()
+    with plt.rc_context({
+        'font.size': 8,
+        'axes.titlesize': 8,
+        'axes.labelsize': 8,
+        'xtick.labelsize': 8,
+        'ytick.labelsize': 8,
+        'legend.fontsize': 8,
+        'legend.title_fontsize': 8,
+        'legend.markerscale': .75
+    }):
+
+        percent_plot = sbn.relplot(
+            data=mpiadvancedata,
+            kind="line",
+            x=x,
+            y=f"Percent {y} Improvement",
+            errorbar=("ci", 95),
+            markers=True,
+            **kargs,
+        )
+        percent_plot.set_ylabels(f"Percent {y}\nImprovement")
+        plt.xscale("log", base=2)
+        custom_titles = ["Tuolumne, 1 GPU per Node", "Tuolumne, 2 GPUs per Node", "Tuolumne, 4 GPUs per Node"]
+        for ax, title in zip(percent_plot.axes.ravel(), custom_titles):
+            ax.grid(True, axis="both", ls=":")
+            ax.set_title(title)
+            ax.set_ylim(-51, 200)
+            if invertx:
+                ax.invert_xaxis()
 
     filepath = os.path.join(
         FIGURE_DIR, f"Percent-{y}-{x}-{breakdown}-linear{extra}.png"
@@ -242,6 +256,7 @@ def make_percent_plot(
 
 # Read the raw data into a Pandas Data Frame
 all_files = [
+
     file
     for d in CLI_SYSTEMS
     for file in glob.glob(os.path.join(args.csv_dir, d.upper(), "solver_times*.csv"))
@@ -264,6 +279,8 @@ df = df.rename(
 # Filter out irrelevant matrices
 if matrix_filter:
     df = df[df["Matrix"].isin(matrix_filter)]
+
+df = df[df["Backend"].isin(["st", "mpi", "mpi-no-ipc"])]
 
 # Fix the names of the backends to be more readable
 df["Backend"] = df["Backend"].replace(
