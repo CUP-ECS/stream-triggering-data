@@ -1,96 +1,122 @@
-#!/usr/bin/env python
-# coding: utf-8
+#!/usr/bin/env python3
+"""Packing ping-pong latency and bandwidth: the paper's Fig. 5, from a PingPong CSV.
 
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sbn
+    pingpong-analysis.py <csv> [--placement OFF-NODE|ON-NODE|both] [--with-mpi-rsend] [--out-dir DIR]
 
-# Read the raw data into a Pandas Data Frame
-# Only the runs used in the paper
-all_files = ["../../data/PingPong/FRONTIER/sc-paper.csv", "../../data/PingPong/TUOLUMNE/sc-paper.csv"]
+Each trial (one Run) measured one time per size and test; latency is that time over its
+iterations (a round trip), bandwidth bytes moved over time. Lines are the mean over trials with
+its 95% Student-t confidence interval, as the paper plots them. The paper's Fig. 5 is OFF-NODE
+(two nodes), with Cray MPICH Send against stream-triggered Send and Rsend; raw (no packing
+kernel) and no-credit runs are left out. Also prints the latency difference from Cray MPICH Send
+per size, to set against the paper's "12-39% (Send) and 12-49% (Rsend) lower, 32 B to 512 KB".
+Replaces pingpong-analysis.py and pingpong-analysis2.py.
+"""
 
-df = pd.concat((pd.read_csv(f) for f in all_files), ignore_index=True)
+import argparse
+import sys
+from pathlib import Path
 
-# Filter out HIP runs (not used in paper)
-df = df[df.Backend != "hip"]
-# Filter out Fine grained memory (not used in paper)
-df = df[df.Backend != "cxi-fine"]
-# Filter out Cray MPICH single buffered (rsend) since not used in CabanaGhost
-df = df.query("not (Backend == 'mpi' and Buffering == 'db')")
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+import pandas as pd  # noqa: E402
+from matplotlib.ticker import FuncFormatter, LogLocator  # noqa: E402
 
-# Clean up names
-df['Test_Type'] = df['Buffering'] + "_" + df['Backend']
-df['Test_Type'] = df['Test_Type'].replace({
-                                       "sb_cxi-coarse":"Stream-Triggered Send",
-                                       "db_cxi-coarse":"Stream-Triggered Rsend",
-                                       "sb_cxi-fine":"Stream-Triggered Send (fine)",
-                                       "db_cxi-fine":"Stream-Triggered Rsend (fine)",
-                                       "sb_mpi":"Cray MPICH Send",
-                                       "db_mpi":"Cray MPICH Rsend"})
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import sdcommon as sd  # noqa: E402
 
-# Calculate true buffer size, bandwidth and latency
-df['Buffer Size'] = df['Items'] * 4
-df['Bandwidth'] = (df['Iters'] * 2 * df['Buffer Size']) / df['Time'] / 1073741824 
-df['Latency'] = (df['Time'] / df['Iters']) * 1e+6
+CRAY = "Cray MPICH Send"
+SERIES = {("mpi", "sb"): (CRAY, "tab:green", "o"),
+          ("mpi", "db"): ("Cray MPICH Rsend", "tab:olive", "s"),
+          ("cxi-coarse", "sb"): ("Stream-Triggered Send", "tab:blue", "^"),
+          ("cxi-coarse", "db"): ("Stream-Triggered Rsend", "tab:orange", "v"),
+          ("ipc", "sb"): ("Direct HIP IPC", "tab:purple", "d")}
 
-pd.set_option('display.max_rows', None)
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', None)
 
-for key, group in df.groupby("GPU"):
-    cray = group.query("Test_Type == 'Cray MPICH Send'")
-    cray_l = cray.groupby(["Buffer Size"])["Latency"].mean()
-    cray_b = cray.groupby(["Buffer Size"])["Bandwidth"].mean()
+def fmt(b):
+    for unit, scale in (("GiB", 2**30), ("MiB", 2**20), ("KiB", 2**10)):
+        if b >= scale:
+            return f"{b // scale} {unit}"
+    return f"{b} B"
 
-    send = group.query("Test_Type == 'Stream-Triggered Send'")
-    send_l = send.groupby(["Buffer Size"])["Latency"].mean()
-    send_b = send.groupby(["Buffer Size"])["Bandwidth"].mean()
 
-    rsend = group.query("Test_Type == 'Stream-Triggered Rsend'")
-    rsend_l = rsend.groupby(["Buffer Size"])["Latency"].mean()
-    rsend_b = rsend.groupby(["Buffer Size"])["Bandwidth"].mean()
+def summarize(df, metric):
+    g = df.groupby(["Label", "IPC", "Bytes"])[metric]
+    out = pd.DataFrame({"Mean": g.mean(), "CI95": g.agg(sd.ci95), "Trials": g.size()}).reset_index()
+    return out
 
-    print(key)
-    # Difference to Cray for latency
-    print(((send_l - cray_l) / cray_l) * 100)
-    print(((rsend_l - cray_l) / cray_l) * 100)
 
-    # Difference to Cray for bandwidth
-    print(((send_b - cray_b) / cray_b) * 100)
-    print(((rsend_b - cray_b) / cray_b) * 100)
+def plot(summary, metric, ylabel, placements, out, max_bytes=None):
+    fig, axes = plt.subplots(1, len(placements), figsize=(7 * len(placements), 4.5), squeeze=False)
+    for ax, placement in zip(axes[0], placements):
+        for label, color, marker in SERIES.values():
+            s = summary[(summary.Label == label) & (summary.IPC == placement)].sort_values("Bytes")
+            if max_bytes:
+                s = s[s.Bytes <= max_bytes]
+            if s.empty:
+                continue
+            ax.plot(s.Bytes, s.Mean, color=color, marker=marker, ms=4, label=label)
+            ax.fill_between(s.Bytes, s.Mean - s.CI95, s.Mean + s.CI95, color=color, alpha=0.2, lw=0)
+        ax.set_xscale("log", base=2)
+        ax.set_yscale("log")
+        ticks = [b for b in sorted(summary.Bytes.unique())[::3] if not max_bytes or b <= max_bytes]
+        ax.set_xticks(ticks, [fmt(b) for b in ticks], rotation=35, ha="right")
+        ax.minorticks_off()
+        ax.yaxis.set_major_locator(LogLocator(subs=(1, 2, 5)))
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}"))
+        ax.grid(True, ls=":")
+        ax.set_title(placement.lower())
+        ax.set_xlabel("Message size")
+        ax.set_ylabel(ylabel)
+        ax.legend(fontsize=8)
+    fig.tight_layout()
+    fig.savefig(out, dpi=150)
+    plt.close(fig)
+    sd.log(f"wrote {out}")
 
-# Colors to use
-custom_palette = {"Cray MPICH Send": "tab:green",
-                  "Stream-Triggered Send":"tab:blue",
-                  "Stream-Triggered Rsend":"tab:orange"}
-custom_order = ["Cray MPICH Send", "Stream-Triggered Rsend", "Stream-Triggered Send"]
 
-for key, group in df.groupby("GPU"):
-    # Less than 2^20
-    latency_df=group[group['Buffer Size'] < 1048576]
-    # Plot
-    plt.figure(figsize=(6,4))
-    sbn.lineplot(data=latency_df, x='Buffer Size',y='Latency', hue='Test_Type', style='Test_Type',
-                 errorbar=("ci", 95), markers=True, palette=custom_palette, hue_order=custom_order)
-    plt.xscale('log', base=2)
-    plt.xlabel("Buffer Size (bytes)")
-    #plt.yscale('log', base=10)
-    plt.ylabel("Latency (microseconds)")
-    plt.ylim(bottom=0)
-    plt.legend(title="Backend")
-    plt.grid(which="both")
-    plt.tight_layout()
-    plt.savefig(f"pingpong-latency-linearY-{key}.png")
+def main():
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("csv")
+    parser.add_argument("--placement", choices=["OFF-NODE", "ON-NODE", "both"], default="OFF-NODE")
+    parser.add_argument("--with-mpi-rsend", action="store_true", help="also plot Cray MPICH Rsend")
+    parser.add_argument("--max-latency-size", type=int, default=2**20,
+                        help="largest message (bytes) on the latency plot (default 1 MiB)")
+    parser.add_argument("--out-dir", type=Path, default=Path("figures/PingPong"))
+    args = parser.parse_args()
+    args.out_dir.mkdir(parents=True, exist_ok=True)
 
-    plt.figure(figsize=(6,3))
-    sbn.lineplot(data=group, x='Buffer Size',y='Bandwidth', hue='Test_Type', style='Test_Type',
-                 errorbar=("ci", 95), markers=True, palette=custom_palette, hue_order=custom_order)
-    plt.xscale('log', base=2)
-    plt.xlabel("Buffer Size (bytes)")
-    plt.ylabel("Bandwidth (GB/second)")
-    plt.legend(title="Backend")
-    plt.xlim(right=2147483648)
-    plt.grid()
-    plt.tight_layout()
-    plt.savefig(f"pingpong-bandwidth-linearY-{key}.png")
+    df = pd.read_csv(args.csv)
+    if "IPC" not in df:  # the SC-paper CSVs predate the column; those runs were all off-node
+        sd.warn(f"{args.csv} has no IPC column: taking every row as OFF-NODE")
+        df["IPC"] = "OFF-NODE"
+    df = df[[(b, s) in SERIES for b, s in zip(df.Backend, df.Buffering)]].copy()
+    if not args.with_mpi_rsend:
+        df = df[~((df.Backend == "mpi") & (df.Buffering == "db"))]
+    df["Label"] = [SERIES[(b, s)][0] for b, s in zip(df.Backend, df.Buffering)]
+    df["Bytes"] = df.Items * 4
+    df["Latency"] = df.Time / df.Iters * 1e6
+    df["Bandwidth"] = df.Iters * 2 * df.Bytes / df.Time / 2**30
+    placements = ["ON-NODE", "OFF-NODE"] if args.placement == "both" else [args.placement]
 
+    stem = Path(args.csv).stem
+    for gpu, gdf in df.groupby("GPU"):
+        lat = summarize(gdf, "Latency")
+        bw = summarize(gdf, "Bandwidth")
+        plot(lat, "Latency", "Round-trip latency (µs)", placements,
+             args.out_dir / f"pingpong-latency-{gpu}-{stem}.png", args.max_latency_size)
+        plot(bw, "Bandwidth", "Bandwidth (GiB/s)", placements,
+             args.out_dir / f"pingpong-bandwidth-{gpu}-{stem}.png")
+
+        for placement in placements:
+            table = lat[lat.IPC == placement].pivot(index="Bytes", columns="Label", values="Mean")
+            if CRAY not in table:
+                continue
+            print(f"\n{gpu} {placement}: latency difference from {CRAY} (%; negative is faster)")
+            diff = table.drop(columns=CRAY).sub(table[CRAY], axis=0).div(table[CRAY], axis=0) * 100
+            diff.index = [fmt(b) for b in diff.index]
+            print(diff.round(1).to_string())
+
+
+if __name__ == "__main__":
+    main()

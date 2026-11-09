@@ -1,0 +1,2 @@
+# CSVs are data: LF everywhere, whatever wrote them (17 of the 19 older CSVs were CRLF)
+*.csv text eol=lf

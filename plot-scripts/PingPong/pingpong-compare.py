@@ -3,19 +3,18 @@
 # Example (from this directory):
 # python3 pingpong-compare.py --new ../../data/PingPong/TUOLUMNE/2026-10-16-patch1.csv --new-label patch1 \
 #     --base ../../data/PingPong/TUOLUMNE/2026-10-15-develop.csv --base-label develop --stat both
+# The machine name in the titles is the CSV's directory (data/PingPong/<SYSTEM>/).
 
 from pathlib import Path
 
 import argparse
+import math
 import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
-
-# Two-sided 95% Student t critical values, keyed by degrees of freedom
-T95 = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262,
-       10: 2.228, 11: 2.201, 12: 2.179, 13: 2.160, 14: 2.145, 15: 2.131, 19: 2.093, 24: 2.064, 29: 2.045}
+from scipy import stats
 
 # (Backend, Buffering), label, color, marker
 series = [
@@ -27,12 +26,11 @@ series = [
 ]
 
 def parse_arguments():
-    data = "../../data/PingPong/TUOLUMNE/"
     parser = argparse.ArgumentParser(description="Plot PingPong latency/bandwidth of one set of runs against another.")
-    parser.add_argument("--new", default=data + "2026-10-16-patch1.csv", help="CSV of the runs being tested")
-    parser.add_argument("--new-label", default="patch1")
-    parser.add_argument("--base", default=data + "2026-10-15-develop.csv", help="CSV of the baseline runs")
-    parser.add_argument("--base-label", default="develop")
+    parser.add_argument("--new", required=True, help="CSV of the runs being tested")
+    parser.add_argument("--new-label", required=True)
+    parser.add_argument("--base", required=True, help="CSV of the baseline runs")
+    parser.add_argument("--base-label", required=True)
     parser.add_argument("--stat", choices=["median", "mean", "both"], default="both",
                         help="median (IQR band) or mean (95%% CI band); both makes both sets of plots")
     parser.add_argument("--one-way", action="store_true",
@@ -60,10 +58,8 @@ def summarize(df, metric, stat):
         out = pd.DataFrame({"centre": g.median(), "lo": g.quantile(0.25), "hi": g.quantile(0.75), "n": g.size()})
     else:
         out = pd.DataFrame({"centre": g.mean(), "sd": g.std(), "n": g.size()})
-        missing = set(out.n - 1) - T95.keys()
-        if missing:
-            raise ValueError(f"No t value for degrees of freedom {missing}; add it to T95")
-        half = out.n.map(lambda n: T95[n - 1]) * out.sd / out.n ** 0.5
+        t95 = out.n.map(lambda n: stats.t.ppf(0.975, n - 1) if n > 1 else math.nan)
+        half = t95 * out.sd / out.n ** 0.5
         out["lo"], out["hi"] = out.centre - half, out.centre + half
     return out.reset_index()
 

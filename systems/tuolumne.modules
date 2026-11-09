@@ -1,0 +1,10 @@
+# The software stack for every Tuolumne build and run: one `module load` of these lines, in order.
+# Copied from stream-triggering's install_setup/tuolumne_rocm_7.14_modules.txt (the list ST was
+# last tested with). The magic rocmcc module makes mpiamdclang/mpiamdclang++ wrap ROCm's clang
+# around Cray MPICH, and the whole stack is compiled with them.
+# Changing a line changes the stack: change SD_STACK_TAG in tuolumne.sh with it.
+craype/2.7.36
+rocm/7.14
+rocmcc/7.14-cce-21.0.3-magic
+craype-accel-amd-gfx942
+cray-mpich/9.1.0
