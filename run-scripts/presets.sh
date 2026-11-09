@@ -5,7 +5,7 @@
 #                                       preset:     smoke | full
 #
 # Every variable can be overridden from the environment (they're all ${VAR:-default}), so a
-# one-off sweep doesn't need a new preset:  CBG_NODES="4 8" submit.sh -x cabana-ghost -P full ...
+# one-off sweep doesn't need a new preset:  SD_NODE_LIST="4 8" submit.sh -x cabana-ghost -P full ...
 #
 # Common to all experiments:
 #   SD_NODE_LIST   node counts; one batch job per node count per repeat
