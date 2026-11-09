@@ -27,6 +27,10 @@ EXECS="${SD_PREFIX}/pingpong"
 [ -d "$EXECS" ] || sd_dry || sd_die "no $EXECS: build the pingpong component"
 
 export MPICH_GPU_SUPPORT_ENABLED=1
+# ST's compile.py links -lstream-triggering without an RPATH, so the st* benchmarks find the
+# library here (as ST's own bandwidth_script.sh does). First, so it's this prefix's ST and no other.
+# Without it every st* run exits 127 (Tuolumne smoke, 2026-11-09).
+export LD_LIBRARY_PATH="${SD_PREFIX}/stream-triggering/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 # A hung exchange costs minutes, not the trial
 export SD_STEP_MINUTES="${SD_STEP_MINUTES:-5}"
 
