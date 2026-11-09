@@ -18,7 +18,7 @@ checkouts. Everything here also works on its own.
 | `systems/<system>.sh` | Per-system settings (GPU architecture, compilers, libfabric, scheduler, install prefix) and the launch and submit functions. Tuolumne is tested. Frontier is a draft until Phase 5 |
 | `systems/versions.sh` | Pinned third-party sources (Silo, Kokkos, aws-ofi-nccl) and where the ST repositories come from |
 | `systems/common.sh` | Helpers shared by everything above (cloning, logging, manifests, dry runs) |
-| `systems/metis-spack.yaml` | METIS for aCG on Tuolumne, through Spack |
+| `systems/metis-spack.yaml` | METIS for aCG on Tuolumne, through Spack (install steps in its header). Frontier uses its `metis` module |
 | `build-scripts/build.sh` | Builds the stack into one prefix and writes `<prefix>/manifest.txt` |
 | `run-scripts/submit.sh` | Submits one experiment (one job per node count per repeat) |
 | `run-scripts/presets.sh` | What `smoke` and `full` mean for each experiment and system |
@@ -35,7 +35,8 @@ build-scripts/build.sh -s tuolumne [-p prefix] [-g dir-with-the-ST-repos] [compo
 The components are `silo kokkos st cabana cabanaghost acg pingpong` (the default), plus `ofi-nccl`,
 which is opt-in. Third-party sources are cloned under `<prefix>/src` at the pinned commits. Our own
 repositories are built in place from `-g` (default `$HOME/git`), and missing ones are cloned. aCG
-needs METIS (`METIS_DIR`, default `<prefix>/metis`; see `systems/metis-spack.yaml`).
+needs METIS (`METIS_DIR`, default `<prefix>/metis`): on Tuolumne, install it there with
+`systems/metis-spack.yaml`; on Frontier, the `metis` module in `frontier.modules` sets it.
 `SD_DRY_RUN=1` prints every command instead of running it.
 
 ## Run, collect, plot

@@ -21,8 +21,9 @@
 # <git-dir>/<name> (default $HOME/git; the meta repo passes its repos/). A missing one is cloned at
 # the ref in systems/versions.sh; an existing one is used as it is, never checked out or reset.
 #
-# METIS: aCG needs METIS_DIR (default <prefix>/metis). On Tuolumne install it with Spack
-# (systems/metis-spack.yaml); on Frontier, `module load metis` and set METIS_DIR.
+# METIS: aCG needs METIS_DIR (default <prefix>/metis). On Tuolumne install it there with Spack
+# (steps in systems/metis-spack.yaml); on Frontier it's the metis module in systems/frontier.modules,
+# and systems/frontier.sh sets METIS_DIR from it.
 #
 # Other knobs: MOD_FILE (module list), SD_DRY_RUN=1 (print the commands), KOKKOS_VIEW_LEGACY
 # (default ON; Cabana's CHANGELOG asks for it with Kokkos newer than 4.6), SD_HIP_COMPILER (the
@@ -232,7 +233,7 @@ build_acg() {
     local src
     src="$(repo_dir "$ACG_REPO")"
     local metis="${METIS_DIR:-${PREFIX}/metis}"
-    [ -d "$metis" ] || sd_dry || sd_die "no METIS at $metis: install it (systems/metis-spack.yaml) or set METIS_DIR"
+    [ -d "$metis" ] || sd_dry || sd_die "no METIS at $metis: install it (systems/metis-spack.yaml; on Frontier, the metis module) or set METIS_DIR"
     local common=(-DCMAKE_C_COMPILER="$SD_CC" -DCMAKE_CXX_COMPILER="$SD_CXX" -DMETIS_DIR="$metis")
     [ -n "${SD_EXE_LINK_FLAGS// /}" ] && common+=(-DCMAKE_EXE_LINKER_FLAGS="$SD_EXE_LINK_FLAGS")
     local opts=("${common[@]}" -DCMAKE_HIP_COMPILER="$HIP_COMPILER" -DCMAKE_HIP_ARCHITECTURES="$SD_GPU_ARCH"

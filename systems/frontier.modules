@@ -1,6 +1,7 @@
 # The software stack for every Frontier build and run: one `module load` of these lines, in order.
 # Copied from stream-triggering's install_setup/frontier_modules.txt. NOT YET RUN by these scripts
 # (Phase 5). Cray MPICH comes from cpe/26.03; pin it here once its version is known.
+# metis is OLCF's module, for aCG (frontier.sh points METIS_DIR at it); pin its version too.
 # Changing a line changes the stack: change SD_STACK_TAG in frontier.sh with it.
 libfabric/2.3.1
 PrgEnv-cray
@@ -8,3 +9,4 @@ cpe/26.03
 cce/21.0.2
 rocm/7.13
 craype-accel-amd-gfx90a
+metis

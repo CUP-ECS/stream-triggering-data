@@ -30,6 +30,12 @@ SD_QOS="${SD_QOS:-}"
 
 sd_system_env() {
     export HSA_XNACK=1
+    # aCG's METIS comes from the metis module (frontier.modules), not <prefix>/metis. OLCF's
+    # modules export OLCF_<NAME>_ROOT; check with `module show metis` in Phase 5. An explicit
+    # METIS_DIR wins.
+    if [ -z "${METIS_DIR:-}" ] && [ -n "${OLCF_METIS_ROOT:-}" ]; then
+        export METIS_DIR="$OLCF_METIS_ROOT"
+    fi
     export LD_LIBRARY_PATH="${CRAY_LD_LIBRARY_PATH:+${CRAY_LD_LIBRARY_PATH}:}${LD_LIBRARY_PATH:-}"
     if [ -z "${ROCM_PATH:-}" ] && command -v hipconfig &> /dev/null; then
         ROCM_PATH="$(hipconfig --rocmpath)"

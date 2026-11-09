@@ -24,8 +24,8 @@ OFI_NCCL_URL=https://github.com/aws/aws-ofi-nccl.git
 OFI_NCCL_REF=v1.22.0
 OFI_NCCL_SHA=80c6d32527bbf764dd06e87b05321b044da36220
 
-# METIS isn't cloned: it comes from METIS_DIR (Spack on Tuolumne, see metis-spack.yaml; a module
-# on Frontier).
+# METIS isn't cloned: it comes from METIS_DIR (Spack on Tuolumne, see metis-spack.yaml; the metis
+# module on Frontier, see frontier.modules).
 
 # Stream-triggering repositories: <directory name under -g> <url> <ref for a fresh clone>
 ST_REPO="stream-triggering https://github.com/mpi-advance/stream-triggering.git feat-header-align"

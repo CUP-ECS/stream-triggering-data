@@ -1,22 +1,50 @@
-# METIS for aCG on Tuolumne, through a Spack environment (Frontier uses `module load metis`).
-# Adapted from Derek's earlier notes, which used cce@20.0.0. METIS is plain C, so any C compiler
-# works; this one matches the stack's CCE. Change it if Spack doesn't know it.
+# METIS for aCG on Tuolumne, through a Spack environment (Frontier uses its `metis` module instead,
+# listed in frontier.modules). Needs Spack >= 1.0 (c:/cxx: requirements, extra_attributes.compilers);
+# Tuolumne has 1.1.1. Installed and checked this way on 2026-11-09 (knowledge/metis-tuolumne.md in
+# the ST-project-testing repo).
 #
 #   spack env create st-metis systems/metis-spack.yaml
-#   spack -e st-metis concretize && spack -e st-metis install
-#   mkdir -p <prefix>/metis && cp -r "$(spack location -e st-metis)/.spack-env/view/." <prefix>/metis/
+#   spack -e st-metis concretize -f     # only metis builds; cce, cmake, gmake, glibc are externals
+#   spack -e st-metis install
+#   mkdir -p <prefix>/metis && cp -rL "$(spack location -e st-metis)/.spack-env/view/." <prefix>/metis/
+#   spack env rm st-metis               # optional: the copy doesn't depend on it
 #
-# build-scripts/build.sh then finds it at <prefix>/metis (or set METIS_DIR). aCG's default index
-# size is 32-bit, which matches metis's default (no +int64).
+# cp -rL, not cp -r: the view is symlinks into Spack's install tree, which `spack gc` could delete.
+# build-scripts/build.sh then finds it at <prefix>/metis (or set METIS_DIR).
+#
+# Self-contained: cce@21.0.3 is declared here because Spack doesn't detect it, and user-scope
+# externals (COMPASS's packages.yaml) only know cce@20.0.0. Env-scope externals come first, so the
+# user config stays untouched; don't `spack compiler find`, which writes into it.
+# If the stack's CCE changes (rocmcc/...-cce-21.0.3-magic in tuolumne.modules), change every 21.0.3
+# below and rebuild: libmetis's RPATH is fixed to this CCE's runtime.
 spack:
   packages:
+    cce:
+      buildable: false
+      externals:
+      - spec: cce@21.0.3
+        prefix: /opt/cray/pe/cce/21.0.3
+        extra_attributes:
+          compilers:
+            c: /opt/cray/pe/cce/21.0.3/bin/craycc
+            cxx: /opt/cray/pe/cce/21.0.3/bin/crayCC
+            fortran: /opt/cray/pe/cce/21.0.3/bin/crayftn
+          # The version's own runtime directory, not /opt/cray/pe/lib64/cce, which follows the
+          # system default CCE and could mismatch at run time.
+          extra_rpaths:
+          - /opt/cray/pe/cce/21.0.3/cce/x86_64/lib
+          - /opt/cray/pe/gcc-libs
     c:
       require: [cce@21.0.3]
     cxx:
       require: [cce@21.0.3]
-    fortran:
-      require: [cce@21.0.3]
+    # METIS has no Fortran, so no fortran requirement.
+    metis:
+      # 5.1.0 bundles GKlib inside libmetis; 5.2.x needs a separate GKlib, and aCG's FindMETIS links
+      # only -lmetis. 32-bit indices and reals match aCG's defaults.
+      require: ["@5.1.0 +shared ~int64 ~real64"]
   specs:
-  - matrix:
-    - ["metis+shared"]
+  - metis
   view: true
+  concretizer:
+    unify: true
