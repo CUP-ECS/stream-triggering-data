@@ -25,7 +25,8 @@
 # (systems/metis-spack.yaml); on Frontier, `module load metis` and set METIS_DIR.
 #
 # Other knobs: MOD_FILE (module list), SD_DRY_RUN=1 (print the commands), KOKKOS_VIEW_LEGACY
-# (default ON; Cabana's CHANGELOG asks for it with Kokkos newer than 4.6).
+# (default ON; Cabana's CHANGELOG asks for it with Kokkos newer than 4.6), SD_HIP_COMPILER (the
+# CMake HIP compiler for ST and aCG, default SD_CXX; see HIP_COMPILER below).
 
 set -euo pipefail
 
@@ -138,6 +139,14 @@ cmake_component() {
 
 ST_PREFIX="${PREFIX}/stream-triggering"
 
+# The HIP-language compiler for the projects that enable HIP in CMake (ST and aCG); the others
+# compile HIP code as CXX. Left alone, CMake picks ROCm's bare clang++ for HIP. With an MPI
+# wrapper as SD_CXX (Tuolumne's mpiamdclang++), FindMPI then gives MPI::MPI_CXX no include
+# directory (the wrapper's -I counts as the compiler's implicit include, so FindMPI drops it),
+# and every .hip file that includes mpi.h fails (Tuolumne, 2026-11-09). Compiling HIP through
+# the same wrapper fixes that, as ST's tests/compile.py does (mpiamdclang++ -x hip).
+HIP_COMPILER="${SD_HIP_COMPILER:-$SD_CXX}"
+
 build_silo() {
     local src="${PREFIX}/src/Silo"
     sd_clone "$src" "$SILO_URL" "$SILO_REF" "$SILO_SHA"
@@ -161,7 +170,8 @@ build_st() {
     local src
     src="$(repo_dir "$ST_REPO")"
     local opts=(-DCMAKE_INSTALL_PREFIX="$ST_PREFIX" -DCMAKE_C_COMPILER="$SD_CC"
-                -DCMAKE_CXX_COMPILER="$SD_CXX" -DUSE_HIP_BACKEND=ON -DUSE_CXI_BACKEND=ON
+                -DCMAKE_CXX_COMPILER="$SD_CXX" -DCMAKE_HIP_COMPILER="$HIP_COMPILER"
+                -DUSE_HIP_BACKEND=ON -DUSE_CXI_BACKEND=ON
                 -DLIBFABRIC_PREFIX="$SD_LIBFABRIC_DIR" -DCMAKE_HIP_ARCHITECTURES="$SD_GPU_ARCH"
                 -DBUILD_TESTS=ON)
     [ -n "${SD_SHARED_LINK_FLAGS// /}" ] && opts+=(-DCMAKE_SHARED_LINKER_FLAGS="$SD_SHARED_LINK_FLAGS")
@@ -225,7 +235,7 @@ build_acg() {
     [ -d "$metis" ] || sd_dry || sd_die "no METIS at $metis: install it (systems/metis-spack.yaml) or set METIS_DIR"
     local common=(-DCMAKE_C_COMPILER="$SD_CC" -DCMAKE_CXX_COMPILER="$SD_CXX" -DMETIS_DIR="$metis")
     [ -n "${SD_EXE_LINK_FLAGS// /}" ] && common+=(-DCMAKE_EXE_LINKER_FLAGS="$SD_EXE_LINK_FLAGS")
-    local opts=("${common[@]}" -DCMAKE_HIP_ARCHITECTURES="$SD_GPU_ARCH"
+    local opts=("${common[@]}" -DCMAKE_HIP_COMPILER="$HIP_COMPILER" -DCMAKE_HIP_ARCHITECTURES="$SD_GPU_ARCH"
                 -DCMAKE_PREFIX_PATH="${ST_PREFIX};${ROCM_PATH:-/opt/rocm}"
                 -DACG_REQUIRE_STREAM_TRIGGERING=ON)
     local bld log
