@@ -27,9 +27,7 @@
 #
 # Other knobs: MOD_FILE (module list), SD_DRY_RUN=1 (print the commands), KOKKOS_VIEW_LEGACY
 # (default ON; Cabana's CHANGELOG asks for it with Kokkos newer than 4.6), SD_HIP_COMPILER (the
-# CMake HIP compiler for ST and aCG, default SD_CXX; see HIP_COMPILER below), KOKKOS_MALLOC_ASYNC
-# (ON or OFF: sets Kokkos_ENABLE_IMPL_HIP_MALLOC_ASYNC; unset keeps Kokkos's default, which in 5.2.2
-# is OFF on ROCm 7 and ON before it. Kokkos 4.6.02, the paper-era build, defaulted to ON).
+# CMake HIP compiler for ST and aCG, default SD_CXX; see HIP_COMPILER below).
 
 set -euo pipefail
 
@@ -165,8 +163,6 @@ build_kokkos() {
     local opts=(-DCMAKE_INSTALL_PREFIX="${PREFIX}/kokkos" -DCMAKE_CXX_COMPILER="$SD_CXX"
                 -DKokkos_ENABLE_HIP=ON -DKokkos_ARCH_"${SD_KOKKOS_ARCH}"=ON
                 -DKokkos_ENABLE_IMPL_VIEW_LEGACY="${KOKKOS_VIEW_LEGACY:-ON}" -DBUILD_SHARED_LIBS=ON)
-    # The halo buffers' allocator: the one known default that differs from the paper-era build
-    [ -n "${KOKKOS_MALLOC_ASYNC:-}" ] && opts+=(-DKokkos_ENABLE_IMPL_HIP_MALLOC_ASYNC="$KOKKOS_MALLOC_ASYNC")
     cmake_component kokkos "$src" "${opts[@]}"
     write_manifest kokkos kokkos "$src" "${opts[@]}"
 }
