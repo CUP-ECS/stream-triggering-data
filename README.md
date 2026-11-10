@@ -15,7 +15,7 @@ checkouts. Everything here also works on its own.
 | Path | What it is |
 |---|---|
 | `systems/<system>.modules` | The software stack: one module list per system, loaded for every build and every job |
-| `systems/<system>.sh` | Per-system settings (GPU architecture, compilers, libfabric, scheduler, install prefix) and the launch and submit functions. Tuolumne is tested. Frontier is a draft until Phase 5 |
+| `systems/<system>.sh` | Per-system settings (GPU architecture, compilers, libfabric, scheduler, install prefix) and the launch and submit functions. Tuolumne is tested. Frontier is a draft until Phase 7 (the Frontier port) |
 | `systems/versions.sh` | Pinned third-party sources (Silo, Kokkos, aws-ofi-nccl) and where the ST repositories come from |
 | `systems/common.sh` | Helpers shared by everything above (cloning, logging, manifests, dry runs) |
 | `systems/metis-spack.yaml` | METIS for aCG on Tuolumne, through Spack (install steps in its header). Frontier uses its `metis` module |

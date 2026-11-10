@@ -1,7 +1,7 @@
 #!/bin/bash
 # shellcheck disable=SC2034 # settings: read by the scripts that source this file
 # ORNL Frontier: 4x MI250X (8 GCDs) per node, Slurm. Sourced by sd_load_system in common.sh.
-# DRAFT for Phase 5: nothing here has been run yet. The compilers and link flags are the ones the
+# DRAFT for Phase 7 (the Frontier port): nothing here has been run yet. The compilers and link flags are the ones the
 # old build-scripts/cabana-ghost.sh -T 2 used, and the srun network flags the ones ST's Frontier
 # scripts use.
 
@@ -31,7 +31,7 @@ SD_QOS="${SD_QOS:-}"
 sd_system_env() {
     export HSA_XNACK=1
     # aCG's METIS comes from the metis module (frontier.modules), not <prefix>/metis. OLCF's
-    # modules export OLCF_<NAME>_ROOT; check with `module show metis` in Phase 5. An explicit
+    # modules export OLCF_<NAME>_ROOT; check with `module show metis` in Phase 7. An explicit
     # METIS_DIR wins.
     if [ -z "${METIS_DIR:-}" ] && [ -n "${OLCF_METIS_ROOT:-}" ]; then
         export METIS_DIR="$OLCF_METIS_ROOT"
