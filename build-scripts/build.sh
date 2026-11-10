@@ -226,8 +226,15 @@ build_ofi_nccl() {
     # MPI only builds aws-ofi-nccl's functional tests, and a ROCm build turns the tests off anyway
     # (v1.22.0 configure.ac), so it isn't needed. Tuolumne's cray-mpich module doesn't set
     # MPICH_DIR (the 2026-11-09 build stopped on that); Frontier's does, so pass it when it's there.
-    local opts=(--prefix="${PREFIX}/ofi-nccl" --with-rocm="${ROCM_PATH:-}"
-                --with-libfabric="$fabric" --disable-tests)
+    local opts=(--prefix="${PREFIX}/ofi-nccl" --with-rocm="${ROCM_PATH:-}" --disable-tests)
+    # Only a non-system libfabric (Frontier's /opt/cray/libfabric/<ver>). --with-libfabric=/usr adds
+    # "-isystem /usr/include", which puts /usr/include ahead of libstdc++'s headers and breaks its
+    # #include_next <stdlib.h> in the C++ probe for hip/hip_runtime_api.h ("NCCL OFI Plugin requires
+    # either CUDA, ROCm, or Neuron runtime", Tuolumne 2026-11-09). configure finds /usr by itself.
+    case "$fabric" in
+        ""|/usr) ;;
+        *) opts+=(--with-libfabric="$fabric") ;;
+    esac
     [ -n "${MPICH_DIR:-}" ] && opts+=(--with-mpi="$MPICH_DIR")
     sd_log "building ofi-nccl ($src)"
     (cd "$src" && sd_step "$log" ./autogen.sh)
