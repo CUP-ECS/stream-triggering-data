@@ -226,7 +226,11 @@ build_ofi_nccl() {
     # MPI only builds aws-ofi-nccl's functional tests, and a ROCm build turns the tests off anyway
     # (v1.22.0 configure.ac), so it isn't needed. Tuolumne's cray-mpich module doesn't set
     # MPICH_DIR (the 2026-11-09 build stopped on that); Frontier's does, so pass it when it's there.
-    local opts=(--prefix="${PREFIX}/ofi-nccl" --with-rocm="${ROCM_PATH:-}" --disable-tests)
+    # --disable-werror: configure adds -Werror whenever the source has a .git directory (our pinned
+    # clone does; a release tarball wouldn't), and its -Wshadow then fails on ROCm 7.14's own
+    # hip/amd_detail/amd_hip_vector_types.h (Tuolumne 2026-11-09). The warnings stay on.
+    local opts=(--prefix="${PREFIX}/ofi-nccl" --with-rocm="${ROCM_PATH:-}" --disable-tests
+                --disable-werror)
     # Only a non-system libfabric (Frontier's /opt/cray/libfabric/<ver>). --with-libfabric=/usr adds
     # "-isystem /usr/include", which puts /usr/include ahead of libstdc++'s headers and breaks its
     # #include_next <stdlib.h> in the C++ probe for hip/hip_runtime_api.h ("NCCL OFI Plugin requires
