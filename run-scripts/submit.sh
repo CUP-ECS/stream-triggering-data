@@ -42,12 +42,7 @@ while getopts ":s:x:P:p:l:o:h" opt; do
 done
 [ -n "$SYSTEM" ] && [ -n "$EXPERIMENT" ] && [ -n "$PRESET" ] || usage 1
 
-case "$EXPERIMENT" in
-    pingpong) EXP_DIR=PingPong ;;
-    cabana-ghost) EXP_DIR=CabanaGhost ;;
-    acg) EXP_DIR=aCG ;;
-    *) sd_die "unknown experiment '$EXPERIMENT' (pingpong, cabana-ghost or acg)" ;;
-esac
+EXP_DIR="$(sd_exp_dir "$EXPERIMENT")" || sd_die "unknown experiment '$EXPERIMENT' (pingpong, cabana-ghost or acg)"
 JOB_SCRIPT="${SCRIPT_DIR}/${EXPERIMENT}-job.sh"
 
 sd_load_system "$SYSTEM"

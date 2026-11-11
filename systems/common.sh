@@ -31,9 +31,10 @@ sd_run() {
     fi
 }
 
-# The lines of a module file, without comments or blank lines, on one line.
+# The lines of a module file, without comments or blank lines, on one line (empty for a file
+# that lists no modules: grep finding nothing mustn't fail the caller under pipefail).
 sd_modules_from() {
-    grep -v '^\s*#' "$1" | grep -v '^\s*$' | tr '\n' ' ' | sed 's/ *$//'
+    { grep -v -e '^\s*#' -e '^\s*$' "$1" || true; } | tr '\n' ' ' | sed 's/ *$//'
 }
 
 # Load a module file (or print what would load, in a dry run). Exports SD_MODULE_FILE and
@@ -44,6 +45,7 @@ sd_load_modules() {
     SD_MODULE_FILE="$(realpath "$file")"
     SD_MODULES="$(sd_modules_from "$file")"
     export SD_MODULE_FILE SD_MODULES
+    [ -n "$SD_MODULES" ] || return 0
     if sd_dry; then
         echo "+ module load $SD_MODULES" >&2
         return 0
@@ -149,13 +151,15 @@ sd_step() {
     [ "$rc" -eq 0 ] || sd_die "failed (exit $rc): $*  -- see $log"
 }
 
-# A file name under <dir> that doesn't exist yet: <dir>/<base>-<n><ext>, n counting from 1.
-sd_unused_name() {
-    local dir="$1" base="$2" ext="$3" n=1
-    while [ -e "${dir}/${base}-${n}${ext}" ]; do
-        n=$((n + 1))
-    done
-    echo "${dir}/${base}-${n}${ext}"
+# An experiment's directory name under data/, outputs/ and plot-scripts/; fails for an unknown one.
+#   sd_exp_dir <pingpong|cabana-ghost|acg>
+sd_exp_dir() {
+    case "$1" in
+        pingpong) echo PingPong ;;
+        cabana-ghost) echo CabanaGhost ;;
+        acg) echo aCG ;;
+        *) return 1 ;;
+    esac
 }
 
 # The header every run's output file starts with: the manifest it ran from, the modules, and
