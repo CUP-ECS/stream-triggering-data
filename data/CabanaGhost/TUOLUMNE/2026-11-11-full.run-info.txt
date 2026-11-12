@@ -1,0 +1,62 @@
+experiment: cabana-ghost
+preset: full
+system: tuolumne
+label: 2026-11-11-full
+prefix: /usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0
+submitted: 2026-11-11T18:27:36-08:00 from tuolumne1002
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks b2d8184876b18b1b9a116425ac51432564411469 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+SD_NODE_LIST: 1 2 4 8 16 32 64 128 256
+SD_REPEATS: 5
+SD_JOB_MINUTES: 30
+SD_CHAIN: repeat
+CBG_PPN: 1 2 4
+CBG_SIZES: 16384 61440
+CBG_VARIANTS: cxi-db-coarse cxi-sb-coarse mpi-sb-coarse
+CBG_ITERS: 1000
+CBG_PRINT_FREQ: 200
+job: cabana-ghost-1N-r1 f3jZqkkoq52w
+job: cabana-ghost-2N-r1 f3jZqkuhkm6w
+job: cabana-ghost-4N-r1 f3jZqm2aZRuh
+job: cabana-ghost-8N-r1 f3jZqmA6Rnm5
+job: cabana-ghost-16N-r1 f3jZqmHwZzGw
+job: cabana-ghost-32N-r1 f3jZqmRgnEfR
+job: cabana-ghost-64N-r1 f3jZqmZL4XvX
+job: cabana-ghost-128N-r1 f3jZqmgcb1Eo
+job: cabana-ghost-256N-r1 f3jZqmopfWi3
+job: cabana-ghost-1N-r2 f3jZqmwLXsZR
+job: cabana-ghost-2N-r2 f3jZqn4kUHHR
+job: cabana-ghost-4N-r2 f3jZqnCGLe8o
+job: cabana-ghost-8N-r2 f3jZqnKt8x7Z
+job: cabana-ghost-16N-r2 f3jZqnTNXKgb
+job: cabana-ghost-32N-r2 f3jZqnazKdfM
+job: cabana-ghost-64N-r2 f3jZqnhqeKBm
+job: cabana-ghost-128N-r2 f3jZqnpiSyzX
+job: cabana-ghost-256N-r2 f3jZqnxFoL8F
+job: cabana-ghost-1N-r3 f3jZqo5x3bx3
+job: cabana-ghost-2N-r3 f3jZqoDSRyX5
+job: cabana-ghost-4N-r3 f3jZqoM4EHVq
+job: cabana-ghost-8N-r3 f3jZqoUoSXtK
+job: cabana-ghost-16N-r3 f3jZqoc7SzUw
+job: cabana-ghost-32N-r3 f3jZqojt9E9m
+job: cabana-ghost-64N-r3 f3jZqosF7fK5
+job: cabana-ghost-128N-r3 f3jZqp19DqPd
+job: cabana-ghost-256N-r3 f3jZqp8ZAF7d
+job: cabana-ghost-1N-r4 f3jZqpFsAhiF
+job: cabana-ghost-2N-r4 f3jZqpNb5Spw
+job: cabana-ghost-4N-r4 f3jZqpVu5uRZ
+job: cabana-ghost-8N-r4 f3jZqpca2fyZ
+job: cabana-ghost-16N-r4 f3jZqpkALzfy
+job: cabana-ghost-32N-r4 f3jZqpsSsTzF
+job: cabana-ghost-64N-r4 f3jZqq11hoQK
+job: cabana-ghost-128N-r4 f3jZqq8GkHSF
+job: cabana-ghost-256N-r4 f3jZqqFqacrK
+job: cabana-ghost-1N-r5 f3jZqqP6d6tF
+job: cabana-ghost-2N-r5 f3jZqqWZXVAw
+job: cabana-ghost-4N-r5 f3jZqqe5Pr2K
+job: cabana-ghost-8N-r5 f3jZqqmWpF2f
+job: cabana-ghost-16N-r5 f3jZqqtKAwzP
+job: cabana-ghost-32N-r5 f3jZqr1oZKZR
+job: cabana-ghost-64N-r5 f3jZqr8Na8z3
+job: cabana-ghost-128N-r5 f3jZqrG1rSF9
+job: cabana-ghost-256N-r5 f3jZqrPUkpXq
