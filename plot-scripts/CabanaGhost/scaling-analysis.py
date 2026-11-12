@@ -78,7 +78,7 @@ def memory_check(paths):
 
 
 def lineplot(data, x, y, out, title, hue="Label", style="Problem Size (GB)", logy=False, ideal=False,
-             invertx=False):
+             xlabel=None):
     if data.empty:
         sd.warn(f"no data for {out.name}")
         return
@@ -92,15 +92,38 @@ def lineplot(data, x, y, out, title, hue="Label", style="Problem Size (GB)", log
     if ideal:
         top = data[x].max()
         ax.plot([1, top], [1, top], "k--", lw=1, label="Ideal")
-    if invertx:
-        ax.invert_xaxis()
     if y == "Percent Improvement":
         ax.axhline(0, color="k", lw=0.8)
+    if xlabel:
+        ax.set_xlabel(xlabel)
     ax.set_title(title)
     ax.grid(True, ls=":")
-    fig.tight_layout()
-    fig.savefig(out, dpi=150)
+    sbn.move_legend(ax, "upper left", bbox_to_anchor=(1.02, 1), frameon=False)
+    fig.savefig(out, dpi=150, bbox_inches="tight")
     plt.close(fig)
+    sd.log(f"wrote {out}")
+
+
+def speedup_by_ppn(data, out, title):
+    """Speedup by total ranks, one panel per GPUs-per-node count, log-log with ideal scaling: the
+    old scripts' "Speedup-Ranks-GPUs per Node-log-<System>" figure."""
+    if data.empty:
+        sd.warn(f"no data for {out.name}")
+        return
+    order = [label for label in PALETTE if label in set(data.Label)]
+    grid = sbn.relplot(data=data, kind="line", x="Ranks", y="Speedup", col="GPUs per Node",
+                       hue="Label", hue_order=order, palette=PALETTE, style="Problem Size (GB)",
+                       markers=True, errorbar=("ci", 95), height=3.5, aspect=1.25)
+    top = data.Ranks.max()
+    for ax in grid.axes.flat:
+        ax.set_xscale("log", base=2)
+        ax.set_yscale("log", base=2)
+        ax.plot([1, top], [1, top], "k--", lw=1)
+        ax.grid(True, ls=":")
+    grid.set_titles("{col_name} GPUs per Node")
+    grid.figure.suptitle(title, y=1.02)
+    grid.savefig(out, dpi=150, bbox_inches="tight")
+    plt.close(grid.figure)
     sd.log(f"wrote {out}")
 
 
@@ -149,9 +172,11 @@ def main():
         lineplot(st[st.PPN.isin(edge_ppn)], "Edge Length", "Percent Improvement",
                  args.out_dir / f"percent-improvement-edge-{system}.png",
                  f"{system}: improvement by mean halo edge length ({args.edge_ppn} GPUs/node)",
-                 invertx=True)
+                 xlabel="Mean halo edge length (bytes)")
         lineplot(sdf, "Ranks", "Speedup", args.out_dir / f"speedup-ranks-{system}.png",
                  f"{system}: strong-scaling speedup", logy=True, ideal=True)
+        speedup_by_ppn(sdf, args.out_dir / f"speedup-ranks-ppn-{system}.png",
+                       f"{system}: strong-scaling speedup by GPUs per node")
         lineplot(sdf, "Ranks", "Parallel Efficiency", args.out_dir / f"efficiency-ranks-{system}.png",
                  f"{system}: parallel efficiency")
         lineplot(sdf, "Ranks", "Percent Improvement", args.out_dir / f"percent-improvement-ppn-{system}.png",
