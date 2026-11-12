@@ -1,0 +1,21 @@
+experiment: pingpong
+preset: full
+system: tuolumne
+label: 2026-11-11-full
+prefix: /usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0
+submitted: 2026-11-11T10:56:30-08:00 from tuolumne2149
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks 69170453d60bf6e9dfbdbda45010c6e3b0e85958 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+SD_NODE_LIST: 2
+SD_REPEATS: 5
+SD_JOB_MINUTES: 120
+SD_CHAIN: all
+PP_START_EXP: 0
+PP_END_EXP: 28
+PP_ITER_DIVISOR: 1
+PP_TESTS: st-cxi-coarse mpi mpi_raw st_raw-cxi-coarse ipc
+job: pingpong-2N-r1 f3jWJ6YZGrxo
+job: pingpong-2N-r2 f3jWJ6hi2RrF
+job: pingpong-2N-r3 f3jWJ6pWP8oy
+job: pingpong-2N-r4 f3jWJ6xL3M3V
+job: pingpong-2N-r5 f3jWJ75Jmxyd

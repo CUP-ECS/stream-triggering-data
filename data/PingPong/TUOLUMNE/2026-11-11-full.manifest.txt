@@ -1,0 +1,103 @@
+# Build manifest for /usr/workspace/derek/st-project/tuolumne/rocm7.14-mpich9.1.0
+# Assembled 2026-11-11T10:54:17-08:00 on tuolumne2149
+system: tuolumne
+stack: rocm7.14-mpich9.1.0
+
+== acg
+built: 2026-11-11T10:53:43-08:00 on tuolumne2149
+source: aCG /g/g16/derek/git/ST-project-testing/repos/aCG feat-initial-compass-run 676ad2df79fedc5f9ab950bd042b9619b165b01a clean
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks 69170453d60bf6e9dfbdbda45010c6e3b0e85958 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+module file: /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data/systems/tuolumne.modules
+cc: mpiamdclang -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: mpiamdclang++ -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_C_COMPILER=mpiamdclang -DCMAKE_CXX_COMPILER=mpiamdclang++ -DMETIS_DIR=/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/metis -DCMAKE_HIP_COMPILER=mpiamdclang++ -DCMAKE_HIP_ARCHITECTURES=gfx942 -DCMAKE_PREFIX_PATH=/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/stream-triggering;/opt/rocm/core-7.14 -DACG_REQUIRE_STREAM_TRIGGERING=ON (mtxpartition: -DCMAKE_C_COMPILER=mpiamdclang -DCMAKE_CXX_COMPILER=mpiamdclang++ -DMETIS_DIR=/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/metis)
+== cabana
+built: 2026-11-11T10:52:44-08:00 on tuolumne2149
+source: Cabana /g/g16/derek/git/ST-project-testing/repos/Cabana mpi-advance-stream-halo 0c81e946c759ad5a99a2ea4b8414ae459e39c497 clean
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks 69170453d60bf6e9dfbdbda45010c6e3b0e85958 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+module file: /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data/systems/tuolumne.modules
+cc: mpiamdclang -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: mpiamdclang++ -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_INSTALL_PREFIX=/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/cabana -DCMAKE_CXX_COMPILER=mpiamdclang++ -DCMAKE_PREFIX_PATH=/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/kokkos;/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/stream-triggering -DCabana_ENABLE_MPI=ON -DCabana_BUILD_STREAM_HALO=ON -DCabana_REQUIRE_STREAM-TRIGGERING=ON
+== cabanaghost
+built: 2026-11-11T10:53:12-08:00 on tuolumne2149
+source: CabanaGhost /g/g16/derek/git/ST-project-testing/repos/CabanaGhost develop d64d75f6058c6d7e9dbf364c619a3b80a5995871 clean
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks 69170453d60bf6e9dfbdbda45010c6e3b0e85958 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+module file: /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data/systems/tuolumne.modules
+cc: mpiamdclang -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: mpiamdclang++ -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_INSTALL_PREFIX=/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/cabanaghost -DCMAKE_C_COMPILER=mpiamdclang -DCMAKE_CXX_COMPILER=mpiamdclang++ -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE -DCMAKE_PREFIX_PATH=/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/kokkos;/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/stream-triggering;/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/silo;/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/cabana
+== kokkos
+built: 2026-11-11T08:58:46-08:00 on tuolumne1003
+source: kokkos /usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/src/kokkos detached 8e15454876298832f013ebcaf08d53825b5bda40 clean
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks 842d722b1b74cbb717f925f4381ab49dc278d424 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+module file: /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data/systems/tuolumne.modules
+cc: mpiamdclang -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: mpiamdclang++ -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_INSTALL_PREFIX=/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/kokkos -DCMAKE_CXX_COMPILER=mpiamdclang++ -DKokkos_ENABLE_HIP=ON -DKokkos_ARCH_AMD_GFX942_APU=ON -DKokkos_ENABLE_IMPL_VIEW_LEGACY=ON -DBUILD_SHARED_LIBS=ON
+== meta
+recorded: 2026-11-11T10:51:42-08:00 on tuolumne2149
+source: ST-project-testing /g/g16/derek/git/ST-project-testing main 523c7b49594322c46baf1ed5cca0d49cc582bec6 clean
+sub-repos against their submodule pointers:
+   0c81e946c759ad5a99a2ea4b8414ae459e39c497 repos/Cabana (0.3.0-1656-g0c81e946)
+   d64d75f6058c6d7e9dbf364c619a3b80a5995871 repos/CabanaGhost (heads/develop)
+   bdc68d5d1d90f27bda7a0cd09f70ad322f763857 repos/Resonance (v0-topology-only-397-gbdc68d5)
+   676ad2df79fedc5f9ab950bd042b9619b165b01a repos/aCG (heads/feat-initial-compass-run)
+   265cda887c0b3e013dd7b8a766f27f51ffa254b3 repos/stream-triggering (v0.6.0-38-g265cda8)
+   69170453d60bf6e9dfbdbda45010c6e3b0e85958 repos/stream-triggering-data (1.0.0-42-g6917045)
+  (a leading + means the checkout isn't the commit this repo points at)
+== ofi-nccl
+built: 2026-11-09T17:33:29-08:00 on tuolumne1002
+source: aws-ofi-nccl /usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/src/aws-ofi-nccl detached 80c6d32527bbf764dd06e87b05321b044da36220 clean
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks 22d171563a30b13c9302ada9bf0108b916f2ad93 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+module file: /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data/systems/tuolumne.modules
+cc: mpiamdclang -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: mpiamdclang++ -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: --prefix=/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/ofi-nccl --with-rocm=/opt/rocm/core-7.14 --disable-tests --disable-werror
+== pingpong
+built: 2026-11-11T10:54:16-08:00 on tuolumne2149
+source: stream-triggering /g/g16/derek/git/ST-project-testing/repos/stream-triggering feat-header-align 265cda887c0b3e013dd7b8a766f27f51ffa254b3 clean
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks 69170453d60bf6e9dfbdbda45010c6e3b0e85958 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+module file: /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data/systems/tuolumne.modules
+cc: mpiamdclang -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: mpiamdclang++ -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: compile.py -C -H -T -S /usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/stream-triggering (st*), -m /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data/systems/tuolumne.modules
+== resonance
+built: 2026-11-11T09:02:20-08:00 on tuolumne1003
+source: Resonance /g/g16/derek/git/ST-project-testing/repos/Resonance derek-st-retest bdc68d5d1d90f27bda7a0cd09f70ad322f763857 clean
+stream-triggering: /usr/workspace/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/stream-triggering (see == st)
+deps: built=2026-11-11T09:01:54-08:00 host=tuolumne1003;rapids 31ee806a4a096193404f1dba79d24cfedea09eb7 (v0.2.2);stream-triggering /usr/workspace/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/stream-triggering (installed elsewhere; see its manifest);rccl-tests 2b22ab0195cc1461cd9abf3b969e9dd7c10af350 (rocm-systems, therock-7.14);hip 7.14.60850-0000000 CXX=Cray clang version 21.0.3  (03f45ce3d0ede393b9c256b04948894287765405);modules: craype-accel-amd-gfx942 rocm/7.14 cce/21.0.3 cray-mpich/9.1.0; rccl-tests MPI /opt/cray/pe/mpich/9.1.0/ofi/rocm-compiler/7.0;
+resonance modules: craype-accel-amd-gfx942 rocm/7.14 cce/21.0.3 cray-mpich/9.1.0 (its scripts' own)
+options: -DRESONANCE_ENABLE_HIP=ON, target rally only (resonance/build-rally.sh)
+== silo
+built: 2026-11-11T08:58:08-08:00 on tuolumne1003
+source: Silo /usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/src/Silo detached f05c5a8e6c22b784b7f5eb958d50218cae873d07 clean
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks 842d722b1b74cbb717f925f4381ab49dc278d424 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+module file: /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data/systems/tuolumne.modules
+cc: mpiamdclang -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: mpiamdclang++ -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_INSTALL_PREFIX=/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/silo -DCMAKE_C_COMPILER=mpiamdclang -DCMAKE_CXX_COMPILER=mpiamdclang++ -DSILO_ENABLE_HDF5=OFF -DSILO_ENABLE_FORTRAN=OFF
+== st
+built: 2026-11-11T10:52:35-08:00 on tuolumne2149
+source: stream-triggering /g/g16/derek/git/ST-project-testing/repos/stream-triggering feat-header-align 265cda887c0b3e013dd7b8a766f27f51ffa254b3 clean
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks 69170453d60bf6e9dfbdbda45010c6e3b0e85958 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+module file: /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data/systems/tuolumne.modules
+cc: mpiamdclang -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: mpiamdclang++ -> /usr/tce/packages/cray-mpich/cray-mpich-9.1.0-rocmcc-7.14-cce-21.0.3-magic/bin/mpiamdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_INSTALL_PREFIX=/usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0/stream-triggering -DCMAKE_C_COMPILER=mpiamdclang -DCMAKE_CXX_COMPILER=mpiamdclang++ -DCMAKE_HIP_COMPILER=mpiamdclang++ -DUSE_HIP_BACKEND=ON -DUSE_CXI_BACKEND=ON -DLIBFABRIC_PREFIX=/usr/lib64 -DCMAKE_HIP_ARCHITECTURES=gfx942 -DBUILD_TESTS=ON
