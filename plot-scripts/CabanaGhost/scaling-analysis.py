@@ -33,9 +33,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import sdcommon as sd  # noqa: E402
 
 CRAY = "Cray MPICH Send"
-LABELS = {("mpi", "sb"): CRAY, ("cxi", "db"): "Stream-Triggered Rsend", ("cxi", "sb"): "Stream-Triggered Send"}
+CRAY_NOSDMA = "Cray MPICH Send (SDMA off)"
+LABELS = {("mpi", "sb"): CRAY, ("cxi", "db"): "Stream-Triggered Rsend", ("cxi", "sb"): "Stream-Triggered Send",
+          ("mpi_nosdma", "sb"): CRAY_NOSDMA}
 PALETTE = {CRAY: "tab:green", "Stream-Triggered Rsend": "tab:orange", "Stream-Triggered Send": "tab:blue",
-           "Stream-Triggered Rsend (fine)": "tab:red", "Stream-Triggered Send (fine)": "tab:purple"}
+           "Stream-Triggered Rsend (fine)": "tab:red", "Stream-Triggered Send (fine)": "tab:purple",
+           CRAY_NOSDMA: "tab:olive"}
 PROBLEM = ["System", "Problem Size (GB)"]
 
 
@@ -156,7 +159,7 @@ def main():
     table = sd.best_mean_speedup(df, PROBLEM + ["Label"])
     print("Table III: best mean speedup ± 95% CI half-width [standard deviation], nodes/ranks")
     for _, r in table.iterrows():
-        print(f"  {r.System:9} {r['Problem Size (GB)']:>3} GB  {r.Label:24} {r.Mean:8.2f} ± {r.CI95:5.2f}"
+        print(f"  {r.System:9} {r['Problem Size (GB)']:>3} GB  {r.Label:27} {r.Mean:8.2f} ± {r.CI95:5.2f}"
               f" [{r.SD:5.2f}]  {r.Nodes}/{r.Ranks}  ({r.Runs} runs)")
     out = args.out_dir / "table3.csv"
     table.to_csv(out, index=False, lineterminator="\n")

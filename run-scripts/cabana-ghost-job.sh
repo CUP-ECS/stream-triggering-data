@@ -8,6 +8,8 @@
 #   cxi-sb-coarse  ST standard sends (MPI_ADVANCE_DOUBLE_BUFFERING=0)
 #   cxi-*-fine     the same with fine-grained memory (MPI_ADVANCE_FINEGRAIN_MEMORY=1)
 #   mpi-sb-coarse  Cray MPICH, GPU-aware (MPICH_GPU_SUPPORT_ENABLED=1)
+#   mpi_nosdma-sb-coarse  the same with HSA_ENABLE_SDMA=0 (GPU copies by kernels, not the SDMA
+#                  engines); not in any preset: add it with CBG_VARIANTS
 # Output: a "Test: <backend> <buffering> <memory> <nodes> <ppn> <size> <iters>" line, gol's
 # output, then "Exit: <code>", per run. CabanaGhost/out-to-csv.py reads it.
 
@@ -45,10 +47,11 @@ run_variant() {
                 *) sd_warn "bad memory type in '$variant'"; return ;;
             esac
             ;;
-        mpi)
-            [ "$variant" = "mpi-sb-coarse" ] || { sd_warn "Cray MPICH runs only as mpi-sb-coarse, not '$variant'"; return; }
+        mpi|mpi_nosdma)
+            [ "$buffering-$memory" = "sb-coarse" ] || { sd_warn "Cray MPICH runs only as $backend-sb-coarse, not '$variant'"; return; }
             comm=mpi
             env+=(MPICH_GPU_SUPPORT_ENABLED=1)
+            [ "$backend" = mpi_nosdma ] && env+=(HSA_ENABLE_SDMA=0)
             ;;
         *)
             sd_warn "unknown variant '$variant'"

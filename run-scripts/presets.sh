@@ -44,6 +44,8 @@ sd_preset() {
         # Sizes: -n 61440 is the 30 GB problem, -n 16384 the 2 GB one. Fig. 9 (by halo edge
         # length) is computed from the same runs (1-2 GPUs per node), so it needs no sweep of
         # its own. Variants: <cxi|mpi>-<sb|db>-<coarse|fine>; cxi = ST (Send sb, Rsend db).
+        # mpi_nosdma-sb-coarse (Cray MPICH with HSA_ENABLE_SDMA=0) is in no preset; add it with
+        # CBG_VARIANTS.
         tuolumne:cabana-ghost:full)
             SD_NODE_LIST="${SD_NODE_LIST:-1 2 4 8 16 32 64 128 256}"
             SD_REPEATS="${SD_REPEATS:-5}"

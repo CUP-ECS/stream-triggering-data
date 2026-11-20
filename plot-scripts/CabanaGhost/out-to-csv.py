@@ -5,7 +5,7 @@
 
 Reads run-scripts/cabana-ghost-job.sh output. Columns:
     System,GPU,Backend,Buffering,Memory,Nodes,PPN,Size,Iters,SetupTime,SolveTime,Run
-Backend is cxi (stream triggering) or mpi (Cray MPICH); Buffering sb (Send) or db (Rsend); Memory
+Backend is cxi (stream triggering), mpi (Cray MPICH) or mpi_nosdma (Cray MPICH, HSA_ENABLE_SDMA=0); Buffering sb (Send) or db (Rsend); Memory
 coarse or fine; Size is gol's -n; SetupTime and SolveTime are gol's "Solver creation time" and
 "Solver solve time" (seconds); Run is the output file's name without .out. Runs that failed or
 never finished are reported and left out.
