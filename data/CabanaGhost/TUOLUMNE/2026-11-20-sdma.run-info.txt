@@ -1,0 +1,29 @@
+experiment: cabana-ghost
+preset: full
+system: tuolumne
+label: 2026-11-20-sdma
+prefix: /usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0
+submitted: 2026-11-20T15:46:12-08:00 from tuolumne1004
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks 088bd9c5721a7592735c4c862af91d447b962676 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+SD_NODE_LIST: 1 2 4 16
+SD_REPEATS: 3
+SD_JOB_MINUTES: 30
+SD_CHAIN: repeat
+CBG_PPN: 1 2 4
+CBG_SIZES: 16384 61440
+CBG_VARIANTS: cxi-db-coarse cxi-sb-coarse mpi-sb-coarse mpi_nosdma-sb-coarse
+CBG_ITERS: 1000
+CBG_PRINT_FREQ: 200
+job: cabana-ghost-1N-r1 f3mJSi1jP9qq
+job: cabana-ghost-2N-r1 f3mJSi9GjVyZ
+job: cabana-ghost-4N-r1 f3mJSiGi9tyu
+job: cabana-ghost-16N-r1 f3mJSiQ9aHzF
+job: cabana-ghost-1N-r2 f3mJSiXS6mJX
+job: cabana-ghost-2N-r2 f3mJSiembDBV
+job: cabana-ghost-4N-r2 f3mJSineDPyh
+job: cabana-ghost-16N-r2 f3mJSivMwf5q
+job: cabana-ghost-1N-r3 f3mJSj3bW9qR
+job: cabana-ghost-2N-r3 f3mJSjArYdsM
+job: cabana-ghost-4N-r3 f3mJSjJULwr7
+job: cabana-ghost-16N-r3 f3mJSjRksRAP
