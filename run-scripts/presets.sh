@@ -45,7 +45,8 @@ sd_preset() {
         # length) is computed from the same runs (1-2 GPUs per node), so it needs no sweep of
         # its own. Variants: <cxi|mpi>-<sb|db>-<coarse|fine>; cxi = ST (Send sb, Rsend db).
         # mpi_nosdma-sb-coarse (Cray MPICH with HSA_ENABLE_SDMA=0) is in no preset; add it with
-        # CBG_VARIANTS.
+        # CBG_VARIANTS. CBG_WARMUP=1 (default) runs gol -w, keeping one-time communication costs out
+        # of the solve time (cabana-ghost-job.sh); CBG_WARMUP=0 times it as the paper era did.
         tuolumne:cabana-ghost:full)
             SD_NODE_LIST="${SD_NODE_LIST:-1 2 4 8 16 32 64 128 256}"
             SD_REPEATS="${SD_REPEATS:-5}"
@@ -67,6 +68,7 @@ sd_preset() {
             CBG_VARIANTS="${CBG_VARIANTS:-cxi-db-coarse cxi-sb-coarse mpi-sb-coarse}"
             CBG_ITERS="${CBG_ITERS:-1000}"
             CBG_PRINT_FREQ="${CBG_PRINT_FREQ:-200}"
+            CBG_WARMUP="${CBG_WARMUP:-1}"
             ;;
         *:cabana-ghost:smoke)
             SD_NODE_LIST="${SD_NODE_LIST:-1 2}"
@@ -77,6 +79,7 @@ sd_preset() {
             CBG_VARIANTS="${CBG_VARIANTS:-cxi-db-coarse cxi-sb-coarse mpi-sb-coarse}"
             CBG_ITERS="${CBG_ITERS:-100}"
             CBG_PRINT_FREQ="${CBG_PRINT_FREQ:-50}"
+            CBG_WARMUP="${CBG_WARMUP:-1}"
             ;;
 
         # --- aCG CG solver strong scaling (Figs. 8, 10, 11; Table IV), Tuolumne only -------
@@ -115,7 +118,7 @@ sd_preset() {
     esac
     export SD_NODE_LIST SD_REPEATS SD_JOB_MINUTES SD_CHAIN
     export PP_START_EXP PP_END_EXP PP_ITER_DIVISOR PP_TESTS
-    export CBG_PPN CBG_SIZES CBG_VARIANTS CBG_ITERS CBG_PRINT_FREQ
+    export CBG_PPN CBG_SIZES CBG_VARIANTS CBG_ITERS CBG_PRINT_FREQ CBG_WARMUP
     export ACG_PPN ACG_MATRICES ACG_BACKENDS ACG_MATRIX_DIR ACG_PARTITION_DIR
 }
 
@@ -123,7 +126,7 @@ sd_preset() {
 sd_preset_vars() {
     case "$1" in
         pingpong) echo "PP_START_EXP PP_END_EXP PP_ITER_DIVISOR PP_TESTS" ;;
-        cabana-ghost) echo "CBG_PPN CBG_SIZES CBG_VARIANTS CBG_ITERS CBG_PRINT_FREQ" ;;
+        cabana-ghost) echo "CBG_PPN CBG_SIZES CBG_VARIANTS CBG_ITERS CBG_PRINT_FREQ CBG_WARMUP" ;;
         acg) echo "ACG_PPN ACG_MATRICES ACG_BACKENDS ACG_MATRIX_DIR ACG_PARTITION_DIR" ;;
     esac
 }
