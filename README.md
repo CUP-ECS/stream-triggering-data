@@ -85,7 +85,7 @@ Files are never overwritten, so older batches stay next to the ones that replace
 | PingPong, Tuolumne | `2026-11-11-full` | Current |
 | PingPong, Tuolumne | `2026-10-15-develop`, `2026-10-16-patch1` | Earlier ST builds (before the Phase 5 CREDIT fix); comparison only |
 
-Background for the CabanaGhost timing change: the meta repo's `knowledge/sdma-first-copy.md`.
+Background for the CabanaGhost timing change: the meta repo's `knowledge/CabanaGhostResultsExplained.md`.
 
 ## How the tables are computed
 
