@@ -84,7 +84,8 @@ sd_preset() {
 
         # --- aCG CG solver strong scaling (Figs. 8, 10, 11; Table IV), Tuolumne only -------
         # Backends: mpi, st, rccl, and mpi-no-ipc (Cray MPICH with GPU IPC and the eager
-        # protocol off: the Fig. 11 ablation).
+        # protocol off: the Fig. 11 ablation). acg-job.sh also has diagnostic mpi-* backends, in no
+        # preset. ACG_TRIALS: runs per configuration per allocation; ACG_MAX_ITERATIONS: solver cap.
         tuolumne:acg:full)
             SD_NODE_LIST="${SD_NODE_LIST:-1 2 4 8 16}"
             SD_REPEATS="${SD_REPEATS:-5}"
@@ -102,6 +103,8 @@ sd_preset() {
             ACG_BACKENDS="${ACG_BACKENDS:-mpi st rccl}"
             ;;&
         tuolumne:acg:*)
+            ACG_TRIALS="${ACG_TRIALS:-1}"
+            ACG_MAX_ITERATIONS="${ACG_MAX_ITERATIONS:-100000}"
             ACG_MATRIX_DIR="${ACG_MATRIX_DIR:-/usr/workspace/${USER}/aCG/input}"
             ACG_PARTITION_DIR="${ACG_PARTITION_DIR:-/usr/workspace/${USER}/aCG/partitions}"
             ;;
@@ -119,7 +122,7 @@ sd_preset() {
     export SD_NODE_LIST SD_REPEATS SD_JOB_MINUTES SD_CHAIN
     export PP_START_EXP PP_END_EXP PP_ITER_DIVISOR PP_TESTS
     export CBG_PPN CBG_SIZES CBG_VARIANTS CBG_ITERS CBG_PRINT_FREQ CBG_WARMUP
-    export ACG_PPN ACG_MATRICES ACG_BACKENDS ACG_MATRIX_DIR ACG_PARTITION_DIR
+    export ACG_PPN ACG_MATRICES ACG_BACKENDS ACG_MATRIX_DIR ACG_PARTITION_DIR ACG_TRIALS ACG_MAX_ITERATIONS
 }
 
 # The variables a preset sets, for run-info.txt
@@ -127,6 +130,6 @@ sd_preset_vars() {
     case "$1" in
         pingpong) echo "PP_START_EXP PP_END_EXP PP_ITER_DIVISOR PP_TESTS" ;;
         cabana-ghost) echo "CBG_PPN CBG_SIZES CBG_VARIANTS CBG_ITERS CBG_PRINT_FREQ CBG_WARMUP" ;;
-        acg) echo "ACG_PPN ACG_MATRICES ACG_BACKENDS ACG_MATRIX_DIR ACG_PARTITION_DIR" ;;
+        acg) echo "ACG_PPN ACG_MATRICES ACG_BACKENDS ACG_MATRIX_DIR ACG_PARTITION_DIR ACG_TRIALS ACG_MAX_ITERATIONS SD_LAUNCH_ARGS SD_STEP_MINUTES" ;;
     esac
 }

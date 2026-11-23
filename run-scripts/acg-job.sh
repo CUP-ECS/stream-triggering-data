@@ -10,6 +10,17 @@
 #   st          stream-triggered sends for the halo exchange (--comm st)
 #   rccl        RCCL (--comm rccl), with aws-ofi-nccl from <prefix>/ofi-nccl when it was built
 #
+# Diagnostic backends (Phase 6, aCG's setup crash; knowledge/phase6-plan.md in ST-project-testing):
+# each is `mpi` with one change, so an A/B against `mpi` isolates it.
+#   mpi-eager-off   FI_CXI_RDZV_THRESHOLD=0 FI_CXI_RDZV_EAGER_SIZE=0 (mpi-no-ipc's eager half)
+#   mpi-ipc-off     MPICH_GPU_IPC_ENABLED=0 (mpi-no-ipc's IPC half)
+#   mpi-mrcache-off FI_MR_CACHE_MAX_COUNT=0: libfabric's memory-registration cache off
+#   mpi-omp1        OMP_NUM_THREADS=1: aCG's host setup without OpenMP threads
+#
+# ACG_TRIALS (default 1) runs every configuration that many times in this allocation, the backends
+# interleaved within each trial. ACG_MAX_ITERATIONS (default 100000) caps the solver; a run that
+# stops at the cap exits 1 ("not converged"), so a small cap is only for testing setup.
+#
 # Matrices are <ACG_MATRIX_DIR>/<name>.mtx. A missing partition file
 # (<ACG_PARTITION_DIR>/<name>_<parts>_parts.mtx) is made with mtxpartition first.
 # Output: a "Test: <backend> <nodes> <ppn> <matrix>" line, aCG's output, then "Exit: <code>",
@@ -32,12 +43,19 @@ mkdir -p "$ACG_PARTITION_DIR"
 
 export MPICH_GPU_SUPPORT_ENABLED=1
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-7}"
+ACG_TRIALS="${ACG_TRIALS:-1}"
+ACG_MAX_ITERATIONS="${ACG_MAX_ITERATIONS:-100000}"
 
 sd_run_header "$OUT" "$NODES"
 if [ -d "$OFI_NCCL_LIB" ]; then
     echo "# rccl: aws-ofi-nccl from $OFI_NCCL_LIB" >> "$OUT"
 else
     echo "# rccl: no aws-ofi-nccl in this prefix (RCCL's own transport)" >> "$OUT"
+fi
+echo "# trials per configuration: $ACG_TRIALS; max iterations: $ACG_MAX_ITERATIONS" >> "$OUT"
+# The runtime libraries acg-hip resolves (OpenMP, MPI, libfabric, CCE runtime, RCCL)
+if ! sd_dry; then
+    ldd "$ACG" 2>&1 | grep -Ei 'omp|mpi|fabric|cray|cce|rccl|amdhip' | sed 's/^[[:space:]]*/# ldd: /' >> "$OUT" || true
 fi
 
 # Make <file> with mtxpartition unless it exists. Written to a temporary name and moved into
@@ -70,6 +88,10 @@ run_backend() {
             env+=(MPICH_GPU_IPC_ENABLED=0 FI_CXI_RDZV_THRESHOLD=0 FI_CXI_RDZV_EAGER_SIZE=0)
             ;;
         st) comm=st; st=1 ;;
+        mpi-eager-off) comm=mpi; env+=(FI_CXI_RDZV_THRESHOLD=0 FI_CXI_RDZV_EAGER_SIZE=0) ;;
+        mpi-ipc-off) comm=mpi; env+=(MPICH_GPU_IPC_ENABLED=0) ;;
+        mpi-mrcache-off) comm=mpi; env+=(FI_MR_CACHE_MAX_COUNT=0) ;;
+        mpi-omp1) comm=mpi; env+=(OMP_NUM_THREADS=1) ;;
         rccl)
             comm=rccl
             # The settings Derek's earlier runs used with aws-ofi-nccl
@@ -85,7 +107,7 @@ run_backend() {
     local rc=0
     ( [ ${#env[@]} -gt 0 ] && export "${env[@]}"
       sd_launch "$NODES" "$ppn" "$OUT" "$st" "$ACG" "$matrix_file" --partition="$partition" \
-          --seed 101 --residual-atol 0 --residual-rtol 1e-6 --max-iterations 100000 \
+          --seed 101 --residual-atol 0 --residual-rtol 1e-6 --max-iterations "$ACG_MAX_ITERATIONS" \
           --solver acg --comm "$comm" --manufactured-solution --verbose -q ) || rc=$?
     echo "Exit: $rc" >> "$OUT"
 }
@@ -107,8 +129,10 @@ for ppn in $ACG_PPN; do
             echo "# mtxpartition failed for $matrix ($parts parts): skipped" >> "$OUT"
             continue
         fi
-        for backend in $ACG_BACKENDS; do
-            run_backend "$backend" "$ppn" "$matrix" "$matrix_file" "$partition"
+        for (( trial=1; trial<=ACG_TRIALS; trial++ )); do
+            for backend in $ACG_BACKENDS; do
+                run_backend "$backend" "$ppn" "$matrix" "$matrix_file" "$partition"
+            done
         done
     done
 done
