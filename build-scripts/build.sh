@@ -288,10 +288,12 @@ build_acg_asan() {
     # With -fsanitize=address the ROCm compiler wrapper drops its usual ROCm library directory
     # (it looks for ASan-instrumented ROCm libraries, which we don't use: only aCG's own code is
     # instrumented), so -lamdhip64 etc. aren't found (Tuolumne, 2026-11-23). Name the directory
-    # the normal acg-hip resolves libamdhip64 from (falling back to $ROCM_PATH/lib).
+    # the normal acg-hip resolves libamdhip64 from (falling back to $ROCM_PATH/lib). awk reads all
+    # of ldd's output: quitting early kills ldd with SIGPIPE, and pipefail + set -e then end the
+    # script without a message.
     local rocmlib=""
     if ! sd_dry && [ -x "${PREFIX}/acg/bin/acg-hip" ]; then
-        rocmlib="$(ldd "${PREFIX}/acg/bin/acg-hip" | awk '/libamdhip64/ {print $3; exit}')"
+        rocmlib="$(ldd "${PREFIX}/acg/bin/acg-hip" | awk '/libamdhip64/ && !found {print $3; found = 1}')"
         rocmlib="${rocmlib:+$(dirname "$rocmlib")}"
     fi
     rocmlib="${rocmlib:-${ROCM_PATH:-/opt/rocm}/lib}"
