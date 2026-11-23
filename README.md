@@ -70,8 +70,22 @@ are never overwritten.
 
 Backends: PingPong `cxi-coarse`, `cxi-fine`, `cxi-coarse-no-credit`, `mpi`, `ipc` (raw runs have
 Buffering `raw`). CabanaGhost `cxi` or `mpi`, with Buffering `sb` (Send) or `db` (Rsend) and Memory
-`coarse` or `fine`. aCG `mpi`, `mpi-no-ipc` (Cray MPICH with GPU IPC and the eager protocol off),
+`coarse` or `fine`; also `mpi_nosdma` (Cray MPICH with `HSA_ENABLE_SDMA=0`, diagnostic only). aCG `mpi`, `mpi-no-ipc` (Cray MPICH with GPU IPC and the eager protocol off),
 `st` and `rccl`.
+
+## Which data is current
+
+Files are never overwritten, so older batches stay next to the ones that replace them.
+
+| Experiment | Label | Status |
+|---|---|---|
+| CabanaGhost, Tuolumne | `2026-11-22-warmup` | **Current** (paper data). `gol -w` (`CBG_WARMUP=1`): one-time communication costs stay out of the solve time. 128N-r4 and 256N-r1 are missing (killed); 4 repeats there was judged enough |
+| CabanaGhost, Tuolumne | `2026-11-11-full` | **Superseded** by `2026-11-22-warmup`. Paper-era timing: Cray MPICH's first SDMA copy (~0.1–0.3 s per run) lands in the solve time, inflating its time at 4 GPUs per node and at 1–2 ranks. Kept for comparison |
+| CabanaGhost, Tuolumne | `2026-11-20-sdma` | Diagnostic: the `mpi_nosdma` variant against the default, 1–16 nodes, paper-era timing |
+| PingPong, Tuolumne | `2026-11-11-full` | Current |
+| PingPong, Tuolumne | `2026-10-15-develop`, `2026-10-16-patch1` | Earlier ST builds (before the Phase 5 CREDIT fix); comparison only |
+
+Background for the CabanaGhost timing change: the meta repo's `knowledge/sdma-first-copy.md`.
 
 ## How the tables are computed
 
