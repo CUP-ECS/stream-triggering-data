@@ -285,7 +285,17 @@ build_acg_asan() {
     local metis="${METIS_DIR:-${PREFIX}/metis}"
     [ -d "$metis" ] || sd_dry || sd_die "no METIS at $metis (see build_acg)"
     local san="-fsanitize=address -fno-omit-frame-pointer -g -O1"
-    local link="-fsanitize=address ${SD_EXE_LINK_FLAGS:-}"
+    # With -fsanitize=address the ROCm compiler wrapper drops its usual ROCm library directory
+    # (it looks for ASan-instrumented ROCm libraries, which we don't use: only aCG's own code is
+    # instrumented), so -lamdhip64 etc. aren't found (Tuolumne, 2026-11-23). Name the directory
+    # the normal acg-hip resolves libamdhip64 from (falling back to $ROCM_PATH/lib).
+    local rocmlib=""
+    if ! sd_dry && [ -x "${PREFIX}/acg/bin/acg-hip" ]; then
+        rocmlib="$(ldd "${PREFIX}/acg/bin/acg-hip" | awk '/libamdhip64/ {print $3; exit}')"
+        rocmlib="${rocmlib:+$(dirname "$rocmlib")}"
+    fi
+    rocmlib="${rocmlib:-${ROCM_PATH:-/opt/rocm}/lib}"
+    local link="-fsanitize=address -L${rocmlib} -Wl,-rpath,${rocmlib} ${SD_EXE_LINK_FLAGS:-}"
     local opts=(-DCMAKE_C_COMPILER="$SD_CC" -DCMAKE_CXX_COMPILER="$SD_CXX" -DMETIS_DIR="$metis"
                 -DCMAKE_HIP_COMPILER="$HIP_COMPILER" -DCMAKE_HIP_ARCHITECTURES="$SD_GPU_ARCH"
                 -DCMAKE_PREFIX_PATH="${ST_PREFIX};${ROCM_PATH:-/opt/rocm}"
