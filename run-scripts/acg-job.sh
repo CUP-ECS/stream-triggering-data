@@ -14,8 +14,16 @@
 # each is `mpi` with one change, so an A/B against `mpi` isolates it.
 #   mpi-eager-off   FI_CXI_RDZV_THRESHOLD=0 FI_CXI_RDZV_EAGER_SIZE=0 (mpi-no-ipc's eager half)
 #   mpi-ipc-off     MPICH_GPU_IPC_ENABLED=0 (mpi-no-ipc's IPC half)
-#   mpi-mrcache-off FI_MR_CACHE_MAX_COUNT=0: libfabric's memory-registration cache off
+#   mpi-mrcache-off FI_MR_CACHE_MAX_COUNT=0: libfabric's memory-registration cache off. On
+#                   Tuolumne's CXI, MPI_Init then fails (fi_open domain: Invalid argument)
 #   mpi-omp1        OMP_NUM_THREADS=1: aCG's host setup without OpenMP threads
+#
+# Modifiers, appended to any backend with '+' (e.g. mpi-ipc-off+pad7+gdb):
+#   +pad<N>   adds ACG_PAD=<N x's> to the environment: shifts the processes' memory layout by N bytes
+#             and changes nothing else (does a crash follow layout rather than MPI settings?)
+#   +gdb      runs every rank under gdb -batch (rocgdb if there's no gdb) and prints a backtrace
+#             where it stops (e.g. glibc's abort). No shell in between, and gdb's LINES/COLUMNS are
+#             unset, so the program's environment is the same as without gdb
 #
 # ACG_TRIALS (default 1) runs every configuration that many times in this allocation, the backends
 # interleaved within each trial. ACG_MAX_ITERATIONS (default 100000) caps the solver; a run that
@@ -45,6 +53,7 @@ export MPICH_GPU_SUPPORT_ENABLED=1
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-7}"
 ACG_TRIALS="${ACG_TRIALS:-1}"
 ACG_MAX_ITERATIONS="${ACG_MAX_ITERATIONS:-100000}"
+GDB="$(command -v gdb || command -v rocgdb || true)"
 
 sd_run_header "$OUT" "$NODES"
 if [ -d "$OFI_NCCL_LIB" ]; then
@@ -79,9 +88,22 @@ make_partition() {
 
 run_backend() {
     local backend="$1" ppn="$2" matrix="$3" matrix_file="$4" partition="$5"
-    local comm st=0
-    local env=()
-    case "$backend" in
+    local comm st=0 base="${backend%%+*}" mod
+    local env=() wrap=() mods=()
+    [ "$base" != "$backend" ] && IFS=+ read -ra mods <<< "${backend#*+}"
+    for mod in "${mods[@]}"; do
+        case "$mod" in
+            pad[0-9]*)
+                env+=(ACG_PAD="$(printf '%*s' "${mod#pad}" '' | tr ' ' x)") ;;
+            gdb)
+                if [ -z "$GDB" ]; then sd_warn "no gdb or rocgdb: skipping $backend"; return; fi
+                wrap=("$GDB" -q -batch -ex "set pagination off" -ex "set startup-with-shell off"
+                      -ex "unset environment LINES"
+                      -ex "unset environment COLUMNS" -ex run -ex bt -ex quit --args) ;;
+            *) sd_warn "unknown modifier '+$mod' in '$backend'"; return ;;
+        esac
+    done
+    case "$base" in
         mpi) comm=mpi ;;
         mpi-no-ipc)
             comm=mpi
@@ -106,7 +128,7 @@ run_backend() {
     echo "Test: $backend $NODES $ppn $matrix" >> "$OUT"
     local rc=0
     ( [ ${#env[@]} -gt 0 ] && export "${env[@]}"
-      sd_launch "$NODES" "$ppn" "$OUT" "$st" "$ACG" "$matrix_file" --partition="$partition" \
+      sd_launch "$NODES" "$ppn" "$OUT" "$st" "${wrap[@]}" "$ACG" "$matrix_file" --partition="$partition" \
           --seed 101 --residual-atol 0 --residual-rtol 1e-6 --max-iterations "$ACG_MAX_ITERATIONS" \
           --solver acg --comm "$comm" --manufactured-solution --verbose -q ) || rc=$?
     echo "Exit: $rc" >> "$OUT"
