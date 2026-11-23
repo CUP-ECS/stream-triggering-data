@@ -24,6 +24,9 @@
 #   +gdb      runs every rank under gdb -batch (rocgdb if there's no gdb) and prints a backtrace
 #             where it stops (e.g. glibc's abort). No shell in between, and gdb's LINES/COLUMNS are
 #             unset, so the program's environment is the same as without gdb
+#   +asan     runs <prefix>/acg/bin/acg-hip-asan (build-scripts/build.sh acg-asan) instead, with
+#             ASAN_OPTIONS for a GPU runtime (no shadow-gap protection, no leak check); a report
+#             stops the rank and names the bad access and where its memory came from
 #
 # ACG_TRIALS (default 1) runs every configuration that many times in this allocation, the backends
 # interleaved within each trial. ACG_MAX_ITERATIONS (default 100000) caps the solver; a run that
@@ -88,13 +91,18 @@ make_partition() {
 
 run_backend() {
     local backend="$1" ppn="$2" matrix="$3" matrix_file="$4" partition="$5"
-    local comm st=0 base="${backend%%+*}" mod
+    local comm st=0 base="${backend%%+*}" mod exe="$ACG"
     local env=() wrap=() mods=()
     [ "$base" != "$backend" ] && IFS=+ read -ra mods <<< "${backend#*+}"
     for mod in "${mods[@]}"; do
         case "$mod" in
             pad[0-9]*)
                 env+=(ACG_PAD="$(printf '%*s' "${mod#pad}" '' | tr ' ' x)") ;;
+            asan)
+                exe="${SD_PREFIX}/acg/bin/acg-hip-asan"
+                if [ ! -x "$exe" ] && ! sd_dry; then sd_warn "no $exe: skipping $backend"; return; fi
+                env+=(ASAN_OPTIONS="protect_shadow_gap=0:detect_leaks=0:abort_on_error=1:symbolize=1:print_legend=0"
+                      ASAN_SYMBOLIZER_PATH="${ROCM_PATH:-/opt/rocm}/llvm/bin/llvm-symbolizer") ;;
             gdb)
                 if [ -z "$GDB" ]; then sd_warn "no gdb or rocgdb: skipping $backend"; return; fi
                 wrap=("$GDB" -q -batch -ex "set pagination off" -ex "set startup-with-shell off"
@@ -128,7 +136,7 @@ run_backend() {
     echo "Test: $backend $NODES $ppn $matrix" >> "$OUT"
     local rc=0
     ( [ ${#env[@]} -gt 0 ] && export "${env[@]}"
-      sd_launch "$NODES" "$ppn" "$OUT" "$st" "${wrap[@]}" "$ACG" "$matrix_file" --partition="$partition" \
+      sd_launch "$NODES" "$ppn" "$OUT" "$st" "${wrap[@]}" "$exe" "$matrix_file" --partition="$partition" \
           --seed 101 --residual-atol 0 --residual-rtol 1e-6 --max-iterations "$ACG_MAX_ITERATIONS" \
           --solver acg --comm "$comm" --manufactured-solution --verbose -q ) || rc=$?
     echo "Exit: $rc" >> "$OUT"

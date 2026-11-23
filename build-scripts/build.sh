@@ -7,6 +7,9 @@
 #   silo kokkos st cabana cabanaghost   CabanaGhost and its dependencies
 #   ofi-nccl                            aws-ofi-nccl, for aCG's rccl backend (optional, opt-in)
 #   acg                                 aCG's acg-hip and mtxpartition (needs METIS, see below)
+#   acg-asan                            acg-hip again, with AddressSanitizer on its host code, as
+#                                       <prefix>/acg/bin/acg-hip-asan (opt-in; for debugging only,
+#                                       never for timings). acg-job.sh runs it with the +asan modifier
 #   pingpong                            stream-triggering's packing ping-pong benchmarks
 #
 # Where things go (<prefix> defaults to <SD_PREFIX_ROOT>/<SD_STACK_TAG> from systems/<system>.sh):
@@ -34,7 +37,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 source "${SCRIPT_DIR}/../systems/common.sh"
 
-ALL_COMPONENTS=(silo kokkos st cabana cabanaghost ofi-nccl acg pingpong)
+ALL_COMPONENTS=(silo kokkos st cabana cabanaghost ofi-nccl acg acg-asan pingpong)
 DEFAULT_COMPONENTS=(silo kokkos st cabana cabanaghost acg pingpong)
 
 usage() {
@@ -272,6 +275,32 @@ build_acg() {
         sd_warn "aCG didn't find RCCL: its rccl backend is disabled"
     fi
     write_manifest acg aCG "$src" "${opts[@]}" "(mtxpartition: ${common[*]})"
+}
+
+# acg-hip with AddressSanitizer on the host code (C and C++; the HIP device code is untouched),
+# -O1 -g with frame pointers so reports have usable stacks. Same options as acg otherwise.
+build_acg_asan() {
+    local src
+    src="$(repo_dir "$ACG_REPO")"
+    local metis="${METIS_DIR:-${PREFIX}/metis}"
+    [ -d "$metis" ] || sd_dry || sd_die "no METIS at $metis (see build_acg)"
+    local san="-fsanitize=address -fno-omit-frame-pointer -g -O1"
+    local link="-fsanitize=address ${SD_EXE_LINK_FLAGS:-}"
+    local opts=(-DCMAKE_C_COMPILER="$SD_CC" -DCMAKE_CXX_COMPILER="$SD_CXX" -DMETIS_DIR="$metis"
+                -DCMAKE_HIP_COMPILER="$HIP_COMPILER" -DCMAKE_HIP_ARCHITECTURES="$SD_GPU_ARCH"
+                -DCMAKE_PREFIX_PATH="${ST_PREFIX};${ROCM_PATH:-/opt/rocm}"
+                -DACG_REQUIRE_STREAM_TRIGGERING=ON
+                -DCMAKE_C_FLAGS="$san" -DCMAKE_CXX_FLAGS="$san" -DCMAKE_EXE_LINKER_FLAGS="${link% }")
+    local bld log
+    bld="$(fresh_build acg-hip-asan)"
+    log="${bld}.log"
+    sd_log "building aCG's hip with AddressSanitizer ($src/hip)"
+    # RelWithDebInfo would add -O2 after our -O1; plain (empty) build type keeps our flags as given
+    sd_step "$log" cmake -S "$src/hip" -B "$bld" -DCMAKE_BUILD_TYPE= "${opts[@]}"
+    sd_step "$log" cmake --build "$bld" -j "$JOBS"
+    sd_run mkdir -p "${PREFIX}/acg/bin"
+    sd_run cp "${bld}/acg-hip" "${PREFIX}/acg/bin/acg-hip-asan"
+    write_manifest acg-asan aCG "$src" "${opts[@]}"
 }
 
 # ST's tests/compile.py, run once per benchmark from a scratch directory (it writes
