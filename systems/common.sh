@@ -178,7 +178,12 @@ sd_run_header() {
     else
         sd_module list >> "$out" 2>&1
     fi
-    sd_hostnames "$nodes" "$out"
+    # Every run uses the whole allocation, so if the nodes can't all run hostname, nothing will run:
+    # end the job now and say why, rather than wait out its time limit.
+    if ! sd_hostnames "$nodes" "$out"; then
+        echo "# ABORT: hostname on all $nodes nodes didn't finish within ${SD_HOSTNAME_MINUTES:-2} min" >> "$out"
+        sd_die "hostname on all $nodes nodes failed or timed out (SD_HOSTNAME_MINUTES=${SD_HOSTNAME_MINUTES:-2}); resubmit this job"
+    fi
 }
 
 # Put a prefix's component manifests (<prefix>/manifests/*.txt) together into <prefix>/manifest.txt,

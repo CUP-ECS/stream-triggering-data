@@ -43,8 +43,10 @@ sd_system_env() {
     fi
 }
 
+# Also a health check of the allocation, limited to SD_HOSTNAME_MINUTES (default 2), as on Tuolumne.
 sd_hostnames() {
-    sd_run srun -N "$1" --ntasks-per-node=1 --output="$2" --open-mode=append hostname
+    sd_run srun -N "$1" --ntasks-per-node=1 --time="${SD_HOSTNAME_MINUTES:-2}" \
+        --output="$2" --open-mode=append hostname
 }
 
 # sd_launch <nodes> <ppn> <outfile> <st: 0|1> <command...>

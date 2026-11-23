@@ -43,8 +43,11 @@ sd_system_env() {
 }
 
 # Write one line per node into <outfile>.   sd_hostnames <nodes> <outfile>
+# Also a health check of the allocation: limited to SD_HOSTNAME_MINUTES (default 2), so a stuck node
+# costs minutes, not the job's whole time limit (a 256-node job once hung here for 30 minutes).
 sd_hostnames() {
-    sd_run flux run -N "$1" --tasks-per-node=1 --output="$2" -o output.mode=append hostname
+    sd_run flux run -N "$1" --tasks-per-node=1 --time-limit="${SD_HOSTNAME_MINUTES:-2}m" \
+        --output="$2" -o output.mode=append hostname
 }
 
 # Launch one step inside an allocation, appending its output (stdout and stderr) to <outfile>.
