@@ -49,7 +49,9 @@
 #                       rank and its environment's size, the memory map), with the crashing
 #                       thread's top frames as "# core" lines in the output. The first
 #                       ACG_CORE_KEEP (4) cores gdb read are kept for a closer look; the rest are
-#                       deleted.
+#                       deleted. Once ACG_CORE_BT_TOTAL runs have left cores, later runs get
+#                       ulimit -c 0 (still run in their own run-NNNN, so the layout is unchanged):
+#                       cores nobody reads aren't written.
 #   ACG_HANG_SECONDS=<s> a run still going after <s> seconds gets SIGABRT on every rank (flux exec
 #                       pkill on every node), so with ACG_CORE_DIR set a hang leaves cores showing
 #                       where each rank was
@@ -93,7 +95,7 @@ ACG_CORE_DIR="${ACG_CORE_DIR:-}"
 ACG_HANG_SECONDS="${ACG_HANG_SECONDS:-0}"
 ACG_FOLLOWUP="${ACG_FOLLOWUP:-}"
 CORE_TXT_DIR="${SD_RUN_DIR}/cores"
-RUN_SEQ=0 CORE_BTS=0 CORES_KEPT=0 SETUP_OK=1
+RUN_SEQ=0 CORE_BTS=0 CORE_RUNS=0 CORES_KEPT=0 SETUP_OK=1
 CRASHED_PADS=()
 
 # Cores: off unless ACG_CORE_DIR is set, and then only there. flux run passes this script's limits
@@ -261,7 +263,13 @@ run_backend() {
           flux exec -r all pkill -ABRT -u "$(id -un)" -x "$comm_name" ) &
         watchdog=$!
     fi
+    local cores_off=0
+    if [ -n "$rundir" ] && [ "$CORE_RUNS" -ge "${ACG_CORE_BT_TOTAL:-24}" ]; then
+        cores_off=1
+        echo "# cores: off for this run (${CORE_RUNS} runs have left cores)" >> "$OUT"
+    fi
     ( if [ -n "$rundir" ] && ! sd_dry; then cd "$rundir" || exit 1; fi
+      [ "$cores_off" = 1 ] && ulimit -c 0
       [ ${#env[@]} -gt 0 ] && export "${env[@]}"
       sd_launch "$NODES" "$ppn" "$OUT" "$st" "${wrap[@]}" "$exe" "$matrix_file" --partition="$partition" \
           --seed 101 --residual-atol 0 --residual-rtol 1e-6 --max-iterations "$ACG_MAX_ITERATIONS" \
@@ -301,7 +309,10 @@ process_cores() {
         fi
         rm -f "$core"
     done
-    [ "$n" -gt 0 ] && echo "# cores: $n in $(basename "$dir")" >> "$OUT"
+    if [ "$n" -gt 0 ]; then
+        CORE_RUNS=$((CORE_RUNS + 1))
+        echo "# cores: $n in $(basename "$dir")" >> "$OUT"
+    fi
     rmdir "$dir" 2> /dev/null || true
 }
 
