@@ -127,19 +127,50 @@ thread apply all bt
 printf "== crash, full\n"
 bt full
 GDB
+        # The rank and the environment's size (the layout variable), from libc's environ (gdb's
+        # plain `environ` is the loader's stale copy). Python reads the core's memory; nothing
+        # else of the environment is written out.
         cat > "$CORE_TXT_DIR/env.gdb" << 'GDB'
 printf "== environment\n"
-set $e = *(char ***) &environ
-set $i = 0
-set $n = 0
-while $e[$i] != 0
-  if $_memeq($e[$i], "FLUX_TASK_RANK=", 15)
-    printf "rank-env: %s\n", $e[$i]
-  end
-  set $n = $n + $_strlen($e[$i]) + 1
-  set $i = $i + 1
+python
+import re
+def _libc_environ():
+    """Address of libc's environ. gdb's plain `environ` may be the dynamic loader's copy, which
+    still points at the initial array; setenv() changes libc's."""
+    cands = []
+    for cmd in ("info variables ^environ$", "info variables ^__environ$"):
+        try:
+            cands += [int(a, 16) for a in re.findall(r"^(0x[0-9a-f]+)\s+_*environ\s*$",
+                                                      gdb.execute(cmd, to_string=True), re.M)]
+        except gdb.error:
+            pass
+    for expr in ("&environ", "&__environ", "&'libc.so.6'::environ"):
+        try:
+            cands.append(int(gdb.parse_and_eval("(long) " + expr)))
+        except gdb.error:
+            pass
+    try:
+        m = re.search(r"at address (0x[0-9a-f]+)", gdb.execute("info address environ", to_string=True))
+        if m:
+            cands.append(int(m.group(1), 16))
+    except gdb.error:
+        pass
+    for a in cands:
+        if "libc.so" in gdb.execute("info symbol 0x%x" % a, to_string=True):
+            return a, True
+    return cands[0], False
+addr, ok = _libc_environ()
+charpp = gdb.lookup_type("char").pointer().pointer()
+env = gdb.Value(addr).cast(charpp.pointer()).dereference()
+n = size = 0
+while int(env[n]) != 0:
+    s = env[n].string(errors="replace")
+    if s.startswith("FLUX_TASK_RANK="):
+        print("rank-env: " + s)
+    size += len(s.encode(errors="replace")) + 1
+    n += 1
+print("rank-env: %d variables, %d bytes%s" % (n, size, "" if ok else " (maybe the loader's environ)"))
 end
-printf "rank-env: %d variables, %d bytes\n", $i, $n
 GDB
         cat > "$CORE_TXT_DIR/maps.gdb" << 'GDB'
 printf "== mappings\n"
