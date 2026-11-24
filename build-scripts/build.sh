@@ -10,6 +10,10 @@
 #   acg-asan                            acg-hip again, with AddressSanitizer on its host code, as
 #                                       <prefix>/acg/bin/acg-hip-asan (opt-in; for debugging only,
 #                                       never for timings). acg-job.sh runs it with the +asan modifier
+#   acg-g                               acg-hip again, as acg does it plus -g on the host code, as
+#                                       <prefix>/acg/bin/acg-hip-g (opt-in): the same machine code
+#                                       with debug information, for backtraces from core files.
+#                                       acg-job.sh runs it with the +g modifier
 #   pingpong                            stream-triggering's packing ping-pong benchmarks
 #
 # Where things go (<prefix> defaults to <SD_PREFIX_ROOT>/<SD_STACK_TAG> from systems/<system>.sh):
@@ -37,7 +41,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 source "${SCRIPT_DIR}/../systems/common.sh"
 
-ALL_COMPONENTS=(silo kokkos st cabana cabanaghost ofi-nccl acg acg-asan pingpong)
+ALL_COMPONENTS=(silo kokkos st cabana cabanaghost ofi-nccl acg acg-asan acg-g pingpong)
 DEFAULT_COMPONENTS=(silo kokkos st cabana cabanaghost acg pingpong)
 
 usage() {
@@ -313,6 +317,31 @@ build_acg_asan() {
     sd_run mkdir -p "${PREFIX}/acg/bin"
     sd_run cp "${bld}/acg-hip" "${PREFIX}/acg/bin/acg-hip-asan"
     write_manifest acg-asan aCG "$src" "${opts[@]}"
+}
+
+# acg-hip as build_acg makes it, plus -g on the C and C++ code. clang's code generation doesn't depend
+# on -g, so the program behaves (and lays out memory) as acg-hip does; the debug information only
+# lets gdb name functions, lines and variables in a core file. Same build type and options as acg.
+build_acg_g() {
+    local src
+    src="$(repo_dir "$ACG_REPO")"
+    local metis="${METIS_DIR:-${PREFIX}/metis}"
+    [ -d "$metis" ] || sd_dry || sd_die "no METIS at $metis (see build_acg)"
+    local opts=(-DCMAKE_C_COMPILER="$SD_CC" -DCMAKE_CXX_COMPILER="$SD_CXX" -DMETIS_DIR="$metis")
+    [ -n "${SD_EXE_LINK_FLAGS// /}" ] && opts+=(-DCMAKE_EXE_LINKER_FLAGS="$SD_EXE_LINK_FLAGS")
+    opts+=(-DCMAKE_HIP_COMPILER="$HIP_COMPILER" -DCMAKE_HIP_ARCHITECTURES="$SD_GPU_ARCH"
+           -DCMAKE_PREFIX_PATH="${ST_PREFIX};${ROCM_PATH:-/opt/rocm}"
+           -DACG_REQUIRE_STREAM_TRIGGERING=ON
+           -DCMAKE_C_FLAGS=-g -DCMAKE_CXX_FLAGS=-g)
+    local bld log
+    bld="$(fresh_build acg-hip-g)"
+    log="${bld}.log"
+    sd_log "building aCG's hip with debug information ($src/hip)"
+    sd_step "$log" cmake -S "$src/hip" -B "$bld" -DCMAKE_BUILD_TYPE="$MODE" "${opts[@]}"
+    sd_step "$log" cmake --build "$bld" -j "$JOBS"
+    sd_run mkdir -p "${PREFIX}/acg/bin"
+    sd_run cp "${bld}/acg-hip" "${PREFIX}/acg/bin/acg-hip-g"
+    write_manifest acg-g aCG "$src" "${opts[@]}"
 }
 
 # ST's tests/compile.py, run once per benchmark from a scratch directory (it writes
