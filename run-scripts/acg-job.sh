@@ -10,35 +10,14 @@
 #   st          stream-triggered sends for the halo exchange (--comm st)
 #   rccl        RCCL (--comm rccl), with aws-ofi-nccl from <prefix>/ofi-nccl when it was built
 #
-# Diagnostic backends (Phase 6, aCG's setup crash; knowledge/phase6-plan.md in ST-project-testing):
-# each is `mpi` with one change, so an A/B against `mpi` isolates it.
-#   mpi-eager-off   FI_CXI_RDZV_THRESHOLD=0 FI_CXI_RDZV_EAGER_SIZE=0 (mpi-no-ipc's eager half)
-#   mpi-ipc-off     MPICH_GPU_IPC_ENABLED=0 (mpi-no-ipc's IPC half)
-#   mpi-mrcache-off FI_MR_CACHE_MAX_COUNT=0: libfabric's memory-registration cache off. On
-#                   Tuolumne's CXI, MPI_Init then fails (fi_open domain: Invalid argument)
-#   mpi-omp1        OMP_NUM_THREADS=1: aCG's host setup without OpenMP threads
-#   mpi-xnack0      HSA_XNACK=0 (the system environment sets 1; the paper-era aCG script didn't)
-#   mpi-uffd        FI_MR_CACHE_MONITOR=userfaultfd: libfabric watches registered memory with
-#                   userfaultfd instead of its default (the setting the paper-era rccl runs used)
-# mpi-omp1 and mpi-xnack0 change a value without changing its length, so the environment's size,
-# and with it the processes' memory layout, stays the same as mpi's.
-#
-# Modifiers, appended to any backend with '+' (e.g. mpi-ipc-off+pad7+gdb):
+# Modifiers, appended to any backend with '+' (e.g. mpi+g+mcheck+pad7). Kept from the diagnosis of
+# aCG's setup crash (knowledge/acg-setup-crash.md in ST-project-testing), for the next memory error:
 #   +pad<N>   adds ACG_PAD=<N x's> to the environment: shifts the processes' memory layout by N bytes
 #             and changes nothing else (does a crash follow layout rather than MPI settings?)
-#   +gdb      runs every rank under gdb -batch (rocgdb if there's no gdb) and prints a backtrace
-#             where it stops (e.g. glibc's abort). No shell in between, and gdb's LINES/COLUMNS are
-#             unset, so the program's environment is the same as without gdb
-#   +asan     runs <prefix>/acg/bin/acg-hip-asan (build-scripts/build.sh acg-asan) instead, with
-#             ASAN_OPTIONS for a GPU runtime (no shadow-gap protection, no leak check); a report
-#             stops the rank and names the bad access and where its memory came from
-#   +alt      runs ACG_ALT_EXE (another acg-hip build, e.g. an older one) instead, same environment
 #   +g        runs <prefix>/acg/bin/acg-hip-g (build-scripts/build.sh acg-g): the same code with debug
 #             information, so backtraces from cores name functions and lines
 #   +mcheck   MALLOC_CHECK_=3: glibc's checking malloc, which checks each block when it's freed and
 #             aborts at the first damaged one (glibc 2.28 has it built in)
-#   +perturb  MALLOC_PERTURB_=165: glibc fills new and freed blocks with a pattern, so reading
-#             uninitialised or freed heap memory gives the same wrong value every time
 #
 # Diagnostics (all off by default):
 #   ACG_CORE_DIR=<dir>  core files on (ulimit -c unlimited; without it, ulimit -c 0). Each run starts
@@ -55,12 +34,6 @@
 #   ACG_HANG_SECONDS=<s> a run still going after <s> seconds gets SIGABRT on every rank (flux exec
 #                       pkill on every node), so with ACG_CORE_DIR set a hang leaves cores showing
 #                       where each rank was
-#   ACG_FOLLOWUP="<backends>"  after each configuration's runs, every backend run with +pad<N> that
-#                       didn't finish setup (no "setting up initial guess") is followed up: each of
-#                       these backends runs with that +pad<N>, for the first ACG_FOLLOWUP_MAX (4)
-#                       such pads. A crash found by a padding sweep is then tested where it happens.
-#                       ACG_FOLLOWUP_FROM=<backend> counts only that backend's crashes (e.g. mpi+g
-#                       for mpi+g+pad<N>), so a diagnostic arm in the sweep doesn't start follow-ups
 #
 # ACG_TRIALS (default 1) runs every configuration that many times in this allocation, the backends
 # interleaved within each trial. ACG_MAX_ITERATIONS (default 100000) caps the solver; a run that
@@ -93,10 +66,8 @@ ACG_MAX_ITERATIONS="${ACG_MAX_ITERATIONS:-100000}"
 GDB="$(command -v gdb || command -v rocgdb || true)"
 ACG_CORE_DIR="${ACG_CORE_DIR:-}"
 ACG_HANG_SECONDS="${ACG_HANG_SECONDS:-0}"
-ACG_FOLLOWUP="${ACG_FOLLOWUP:-}"
 CORE_TXT_DIR="${SD_RUN_DIR}/cores"
-RUN_SEQ=0 CORE_BTS=0 CORE_RUNS=0 CORES_KEPT=0 SETUP_OK=1
-CRASHED_PADS=()
+RUN_SEQ=0 CORE_BTS=0 CORE_RUNS=0 CORES_KEPT=0
 
 # Cores: off unless ACG_CORE_DIR is set, and then only there. flux run passes this script's limits
 # on to every rank. (The default soft limit, 32 KiB, would leave truncated cores in the directory
@@ -194,15 +165,9 @@ if [ -n "$ACG_CORE_DIR" ]; then
     sd_dry || echo "# core limit in a rank: $(flux run -N1 -n1 sh -c 'ulimit -c' 2>&1 | tail -1)" >> "$OUT"
 fi
 [ "$ACG_HANG_SECONDS" -gt 0 ] && echo "# hang watchdog: SIGABRT after $ACG_HANG_SECONDS s" >> "$OUT"
-[ -n "$ACG_FOLLOWUP" ] && echo "# follow-up at crashing pads: $ACG_FOLLOWUP (up to ${ACG_FOLLOWUP_MAX:-4} pads)" >> "$OUT"
 # The runtime libraries acg-hip resolves (OpenMP, MPI, libfabric, CCE runtime, RCCL)
 if ! sd_dry; then
     ldd "$ACG" 2>&1 | grep -Ei 'omp|mpi|fabric|cray|cce|rccl|amdhip' | sed 's/^[[:space:]]*/# ldd: /' >> "$OUT" || true
-    if [ -n "${ACG_ALT_EXE:-}" ]; then
-        echo "# +alt: $ACG_ALT_EXE ($(stat -c '%y' "$ACG_ALT_EXE" 2>&1))" >> "$OUT"
-        ldd "$ACG_ALT_EXE" 2>&1 | grep -Ei 'omp|mpi|fabric|cray|cce|rccl|amdhip|stream|not found' \
-            | sed 's/^[[:space:]]*/# ldd alt: /' >> "$OUT" || true
-    fi
 fi
 
 # Make <file> with mtxpartition unless it exists. Written to a temporary name and moved into
@@ -227,30 +192,16 @@ make_partition() {
 run_backend() {
     local backend="$1" ppn="$2" matrix="$3" matrix_file="$4" partition="$5"
     local comm st=0 base="${backend%%+*}" mod exe="$ACG"
-    local env=() wrap=() mods=()
+    local env=() mods=()
     [ "$base" != "$backend" ] && IFS=+ read -ra mods <<< "${backend#*+}"
     for mod in "${mods[@]}"; do
         case "$mod" in
             pad[0-9]*)
                 env+=(ACG_PAD="$(printf '%*s' "${mod#pad}" '' | tr ' ' x)") ;;
-            asan)
-                exe="${SD_PREFIX}/acg/bin/acg-hip-asan"
-                if [ ! -x "$exe" ] && ! sd_dry; then sd_warn "no $exe: skipping $backend"; return; fi
-                env+=(ASAN_OPTIONS="protect_shadow_gap=0:detect_leaks=0:abort_on_error=1:symbolize=1:print_legend=0"
-                      ASAN_SYMBOLIZER_PATH="${ROCM_PATH:-/opt/rocm}/llvm/bin/llvm-symbolizer") ;;
             g)
                 exe="${SD_PREFIX}/acg/bin/acg-hip-g"
                 if [ ! -x "$exe" ] && ! sd_dry; then sd_warn "no $exe: skipping $backend"; return; fi ;;
             mcheck) env+=(MALLOC_CHECK_=3) ;;
-            perturb) env+=(MALLOC_PERTURB_=165) ;;
-            alt)
-                exe="${ACG_ALT_EXE:-}"
-                if [ ! -x "$exe" ] && ! sd_dry; then sd_warn "ACG_ALT_EXE '$exe' isn't executable: skipping $backend"; return; fi ;;
-            gdb)
-                if [ -z "$GDB" ]; then sd_warn "no gdb or rocgdb: skipping $backend"; return; fi
-                wrap=("$GDB" -q -batch -ex "set pagination off" -ex "set startup-with-shell off"
-                      -ex "unset environment LINES"
-                      -ex "unset environment COLUMNS" -ex run -ex bt -ex quit --args) ;;
             *) sd_warn "unknown modifier '+$mod' in '$backend'"; return ;;
         esac
     done
@@ -261,12 +212,6 @@ run_backend() {
             env+=(MPICH_GPU_IPC_ENABLED=0 FI_CXI_RDZV_THRESHOLD=0 FI_CXI_RDZV_EAGER_SIZE=0)
             ;;
         st) comm=st; st=1 ;;
-        mpi-eager-off) comm=mpi; env+=(FI_CXI_RDZV_THRESHOLD=0 FI_CXI_RDZV_EAGER_SIZE=0) ;;
-        mpi-ipc-off) comm=mpi; env+=(MPICH_GPU_IPC_ENABLED=0) ;;
-        mpi-mrcache-off) comm=mpi; env+=(FI_MR_CACHE_MAX_COUNT=0) ;;
-        mpi-omp1) comm=mpi; env+=(OMP_NUM_THREADS=1) ;;
-        mpi-xnack0) comm=mpi; env+=(HSA_XNACK=0) ;;
-        mpi-uffd) comm=mpi; env+=(FI_MR_CACHE_MONITOR=userfaultfd) ;;
         rccl)
             comm=rccl
             # The settings Derek's earlier runs used with aws-ofi-nccl
@@ -280,8 +225,7 @@ run_backend() {
     esac
     echo "Test: $backend $NODES $ppn $matrix" >> "$OUT"
     RUN_SEQ=$((RUN_SEQ + 1))
-    local rc=0 rundir="" watchdog="" before
-    before="$(stat -c %s "$OUT" 2>/dev/null || echo 0)"
+    local rc=0 rundir="" watchdog=""
     if [ -n "$ACG_CORE_DIR" ]; then
         rundir="${ACG_CORE_DIR}/run-$(printf '%04d' "$RUN_SEQ")"   # fixed width: same size of PWD
         sd_dry || mkdir -p "$rundir"
@@ -302,7 +246,7 @@ run_backend() {
     ( if [ -n "$rundir" ] && ! sd_dry; then cd "$rundir" || exit 1; fi
       [ "$cores_off" = 1 ] && ulimit -c 0
       [ ${#env[@]} -gt 0 ] && export "${env[@]}"
-      sd_launch "$NODES" "$ppn" "$OUT" "$st" "${wrap[@]}" "$exe" "$matrix_file" --partition="$partition" \
+      sd_launch "$NODES" "$ppn" "$OUT" "$st" "$exe" "$matrix_file" --partition="$partition" \
           --seed 101 --residual-atol 0 --residual-rtol 1e-6 --max-iterations "$ACG_MAX_ITERATIONS" \
           --solver acg --comm "$comm" --manufactured-solution --verbose -q ) || rc=$?
     if [ -n "$watchdog" ]; then
@@ -311,10 +255,6 @@ run_backend() {
     fi
     [ -n "$rundir" ] && ! sd_dry && process_cores "$rundir" "$exe"
     echo "Exit: $rc" >> "$OUT"
-    SETUP_OK=1
-    if ! sd_dry && ! tail -c +"$((before + 1))" "$OUT" | grep -q 'setting up initial guess'; then
-        SETUP_OK=0
-    fi
 }
 
 # Backtraces from the cores of one run (see ACG_CORE_DIR above).   process_cores <run dir> <exe>
@@ -365,21 +305,8 @@ for ppn in $ACG_PPN; do
             continue
         fi
         for (( trial=1; trial<=ACG_TRIALS; trial++ )); do
-            CRASHED_PADS=()
             for backend in $ACG_BACKENDS; do
                 run_backend "$backend" "$ppn" "$matrix" "$matrix_file" "$partition"
-                if [ "$SETUP_OK" = 0 ] && [[ "$backend" =~ \+(pad[0-9]+) ]] \
-                   && { [ -z "${ACG_FOLLOWUP_FROM:-}" ] || [ "${backend%+pad*}" = "$ACG_FOLLOWUP_FROM" ]; }; then
-                    pad="${BASH_REMATCH[1]}"
-                    [[ " ${CRASHED_PADS[*]} " == *" $pad "* ]] || CRASHED_PADS+=("$pad")
-                fi
-            done
-            [ -n "$ACG_FOLLOWUP" ] || continue
-            echo "# follow-up: setup failed at ${CRASHED_PADS[*]:-no pad}" >> "$OUT"
-            for pad in "${CRASHED_PADS[@]:0:${ACG_FOLLOWUP_MAX:-4}}"; do
-                for backend in $ACG_FOLLOWUP; do
-                    run_backend "${backend}+${pad}" "$ppn" "$matrix" "$matrix_file" "$partition"
-                done
             done
         done
     done
