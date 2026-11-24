@@ -17,6 +17,9 @@
 #   mpi-mrcache-off FI_MR_CACHE_MAX_COUNT=0: libfabric's memory-registration cache off. On
 #                   Tuolumne's CXI, MPI_Init then fails (fi_open domain: Invalid argument)
 #   mpi-omp1        OMP_NUM_THREADS=1: aCG's host setup without OpenMP threads
+#   mpi-xnack0      HSA_XNACK=0 (the system environment sets 1; the paper-era aCG script didn't)
+# mpi-omp1 and mpi-xnack0 change a value without changing its length, so the environment's size,
+# and with it the processes' memory layout, stays the same as mpi's.
 #
 # Modifiers, appended to any backend with '+' (e.g. mpi-ipc-off+pad7+gdb):
 #   +pad<N>   adds ACG_PAD=<N x's> to the environment: shifts the processes' memory layout by N bytes
@@ -27,6 +30,7 @@
 #   +asan     runs <prefix>/acg/bin/acg-hip-asan (build-scripts/build.sh acg-asan) instead, with
 #             ASAN_OPTIONS for a GPU runtime (no shadow-gap protection, no leak check); a report
 #             stops the rank and names the bad access and where its memory came from
+#   +alt      runs ACG_ALT_EXE (another acg-hip build, e.g. an older one) instead, same environment
 #
 # ACG_TRIALS (default 1) runs every configuration that many times in this allocation, the backends
 # interleaved within each trial. ACG_MAX_ITERATIONS (default 100000) caps the solver; a run that
@@ -68,6 +72,11 @@ echo "# trials per configuration: $ACG_TRIALS; max iterations: $ACG_MAX_ITERATIO
 # The runtime libraries acg-hip resolves (OpenMP, MPI, libfabric, CCE runtime, RCCL)
 if ! sd_dry; then
     ldd "$ACG" 2>&1 | grep -Ei 'omp|mpi|fabric|cray|cce|rccl|amdhip' | sed 's/^[[:space:]]*/# ldd: /' >> "$OUT" || true
+    if [ -n "${ACG_ALT_EXE:-}" ]; then
+        echo "# +alt: $ACG_ALT_EXE ($(stat -c '%y' "$ACG_ALT_EXE" 2>&1))" >> "$OUT"
+        ldd "$ACG_ALT_EXE" 2>&1 | grep -Ei 'omp|mpi|fabric|cray|cce|rccl|amdhip|stream|not found' \
+            | sed 's/^[[:space:]]*/# ldd alt: /' >> "$OUT" || true
+    fi
 fi
 
 # Make <file> with mtxpartition unless it exists. Written to a temporary name and moved into
@@ -103,6 +112,9 @@ run_backend() {
                 if [ ! -x "$exe" ] && ! sd_dry; then sd_warn "no $exe: skipping $backend"; return; fi
                 env+=(ASAN_OPTIONS="protect_shadow_gap=0:detect_leaks=0:abort_on_error=1:symbolize=1:print_legend=0"
                       ASAN_SYMBOLIZER_PATH="${ROCM_PATH:-/opt/rocm}/llvm/bin/llvm-symbolizer") ;;
+            alt)
+                exe="${ACG_ALT_EXE:-}"
+                if [ ! -x "$exe" ] && ! sd_dry; then sd_warn "ACG_ALT_EXE '$exe' isn't executable: skipping $backend"; return; fi ;;
             gdb)
                 if [ -z "$GDB" ]; then sd_warn "no gdb or rocgdb: skipping $backend"; return; fi
                 wrap=("$GDB" -q -batch -ex "set pagination off" -ex "set startup-with-shell off"
@@ -122,6 +134,7 @@ run_backend() {
         mpi-ipc-off) comm=mpi; env+=(MPICH_GPU_IPC_ENABLED=0) ;;
         mpi-mrcache-off) comm=mpi; env+=(FI_MR_CACHE_MAX_COUNT=0) ;;
         mpi-omp1) comm=mpi; env+=(OMP_NUM_THREADS=1) ;;
+        mpi-xnack0) comm=mpi; env+=(HSA_XNACK=0) ;;
         rccl)
             comm=rccl
             # The settings Derek's earlier runs used with aws-ofi-nccl
