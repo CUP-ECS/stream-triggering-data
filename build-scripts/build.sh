@@ -322,6 +322,8 @@ build_acg_asan() {
 # acg-hip as build_acg makes it, plus -g on the C and C++ code. clang's code generation doesn't depend
 # on -g, so the program behaves (and lays out memory) as acg-hip does; the debug information only
 # lets gdb name functions, lines and variables in a core file. Same build type and options as acg.
+# DWARF 4: Tuolumne's gdb (8.2) can't read the DWARF 5 that ROCm 7.14's clang writes by default
+# ("Cannot handle DW_FORM_strx1").
 build_acg_g() {
     local src
     src="$(repo_dir "$ACG_REPO")"
@@ -332,7 +334,7 @@ build_acg_g() {
     opts+=(-DCMAKE_HIP_COMPILER="$HIP_COMPILER" -DCMAKE_HIP_ARCHITECTURES="$SD_GPU_ARCH"
            -DCMAKE_PREFIX_PATH="${ST_PREFIX};${ROCM_PATH:-/opt/rocm}"
            -DACG_REQUIRE_STREAM_TRIGGERING=ON
-           -DCMAKE_C_FLAGS=-g -DCMAKE_CXX_FLAGS=-g)
+           -DCMAKE_C_FLAGS=-gdwarf-4 -DCMAKE_CXX_FLAGS=-gdwarf-4)
     local bld log
     bld="$(fresh_build acg-hip-g)"
     log="${bld}.log"
