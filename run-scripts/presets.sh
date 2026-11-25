@@ -21,6 +21,15 @@ sd_preset() {
         # --- Packing ping-pong (Fig. 5): 2 nodes, on-node and off-node pairs ---------------
         # Sizes are 2^exp ints (4 B to 1 GiB). The iteration counts are the paper's: 100k below
         # 4 MB, 10k up to 64 MB, 1k above, divided by PP_ITER_DIVISOR.
+        # Frontier leaves out ipc (direct HIP IPC, a reference line): pingpong_ipc hangs between
+        # two GCDs, with or without OLCF's IPC settings (smoke 5996051). Cray MPICH's and ST
+        # Rsend's on-node IPC work.
+        frontier:pingpong:full)
+            PP_TESTS="${PP_TESTS:-st-cxi-coarse mpi mpi_raw st_raw-cxi-coarse}"
+            ;;&
+        frontier:pingpong:smoke)
+            PP_TESTS="${PP_TESTS:-st-cxi-coarse mpi}"
+            ;;&
         *:pingpong:full)
             SD_NODE_LIST="${SD_NODE_LIST:-2}"
             SD_REPEATS="${SD_REPEATS:-5}"
