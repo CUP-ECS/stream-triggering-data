@@ -1,7 +1,7 @@
 #!/bin/bash
 # Submit one experiment's batch jobs: one job per node count per repeat.
 #
-#   run-scripts/submit.sh -s <system> -x <experiment> -P <preset> [-p prefix] [-l label] [-o dir]
+#   run-scripts/submit.sh -s <system> -x <experiment> -P <preset> [-p prefix] [-l label] [-o dir] [-i]
 #
 #   -s  tuolumne | frontier
 #   -x  pingpong | cabana-ghost | acg
@@ -11,6 +11,9 @@
 #   -l  label for this batch of runs (default: <date>-<preset>)
 #   -o  run directory (default: outputs/<Experiment>/<SYSTEM>/<label> in this repository;
 #       outputs/ is gitignored). It must not exist yet: a batch is never mixed into another.
+#   -i  inline: run the jobs one after another in the current allocation instead of submitting
+#       them (for queues that take one job per user, e.g. Frontier's debug QOS). Every node count
+#       must fit the allocation. A job's scheduler log becomes its stdout/stderr, same place.
 #
 # Each job appends its output to <run dir>/<SYSTEM>-<nodes>N-r<repeat>.out and its scheduler log
 # to <run dir>/logs/. Turn a finished run directory into a CSV with the experiment's out-to-csv.py
@@ -27,8 +30,8 @@ usage() {
     exit "${1:-0}"
 }
 
-SYSTEM="" EXPERIMENT="" PRESET="" PREFIX="" LABEL="" RUN_DIR=""
-while getopts ":s:x:P:p:l:o:h" opt; do
+SYSTEM="" EXPERIMENT="" PRESET="" PREFIX="" LABEL="" RUN_DIR="" INLINE=0
+while getopts ":s:x:P:p:l:o:ih" opt; do
     case $opt in
         s) SYSTEM="$OPTARG" ;;
         x) EXPERIMENT="$OPTARG" ;;
@@ -36,6 +39,7 @@ while getopts ":s:x:P:p:l:o:h" opt; do
         p) PREFIX="$OPTARG" ;;
         l) LABEL="$OPTARG" ;;
         o) RUN_DIR="$OPTARG" ;;
+        i) INLINE=1 ;;
         h) usage 0 ;;
         *) usage 1 ;;
     esac
@@ -87,10 +91,27 @@ for (( r=1; r<=SD_REPEATS; r++ )); do
         name="${EXPERIMENT}-${nodes}N-r${r}"
         after=""
         [ "$SD_CHAIN" != "none" ] && after="$prev"
-        id="$(sd_submit "$nodes" "$SD_JOB_MINUTES" "$name" "${RUN_DIR}/logs/${name}.log" "$after" \
-                "$JOB_SCRIPT" SD_ROOT="$SD_ROOT" SD_SYSTEM="$SD_SYSTEM" SD_PREFIX="$PREFIX" \
-                SD_RUN_DIR="$RUN_DIR" SD_MANIFEST="${RUN_DIR}/manifest.txt" \
-                SD_JOB_NODES="$nodes" SD_JOB_REPEAT="$r" ${MOD_FILE:+MOD_FILE="$MOD_FILE"})"
+        job_env=(SD_ROOT="$SD_ROOT" SD_SYSTEM="$SD_SYSTEM" SD_PREFIX="$PREFIX"
+                 SD_RUN_DIR="$RUN_DIR" SD_MANIFEST="${RUN_DIR}/manifest.txt"
+                 SD_JOB_NODES="$nodes" SD_JOB_REPEAT="$r" ${MOD_FILE:+MOD_FILE="$MOD_FILE"})
+        if [ "$INLINE" = 1 ]; then
+            if [ -n "${SLURM_JOB_NUM_NODES:-}" ] && [ "$nodes" -gt "$SLURM_JOB_NUM_NODES" ]; then
+                sd_warn "$name: $nodes nodes, allocation has $SLURM_JOB_NUM_NODES: skipped"
+                echo "job: $name skipped (allocation too small)" >> "${RUN_DIR}/run-info.txt"
+                continue
+            fi
+            sd_log "$name: running in this allocation"
+            rc=0
+            if sd_dry; then
+                echo "+ env ${job_env[*]} bash $JOB_SCRIPT > ${RUN_DIR}/logs/${name}.log" >&2
+            else
+                env "${job_env[@]}" bash "$JOB_SCRIPT" > "${RUN_DIR}/logs/${name}.log" 2>&1 || rc=$?
+            fi
+            id="inline-rc${rc}"
+        else
+            id="$(sd_submit "$nodes" "$SD_JOB_MINUTES" "$name" "${RUN_DIR}/logs/${name}.log" "$after" \
+                    "$JOB_SCRIPT" "${job_env[@]}")"
+        fi
         echo "job: $name $id" >> "${RUN_DIR}/run-info.txt"
         echo "$name $id"
         prev="$id"
