@@ -1,10 +1,9 @@
 #!/bin/bash
 # shellcheck disable=SC2034 # settings: read by the scripts that source this file
 # ORNL Frontier: 4x MI250X (8 GCDs) per node, Slurm. Sourced by sd_load_system in common.sh.
-# Phase 7 (the Frontier port): modules pinned from the login-node probe; nothing here has been run
-# on compute nodes yet. The compilers and link flags are the ones the old
-# build-scripts/cabana-ghost.sh -T 2 used, and the srun network flags the paper-era run scripts'
-# (scripts/frontier-preflight.sh in the meta repo compares them with ST's st_env.sh flags).
+# Phase 7 (the Frontier port): modules pinned from the login-node probe; launch flags from the
+# meta repo's pre-flight job (knowledge/frontier/preflight-5994066). The compilers and link flags
+# are the ones the old build-scripts/cabana-ghost.sh -T 2 used.
 
 SD_SYSTEM=frontier
 SD_SYSTEM_LABEL=FRONTIER
@@ -14,8 +13,9 @@ SD_KOKKOS_ARCH=AMD_GFX90A
 SD_GPUS_PER_NODE=8
 
 SD_STACK_TAG="${SD_STACK_TAG:-rocm7.14-mpich9.1.0}"
-# On Orion, not $HOME: OLCF mounts home (NFS) read-only on compute nodes, and ST's CTest writes
-# into its build tree. Member work is purged after 90 days unused.
+# On Orion, not $HOME: home is writable from compute nodes (pre-flight 5994066), but it's NFS with
+# a 50 GB quota, and Lustre serves 1024-node launches better. Member work is purged after 90 days
+# unused.
 SD_PREFIX_ROOT="${SD_PREFIX_ROOT:-${MEMBERWORK:-${HOME}}/csc698/st-project/frontier}"
 
 SD_CC="${SD_CC:-amdclang}"
@@ -39,6 +39,15 @@ sd_system_env() {
         export METIS_DIR="$OLCF_METIS_ROOT"
     fi
     export LD_LIBRARY_PATH="${CRAY_LD_LIBRARY_PATH:+${CRAY_LD_LIBRARY_PATH}:}${LD_LIBRARY_PATH:-}"
+    # Cray MPICH's NIC: the one on the rank's NUMA node, which --gpu-bind=closest makes its GPU's
+    # NIC too, the NIC ST picks (pre-flight 5994066). Cray MPICH's default policy (BLOCK, as we
+    # read its man page) gives local ranks 0-1 cxi0, which with -c7 binding sit on NUMA 0 while
+    # cxi0 is on NUMA 3. SD_MPICH_NIC_POLICY=default leaves Cray MPICH's own default.
+    if [ "${SD_MPICH_NIC_POLICY:-NUMA}" = default ]; then
+        unset MPICH_OFI_NIC_POLICY
+    else
+        export MPICH_OFI_NIC_POLICY="${SD_MPICH_NIC_POLICY:-NUMA}"
+    fi
     if [ -z "${ROCM_PATH:-}" ] && command -v hipconfig &> /dev/null; then
         ROCM_PATH="$(hipconfig --rocmpath)"
         export ROCM_PATH
@@ -52,15 +61,26 @@ sd_hostnames() {
 }
 
 # sd_launch <nodes> <ppn> <outfile> <st: 0|1> <command...>
-# ST runs get a VNI and their share of the node's 1024 trigger-list entries (TLEs).
+# Placement (pre-flight 5994066): one CCD's 7 cores and the closest GCD per rank, so each rank's
+# CPU, GPU and NIC share a NUMA node. Without --gpus-per-task every rank sees all 8 GCDs, and ST
+# (no hipSetDevice) puts them all on GCD 0 and cxi0. SD_CPUS_PER_TASK changes -c;
+# SD_GPU_BIND=none drops the GPU binding (the paper-era launch, with SD_CPUS_PER_TASK=1).
+# ST runs need a VNI on one node too (single_node_vni: fi_domain fails with ENOSYS without it)
+# and reserved trigger-list entries (without them FI_QUEUE_WORK fails with EAGAIN). res_tles is
+# per node; def_tles is per CPU, so def_tles=128 with -c7 asks for more than Slurm can give
+# ("Error configuring interconnect").
 sd_launch() {
     local nodes="$1" ppn="$2" out="$3" st="$4"
     shift 4
-    local net=()
-    [ "$st" = "1" ] && net=(--network="single_node_vni,job_vni,def_tles=$((1024 / ppn))")
+    local net=() gpu=()
+    [ "$st" = "1" ] && net=(--network="${SD_ST_NETWORK:-single_node_vni,job_vni,res_tles=1024}")
+    case "${SD_GPU_BIND:-closest}" in
+        none) ;;
+        *) gpu=(--gpus-per-task=1 --gpu-bind="${SD_GPU_BIND:-closest}") ;;
+    esac
     # shellcheck disable=SC2086 # SD_LAUNCH_ARGS is a list of words
     sd_run srun "${net[@]}" -N "$nodes" --ntasks-per-node="$ppn" \
-        --gpus-per-task=1 --gpu-bind=closest \
+        -c "${SD_CPUS_PER_TASK:-7}" "${gpu[@]}" \
         ${SD_STEP_MINUTES:+--time="$SD_STEP_MINUTES"} \
         --output="$out" --open-mode=append ${SD_LAUNCH_ARGS:-} "$@"
 }

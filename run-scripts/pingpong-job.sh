@@ -95,7 +95,8 @@ run_test() {
     done
 }
 
-for (( exp=PP_START_EXP; exp<=PP_END_EXP; exp++ )); do
+# PP_EXPS (a list of exponents) picks sizes instead of the PP_START_EXP..PP_END_EXP range
+for exp in ${PP_EXPS:-$(seq "$PP_START_EXP" "$PP_END_EXP")}; do
     items=$((2 ** exp))
     iters="$(iterations "$items")"
     echo "# round: $iters iterations of $items ints" >> "$OUT"

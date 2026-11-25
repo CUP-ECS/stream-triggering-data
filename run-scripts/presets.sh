@@ -82,31 +82,36 @@ sd_preset() {
             CBG_WARMUP="${CBG_WARMUP:-1}"
             ;;
 
-        # --- aCG CG solver strong scaling (Figs. 8, 10, 11; Table IV), Tuolumne only -------
+        # --- aCG CG solver strong scaling (Figs. 8, 10, 11; Table IV; the paper ran Tuolumne) -
         # Backends: mpi, st, rccl, and mpi-no-ipc (Cray MPICH with GPU IPC and the eager
         # protocol off: the Fig. 11 ablation). acg-job.sh also has diagnostic mpi-* backends, in no
         # preset. ACG_TRIALS: runs per configuration per allocation; ACG_MAX_ITERATIONS: solver cap.
-        tuolumne:acg:full)
+        *:acg:full)
             SD_NODE_LIST="${SD_NODE_LIST:-1 2 4 8 16}"
             SD_REPEATS="${SD_REPEATS:-5}"
             SD_JOB_MINUTES="${SD_JOB_MINUTES:-60}"
-            ACG_PPN="${ACG_PPN:-1 2 4}"
+            if [ "$SD_GPUS_PER_NODE" -ge 8 ]; then ACG_PPN="${ACG_PPN:-1 2 4 8}"; else ACG_PPN="${ACG_PPN:-1 2 4}"; fi
             ACG_MATRICES="${ACG_MATRICES:-Queen_4147 Bump_2911 audikw_1 Serena}"
             ACG_BACKENDS="${ACG_BACKENDS:-mpi st rccl mpi-no-ipc}"
             ;;&
-        tuolumne:acg:smoke)
+        *:acg:smoke)
             SD_NODE_LIST="${SD_NODE_LIST:-1}"
             SD_REPEATS="${SD_REPEATS:-1}"
             SD_JOB_MINUTES="${SD_JOB_MINUTES:-30}"
-            ACG_PPN="${ACG_PPN:-1 4}"
+            ACG_PPN="${ACG_PPN:-1 ${SD_GPUS_PER_NODE}}"
             ACG_MATRICES="${ACG_MATRICES:-Serena}"
             ACG_BACKENDS="${ACG_BACKENDS:-mpi st rccl}"
             ;;&
-        tuolumne:acg:*)
+        *:acg:*)
             ACG_TRIALS="${ACG_TRIALS:-1}"
             ACG_MAX_ITERATIONS="${ACG_MAX_ITERATIONS:-100000}"
-            ACG_MATRIX_DIR="${ACG_MATRIX_DIR:-/usr/workspace/${USER}/aCG/input}"
-            ACG_PARTITION_DIR="${ACG_PARTITION_DIR:-/usr/workspace/${USER}/aCG/partitions}"
+            local acg_dir
+            case "$SD_SYSTEM" in
+                frontier) acg_dir="${HOME}/aCG-input" ;;
+                *) acg_dir="/usr/workspace/${USER}/aCG" ;;
+            esac
+            ACG_MATRIX_DIR="${ACG_MATRIX_DIR:-${acg_dir}/input}"
+            ACG_PARTITION_DIR="${ACG_PARTITION_DIR:-${acg_dir}/partitions}"
             ;;
 
         *)
@@ -128,7 +133,7 @@ sd_preset() {
 # The variables a preset sets, for run-info.txt
 sd_preset_vars() {
     case "$1" in
-        pingpong) echo "PP_START_EXP PP_END_EXP PP_ITER_DIVISOR PP_TESTS" ;;
+        pingpong) echo "PP_START_EXP PP_END_EXP PP_EXPS PP_ITER_DIVISOR PP_TESTS" ;;
         cabana-ghost) echo "CBG_PPN CBG_SIZES CBG_VARIANTS CBG_ITERS CBG_PRINT_FREQ CBG_WARMUP" ;;
         acg) echo "ACG_PPN ACG_MATRICES ACG_BACKENDS ACG_MATRIX_DIR ACG_PARTITION_DIR ACG_TRIALS ACG_MAX_ITERATIONS SD_LAUNCH_ARGS SD_STEP_MINUTES ACG_CORE_DIR ACG_HANG_SECONDS" ;;
     esac
