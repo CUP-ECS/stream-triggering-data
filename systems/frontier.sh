@@ -50,9 +50,10 @@ sd_system_env() {
     fi
     # OLCF's GPU-aware Cray MPICH settings ("GPU-Aware MPI", OLCF Frontier user guide): the HSA
     # IPC signal cache (Cray MPICH 9.1.0 on, "optional, but recommended") and AMD's legacy IPC mode
-    # (the dma-buf mode "is not natively supported by Cray MPICH"). SD_OLCF_IPC_ENV=0 leaves both
-    # unset, as every run before 2026-11-25's on-node check had them.
-    if [ "${SD_OLCF_IPC_ENV:-1}" = 1 ]; then
+    # (the dma-buf mode "is not natively supported by Cray MPICH"). Off by default for now
+    # (SD_OLCF_IPC_ENV=1 turns them on): the first job with them on (smoke 5995451) hung in ST's
+    # allreduce test (cxil_map: write error), and every run that worked had them off.
+    if [ "${SD_OLCF_IPC_ENV:-0}" = 1 ]; then
         export GTL_ENABLE_HSA_IPC_SIGNAL_CACHE=1 HSA_ENABLE_IPC_MODE_LEGACY=1
     else
         unset GTL_ENABLE_HSA_IPC_SIGNAL_CACHE HSA_ENABLE_IPC_MODE_LEGACY
