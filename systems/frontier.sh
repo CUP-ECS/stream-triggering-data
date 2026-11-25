@@ -1,9 +1,10 @@
 #!/bin/bash
 # shellcheck disable=SC2034 # settings: read by the scripts that source this file
 # ORNL Frontier: 4x MI250X (8 GCDs) per node, Slurm. Sourced by sd_load_system in common.sh.
-# DRAFT for Phase 7 (the Frontier port): nothing here has been run yet. The compilers and link flags are the ones the
-# old build-scripts/cabana-ghost.sh -T 2 used, and the srun network flags the ones ST's Frontier
-# scripts use.
+# Phase 7 (the Frontier port): modules pinned from the login-node probe; nothing here has been run
+# on compute nodes yet. The compilers and link flags are the ones the old
+# build-scripts/cabana-ghost.sh -T 2 used, and the srun network flags the paper-era run scripts'
+# (scripts/frontier-preflight.sh in the meta repo compares them with ST's st_env.sh flags).
 
 SD_SYSTEM=frontier
 SD_SYSTEM_LABEL=FRONTIER
@@ -12,8 +13,10 @@ SD_GPU_ARCH=gfx90a
 SD_KOKKOS_ARCH=AMD_GFX90A
 SD_GPUS_PER_NODE=8
 
-SD_STACK_TAG="${SD_STACK_TAG:-rocm7.13-cpe26.03}"
-SD_PREFIX_ROOT="${SD_PREFIX_ROOT:-${HOME}/st-project/frontier}"
+SD_STACK_TAG="${SD_STACK_TAG:-rocm7.14-mpich9.1.0}"
+# On Orion, not $HOME: OLCF mounts home (NFS) read-only on compute nodes, and ST's CTest writes
+# into its build tree. Member work is purged after 90 days unused.
+SD_PREFIX_ROOT="${SD_PREFIX_ROOT:-${MEMBERWORK:-${HOME}}/csc698/st-project/frontier}"
 
 SD_CC="${SD_CC:-amdclang}"
 SD_CXX="${SD_CXX:-amdclang++}"
@@ -30,9 +33,8 @@ SD_QOS="${SD_QOS:-}"
 
 sd_system_env() {
     export HSA_XNACK=1
-    # aCG's METIS comes from the metis module (frontier.modules), not <prefix>/metis. OLCF's
-    # modules export OLCF_<NAME>_ROOT; check with `module show metis` in Phase 7. An explicit
-    # METIS_DIR wins.
+    # aCG's METIS comes from the metis module (frontier.modules), not <prefix>/metis: it exports
+    # OLCF_METIS_ROOT (probe, 2026-11-25). An explicit METIS_DIR wins.
     if [ -z "${METIS_DIR:-}" ] && [ -n "${OLCF_METIS_ROOT:-}" ]; then
         export METIS_DIR="$OLCF_METIS_ROOT"
     fi

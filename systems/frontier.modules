@@ -1,12 +1,15 @@
 # The software stack for every Frontier build and run: one `module load` of these lines, in order.
-# Copied from stream-triggering's install_setup/frontier_modules.txt. NOT YET RUN by these scripts
-# (Phase 5). Cray MPICH comes from cpe/26.03; pin it here once its version is known.
-# metis is OLCF's module, for aCG (frontier.sh points METIS_DIR at it); pin its version too.
+# Pinned from the Phase 7 login-node probe (meta repo knowledge/frontier/probe-2026-11-25.txt) to
+# match Tuolumne where Frontier has it: ROCm 7.14 (7.14.1 here) and Cray MPICH 9.1.0.
+# cce stays at cpe/26.03's default (21.0.4): OLCF's metis and darshan-runtime modules live under
+# it, and any other cce makes Lmod refuse the whole load. The compilers are ROCm's amdclang (see
+# frontier.sh); cce only picks the module hierarchy.
 # Changing a line changes the stack: change SD_STACK_TAG in frontier.sh with it.
 libfabric/2.3.1
-PrgEnv-cray
+PrgEnv-cray/8.7.0
 cpe/26.03
-cce/21.0.2
-rocm/7.13
+cce/21.0.4
+cray-mpich/9.1.0
+rocm/7.14.1
 craype-accel-amd-gfx90a
-metis
+metis/5.1.0
