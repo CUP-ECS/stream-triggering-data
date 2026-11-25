@@ -40,13 +40,22 @@ sd_system_env() {
     fi
     export LD_LIBRARY_PATH="${CRAY_LD_LIBRARY_PATH:+${CRAY_LD_LIBRARY_PATH}:}${LD_LIBRARY_PATH:-}"
     # Cray MPICH's NIC: the one on the rank's NUMA node, which --gpu-bind=closest makes its GPU's
-    # NIC too, the NIC ST picks (pre-flight 5994066). Cray MPICH's default policy (BLOCK, as we
-    # read its man page) gives local ranks 0-1 cxi0, which with -c7 binding sit on NUMA 0 while
-    # cxi0 is on NUMA 3. SD_MPICH_NIC_POLICY=default leaves Cray MPICH's own default.
+    # NIC too, the NIC ST picks (pre-flight 5994066). That is already Frontier's default ("NIC
+    # Mapping", OLCF Frontier user guide); set explicitly so runs don't depend on it.
+    # SD_MPICH_NIC_POLICY=default leaves Cray MPICH's own default.
     if [ "${SD_MPICH_NIC_POLICY:-NUMA}" = default ]; then
         unset MPICH_OFI_NIC_POLICY
     else
         export MPICH_OFI_NIC_POLICY="${SD_MPICH_NIC_POLICY:-NUMA}"
+    fi
+    # OLCF's GPU-aware Cray MPICH settings ("GPU-Aware MPI", OLCF Frontier user guide): the HSA
+    # IPC signal cache (Cray MPICH 9.1.0 on, "optional, but recommended") and AMD's legacy IPC mode
+    # (the dma-buf mode "is not natively supported by Cray MPICH"). SD_OLCF_IPC_ENV=0 leaves both
+    # unset, as every run before 2026-11-25's on-node check had them.
+    if [ "${SD_OLCF_IPC_ENV:-1}" = 1 ]; then
+        export GTL_ENABLE_HSA_IPC_SIGNAL_CACHE=1 HSA_ENABLE_IPC_MODE_LEGACY=1
+    else
+        unset GTL_ENABLE_HSA_IPC_SIGNAL_CACHE HSA_ENABLE_IPC_MODE_LEGACY
     fi
     if [ -z "${ROCM_PATH:-}" ] && command -v hipconfig &> /dev/null; then
         ROCM_PATH="$(hipconfig --rocmpath)"
