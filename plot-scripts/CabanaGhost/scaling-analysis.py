@@ -66,16 +66,19 @@ def memory_check(paths):
     g = df.groupby(keys + ["Memory"])["SolveTime"].agg(Mean="mean", CI95=sd.ci95, Runs="size").unstack("Memory")
     if "fine" not in g.columns.get_level_values(1) or "coarse" not in g.columns.get_level_values(1):
         raise SystemExit("--memory-check needs both coarse- and fine-grained-memory ST runs")
-    g = g.dropna()
+    # A single run has no CI: keep it, with "CIs overlap" left empty
+    g = g.dropna(subset=[("Mean", "coarse"), ("Mean", "fine")])
     c, f = g.xs("coarse", axis=1, level=1), g.xs("fine", axis=1, level=1)
+    overlap = ((c.Mean - c.CI95 <= f.Mean + f.CI95) & (f.Mean - f.CI95 <= c.Mean + c.CI95)).astype(object)
+    overlap[c.CI95.isna() | f.CI95.isna()] = None
     out = pd.DataFrame({"Coarse": c.Mean, "Fine": f.Mean, "Fine vs coarse %": 100 * (f.Mean - c.Mean) / c.Mean,
-                        "CIs overlap": (c.Mean - c.CI95 <= f.Mean + f.CI95) & (f.Mean - f.CI95 <= c.Mean + c.CI95),
+                        "CIs overlap": overlap,
                         "Runs": c.Runs.astype(int).astype(str) + "/" + f.Runs.astype(int).astype(str)})
     pd.set_option("display.max_rows", None)
     print("Coarse- vs fine-grained-memory ST solve time (s), per configuration")
     print(out.round(3).to_string())
-    split = (~out["CIs overlap"]).sum()
-    print(f"\n{split} of {len(out)} configurations have non-overlapping 95% CIs; "
+    split = (out["CIs overlap"] == False).sum()  # noqa: E712 (None: single runs)
+    print(f"\n{split} of {out['CIs overlap'].notna().sum()} configurations have non-overlapping 95% CIs; "
           f"median difference {out['Fine vs coarse %'].median():+.2f}%, range "
           f"{out['Fine vs coarse %'].min():+.2f}% to {out['Fine vs coarse %'].max():+.2f}%")
 
