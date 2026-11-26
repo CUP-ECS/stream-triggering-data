@@ -1,0 +1,86 @@
+# Build manifest for /lustre/orion/scratch/dschafer/csc698/st-project/frontier/rocm7.14-mpich9.1.0
+# Assembled 2026-11-25T10:43:28-05:00 on login09
+system: frontier
+stack: rocm7.14-mpich9.1.0
+
+== acg
+built: 2026-11-25T10:42:36-05:00 on login09
+source: aCG /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/aCG detached 00e1cee37fcf022062e001a15e741489fced479f clean
+scripts: stream-triggering-data /lustre/orion/scratch/dschafer/csc698/ST-project-testing/repos/stream-triggering-data detached 9ef4a85c2a731b8f0d7d79a24a7d4b98b18e9aa5 clean
+modules: libfabric/2.3.1 PrgEnv-cray/8.7.0 cpe/26.03 cce/21.0.4 cray-mpich/9.1.0 rocm/7.14.1 craype-accel-amd-gfx90a metis/5.1.0
+module file: /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/stream-triggering-data/systems/frontier.modules
+cc: amdclang -> /opt/rocm-7.14.1/bin/amdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: amdclang++ -> /opt/rocm-7.14.1/bin/amdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_C_COMPILER=amdclang -DCMAKE_CXX_COMPILER=amdclang++ -DMETIS_DIR=/sw/frontier/spack-envs/cpe26.03-cpu/opt/cce-21.0.4/metis-5.1.0-qutpns73gcdm3xpzrvp32eenbv6qjno7 -DCMAKE_EXE_LINKER_FLAGS=-L/opt/cray/pe/mpich/9.1.0/gtl/lib -lmpi_gtl_hsa -DCMAKE_HIP_COMPILER=amdclang++ -DCMAKE_HIP_ARCHITECTURES=gfx90a -DCMAKE_PREFIX_PATH=/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/stream-triggering;/opt/rocm-7.14.1 -DACG_REQUIRE_STREAM_TRIGGERING=ON (mtxpartition: -DCMAKE_C_COMPILER=amdclang -DCMAKE_CXX_COMPILER=amdclang++ -DMETIS_DIR=/sw/frontier/spack-envs/cpe26.03-cpu/opt/cce-21.0.4/metis-5.1.0-qutpns73gcdm3xpzrvp32eenbv6qjno7 -DCMAKE_EXE_LINKER_FLAGS=-L/opt/cray/pe/mpich/9.1.0/gtl/lib -lmpi_gtl_hsa)
+== cabanaghost
+built: 2026-11-25T10:42:21-05:00 on login09
+source: CabanaGhost /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/CabanaGhost detached dc029f960abb57d47c473274c564d70918a01e8c clean
+scripts: stream-triggering-data /lustre/orion/scratch/dschafer/csc698/ST-project-testing/repos/stream-triggering-data detached 9ef4a85c2a731b8f0d7d79a24a7d4b98b18e9aa5 clean
+modules: libfabric/2.3.1 PrgEnv-cray/8.7.0 cpe/26.03 cce/21.0.4 cray-mpich/9.1.0 rocm/7.14.1 craype-accel-amd-gfx90a metis/5.1.0
+module file: /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/stream-triggering-data/systems/frontier.modules
+cc: amdclang -> /opt/rocm-7.14.1/bin/amdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: amdclang++ -> /opt/rocm-7.14.1/bin/amdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_INSTALL_PREFIX=/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/cabanaghost -DCMAKE_C_COMPILER=amdclang -DCMAKE_CXX_COMPILER=amdclang++ -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE -DCMAKE_PREFIX_PATH=/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/kokkos;/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/stream-triggering;/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/silo;/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/cabana -DCMAKE_EXE_LINKER_FLAGS=-L/opt/cray/pe/mpich/9.1.0/gtl/lib -lmpi_gtl_hsa
+== cabana
+built: 2026-11-25T10:41:56-05:00 on login09
+source: Cabana /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/Cabana detached 0c81e946c759ad5a99a2ea4b8414ae459e39c497 clean
+scripts: stream-triggering-data /lustre/orion/scratch/dschafer/csc698/ST-project-testing/repos/stream-triggering-data detached 9ef4a85c2a731b8f0d7d79a24a7d4b98b18e9aa5 clean
+modules: libfabric/2.3.1 PrgEnv-cray/8.7.0 cpe/26.03 cce/21.0.4 cray-mpich/9.1.0 rocm/7.14.1 craype-accel-amd-gfx90a metis/5.1.0
+module file: /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/stream-triggering-data/systems/frontier.modules
+cc: amdclang -> /opt/rocm-7.14.1/bin/amdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: amdclang++ -> /opt/rocm-7.14.1/bin/amdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_INSTALL_PREFIX=/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/cabana -DCMAKE_CXX_COMPILER=amdclang++ -DCMAKE_PREFIX_PATH=/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/kokkos;/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/stream-triggering -DCabana_ENABLE_MPI=ON -DCabana_BUILD_STREAM_HALO=ON -DCabana_REQUIRE_STREAM-TRIGGERING=ON
+== kokkos
+built: 2026-11-25T10:41:09-05:00 on login09
+source: kokkos /lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/src/kokkos detached 8e15454876298832f013ebcaf08d53825b5bda40 clean
+scripts: stream-triggering-data /lustre/orion/scratch/dschafer/csc698/ST-project-testing/repos/stream-triggering-data detached 9ef4a85c2a731b8f0d7d79a24a7d4b98b18e9aa5 clean
+modules: libfabric/2.3.1 PrgEnv-cray/8.7.0 cpe/26.03 cce/21.0.4 cray-mpich/9.1.0 rocm/7.14.1 craype-accel-amd-gfx90a metis/5.1.0
+module file: /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/stream-triggering-data/systems/frontier.modules
+cc: amdclang -> /opt/rocm-7.14.1/bin/amdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: amdclang++ -> /opt/rocm-7.14.1/bin/amdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_INSTALL_PREFIX=/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/kokkos -DCMAKE_CXX_COMPILER=amdclang++ -DKokkos_ENABLE_HIP=ON -DKokkos_ARCH_AMD_GFX90A=ON -DKokkos_ENABLE_IMPL_VIEW_LEGACY=ON -DBUILD_SHARED_LIBS=ON
+== meta
+recorded: 2026-11-25T10:40:06-05:00 on login09
+source: ST-project-testing /lustre/orion/scratch/dschafer/csc698/ST-project-testing main 057e418c2a5022d03deb360ab6c4041170b56e81 clean
+sub-repos against their submodule pointers:
+   0c81e946c759ad5a99a2ea4b8414ae459e39c497 repos/Cabana (0.3.0-1656-g0c81e946)
+   dc029f960abb57d47c473274c564d70918a01e8c repos/CabanaGhost (remotes/origin/develop)
+   bdc68d5d1d90f27bda7a0cd09f70ad322f763857 repos/Resonance (v0-topology-only-397-gbdc68d5)
+   00e1cee37fcf022062e001a15e741489fced479f repos/aCG (remotes/origin/feat-initial-compass-run)
+   e30b7ccf97063cbc8a5e2bee8a269eefea2afa68 repos/stream-triggering (v0.6.0-39-ge30b7cc)
+   9ef4a85c2a731b8f0d7d79a24a7d4b98b18e9aa5 repos/stream-triggering-data (1.0.0-65-g9ef4a85)
+  (a leading + means the checkout isn't the commit this repo points at)
+== pingpong
+built: 2026-11-25T10:43:28-05:00 on login09
+source: stream-triggering /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/stream-triggering detached e30b7ccf97063cbc8a5e2bee8a269eefea2afa68 clean
+scripts: stream-triggering-data /lustre/orion/scratch/dschafer/csc698/ST-project-testing/repos/stream-triggering-data detached 9ef4a85c2a731b8f0d7d79a24a7d4b98b18e9aa5 clean
+modules: libfabric/2.3.1 PrgEnv-cray/8.7.0 cpe/26.03 cce/21.0.4 cray-mpich/9.1.0 rocm/7.14.1 craype-accel-amd-gfx90a metis/5.1.0
+module file: /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/stream-triggering-data/systems/frontier.modules
+cc: amdclang -> /opt/rocm-7.14.1/bin/amdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: amdclang++ -> /opt/rocm-7.14.1/bin/amdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: compile.py -C -H -T -S /lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/stream-triggering (st*), -m /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/stream-triggering-data/systems/frontier.modules
+== silo
+built: 2026-11-25T10:40:28-05:00 on login09
+source: Silo /lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/src/Silo detached f05c5a8e6c22b784b7f5eb958d50218cae873d07 clean
+scripts: stream-triggering-data /lustre/orion/scratch/dschafer/csc698/ST-project-testing/repos/stream-triggering-data detached 9ef4a85c2a731b8f0d7d79a24a7d4b98b18e9aa5 clean
+modules: libfabric/2.3.1 PrgEnv-cray/8.7.0 cpe/26.03 cce/21.0.4 cray-mpich/9.1.0 rocm/7.14.1 craype-accel-amd-gfx90a metis/5.1.0
+module file: /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/stream-triggering-data/systems/frontier.modules
+cc: amdclang -> /opt/rocm-7.14.1/bin/amdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: amdclang++ -> /opt/rocm-7.14.1/bin/amdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_INSTALL_PREFIX=/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/silo -DCMAKE_C_COMPILER=amdclang -DCMAKE_CXX_COMPILER=amdclang++ -DSILO_ENABLE_HDF5=OFF -DSILO_ENABLE_FORTRAN=OFF
+== st
+built: 2026-11-25T10:41:52-05:00 on login09
+source: stream-triggering /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/stream-triggering detached e30b7ccf97063cbc8a5e2bee8a269eefea2afa68 clean
+scripts: stream-triggering-data /lustre/orion/scratch/dschafer/csc698/ST-project-testing/repos/stream-triggering-data detached 9ef4a85c2a731b8f0d7d79a24a7d4b98b18e9aa5 clean
+modules: libfabric/2.3.1 PrgEnv-cray/8.7.0 cpe/26.03 cce/21.0.4 cray-mpich/9.1.0 rocm/7.14.1 craype-accel-amd-gfx90a metis/5.1.0
+module file: /lustre/orion/csc698/scratch/dschafer/ST-project-testing/repos/stream-triggering-data/systems/frontier.modules
+cc: amdclang -> /opt/rocm-7.14.1/bin/amdclang (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+cxx: amdclang++ -> /opt/rocm-7.14.1/bin/amdclang++ (AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git f30ae3e6b680ad23dcf522e668c6d4c5c90838d0+PATCHED:440716f8b87be9d8e20ed910e10e5b6d14d57cf6))
+build type: Release
+options: -DCMAKE_INSTALL_PREFIX=/lustre/orion/csc698/scratch/dschafer/st-project/frontier/rocm7.14-mpich9.1.0/stream-triggering -DCMAKE_C_COMPILER=amdclang -DCMAKE_CXX_COMPILER=amdclang++ -DCMAKE_HIP_COMPILER=amdclang++ -DUSE_HIP_BACKEND=ON -DUSE_CXI_BACKEND=ON -DLIBFABRIC_PREFIX=/opt/cray/libfabric/2.3.1 -DCMAKE_HIP_ARCHITECTURES=gfx90a -DBUILD_TESTS=ON -DCMAKE_SHARED_LINKER_FLAGS=-L/opt/cray/pe/mpich/9.1.0/gtl/lib -lmpi_gtl_hsa
