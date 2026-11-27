@@ -8,7 +8,12 @@
 #   mpi-no-ipc  the same with GPU IPC and the eager protocol off: the paper's Fig. 11 ablation
 #               (MPICH_GPU_IPC_ENABLED=0 FI_CXI_RDZV_THRESHOLD=0 FI_CXI_RDZV_EAGER_SIZE=0)
 #   st          stream-triggered sends for the halo exchange (--comm st)
-#   rccl        RCCL (--comm rccl), with aws-ofi-nccl from <prefix>/ofi-nccl when it was built
+#   rccl        RCCL (--comm rccl), with aws-ofi-nccl from <prefix>/ofi-nccl when it was built.
+#               Settings: LC's rccl/fast-env-slows-mpi module. (The job environment has
+#               OMP_PROC_BIND=spread OMP_PLACES=threads and aCG starts OpenMP before ncclCommInitRank,
+#               which pinned RCCL's proxy threads to the main thread's core, 5-40x slower off-node;
+#               aCG now gives ncclCommInitRank the rank's pre-OpenMP mask. ST-project-testing
+#               knowledge/phase6-plan.md, "aCG full: first results")
 #
 # Modifiers, appended to any backend with '+' (e.g. mpi+g+mcheck+pad7). Kept from the diagnosis of
 # aCG's setup crash (knowledge/acg-setup-crash.md in ST-project-testing), for the next memory error:
@@ -21,11 +26,12 @@
 # For RCCL's environment (only the rccl backend; ST-project-testing knowledge/phase6-plan.md, "aCG full"):
 #   +ncdebug  NCCL_DEBUG=INFO NCCL_DEBUG_SUBSYS=INIT,NET: RCCL logs its net plugin, provider, NICs,
 #             transport per peer (NET/OFI GDRDMA, NET/Socket, P2P/IPC) and CPU affinity
-#   +lcfast   LC's rccl/fast-env-slows-mpi module settings instead of this script's RCCL settings
-#   +lcmin    LC's rccl/working-env module settings instead of this script's RCCL settings
-#   +ncaff    NCCL_IGNORE_CPU_AFFINITY=1: RCCL binds its proxy threads to the GPU's cores, not to the
-#             calling thread's mask (which libomp's OMP_PROC_BIND=spread narrows to one core)
-#   +nobind   OMP_PROC_BIND=false: libomp leaves every thread's mask alone
+#   +oldenv   the settings before 2026-11-27 (Derek's earlier aws-ofi-nccl runs) instead of LC's
+#             fast-env: NCCL_NET_GDR_LEVEL=PHB NCCL_CROSS_NIC=1 HSA_FORCE_FINE_GRAIN_PCIE=1, TX size
+#             2048, no NCCL_SOCKET_IFNAME, FI_CXI_RDZV_THRESHOLD or FI_CXI_RDZV_GET_MIN
+#   +lcmin    LC's rccl/working-env module settings instead of fast-env
+#   +ncaff    NCCL_IGNORE_CPU_AFFINITY=1: proxy threads on all the GPU's cores, which include
+#             the system cores mpibind keeps tasks off (LLNL: noise at scale)
 #
 # Diagnostics (all off by default):
 #   ACG_CORE_DIR=<dir>  core files on (ulimit -c unlimited; without it, ulimit -c 0). Each run starts
@@ -204,7 +210,7 @@ make_partition() {
 run_backend() {
     local backend="$1" ppn="$2" matrix="$3" matrix_file="$4" partition="$5"
     local comm st=0 base="${backend%%+*}" mod exe="$ACG"
-    local env=() mods=() rccl_env=script
+    local env=() mods=() rccl_env=lcfast
     [ "$base" != "$backend" ] && IFS=+ read -ra mods <<< "${backend#*+}"
     for mod in "${mods[@]}"; do
         case "$mod" in
@@ -215,9 +221,8 @@ run_backend() {
                 if [ ! -x "$exe" ] && ! sd_dry; then sd_warn "no $exe: skipping $backend"; return; fi ;;
             mcheck) env+=(MALLOC_CHECK_=3) ;;
             ncdebug) env+=(NCCL_DEBUG=INFO "NCCL_DEBUG_SUBSYS=INIT,NET") ;;
-            lcfast|lcmin) rccl_env="$mod" ;;
+            oldenv|lcmin) rccl_env="$mod" ;;
             ncaff) env+=(NCCL_IGNORE_CPU_AFFINITY=1) ;;
-            nobind) env+=(OMP_PROC_BIND=false) ;;
             *) sd_warn "unknown modifier '+$mod' in '$backend'"; return ;;
         esac
     done
@@ -231,8 +236,8 @@ run_backend() {
         rccl)
             comm=rccl
             case "$rccl_env" in
-                script)
-                    # The settings Derek's earlier runs used with aws-ofi-nccl
+                oldenv)
+                    # The settings Derek's earlier runs used with aws-ofi-nccl (the default until 2026-11-27)
                     env+=(NCCL_NET_GDR_LEVEL=PHB NCCL_CROSS_NIC=1 HSA_FORCE_FINE_GRAIN_PCIE=1
                           FI_MR_CACHE_MONITOR=userfaultfd FI_CXI_DISABLE_HOST_REGISTER=1
                           FI_CXI_DEFAULT_CQ_SIZE=131072 FI_CXI_RDZV_PROTO=alt_read
