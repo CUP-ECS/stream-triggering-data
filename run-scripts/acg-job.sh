@@ -18,6 +18,11 @@
 #             information, so backtraces from cores name functions and lines
 #   +mcheck   MALLOC_CHECK_=3: glibc's checking malloc, which checks each block when it's freed and
 #             aborts at the first damaged one (glibc 2.28 has it built in)
+# For RCCL's environment (only the rccl backend; ST-project-testing knowledge/phase6-plan.md, "aCG full"):
+#   +ncdebug  NCCL_DEBUG=INFO NCCL_DEBUG_SUBSYS=INIT,NET: RCCL logs its net plugin, provider, NICs,
+#             transport per peer (NET/OFI GDRDMA, NET/Socket, P2P/IPC) and CPU affinity
+#   +lcfast   LC's rccl/fast-env-slows-mpi module settings instead of this script's RCCL settings
+#   +lcmin    LC's rccl/working-env module settings instead of this script's RCCL settings
 #
 # Diagnostics (all off by default):
 #   ACG_CORE_DIR=<dir>  core files on (ulimit -c unlimited; without it, ulimit -c 0). Each run starts
@@ -168,6 +173,10 @@ fi
 # The runtime libraries acg-hip resolves (OpenMP, MPI, libfabric, CCE runtime, RCCL)
 if ! sd_dry; then
     ldd "$ACG" 2>&1 | grep -Ei 'omp|mpi|fabric|cray|cce|rccl|amdhip' | sed 's/^[[:space:]]*/# ldd: /' >> "$OUT" || true
+    # The environment a rank starts with, for the variables that steer OpenMP, RCCL, libfabric and
+    # HIP (LC's StdEnv sets FI_MR_CACHE_MONITOR, for example). Backends add their own on top.
+    flux run -N1 -n1 env 2>&1 | grep -E '^(OMP_|KMP_|NCCL_|RCCL_|FI_|HSA_|MPICH_)' | sort \
+        | sed 's/^/# rank env: /' >> "$OUT" || true
 fi
 
 # Make <file> with mtxpartition unless it exists. Written to a temporary name and moved into
@@ -192,7 +201,7 @@ make_partition() {
 run_backend() {
     local backend="$1" ppn="$2" matrix="$3" matrix_file="$4" partition="$5"
     local comm st=0 base="${backend%%+*}" mod exe="$ACG"
-    local env=() mods=()
+    local env=() mods=() rccl_env=script
     [ "$base" != "$backend" ] && IFS=+ read -ra mods <<< "${backend#*+}"
     for mod in "${mods[@]}"; do
         case "$mod" in
@@ -202,6 +211,8 @@ run_backend() {
                 exe="${SD_PREFIX}/acg/bin/acg-hip-g"
                 if [ ! -x "$exe" ] && ! sd_dry; then sd_warn "no $exe: skipping $backend"; return; fi ;;
             mcheck) env+=(MALLOC_CHECK_=3) ;;
+            ncdebug) env+=(NCCL_DEBUG=INFO "NCCL_DEBUG_SUBSYS=INIT,NET") ;;
+            lcfast|lcmin) rccl_env="$mod" ;;
             *) sd_warn "unknown modifier '+$mod' in '$backend'"; return ;;
         esac
     done
@@ -214,11 +225,24 @@ run_backend() {
         st) comm=st; st=1 ;;
         rccl)
             comm=rccl
-            # The settings Derek's earlier runs used with aws-ofi-nccl
-            env+=(NCCL_NET_GDR_LEVEL=PHB NCCL_CROSS_NIC=1 HSA_FORCE_FINE_GRAIN_PCIE=1
-                  FI_MR_CACHE_MONITOR=userfaultfd FI_CXI_DISABLE_HOST_REGISTER=1
-                  FI_CXI_DEFAULT_CQ_SIZE=131072 FI_CXI_RDZV_PROTO=alt_read
-                  FI_CXI_RX_MATCH_MODE=hybrid FI_CXI_RDZV_EAGER_SIZE=0 FI_CXI_DEFAULT_TX_SIZE=2048)
+            case "$rccl_env" in
+                script)
+                    # The settings Derek's earlier runs used with aws-ofi-nccl
+                    env+=(NCCL_NET_GDR_LEVEL=PHB NCCL_CROSS_NIC=1 HSA_FORCE_FINE_GRAIN_PCIE=1
+                          FI_MR_CACHE_MONITOR=userfaultfd FI_CXI_DISABLE_HOST_REGISTER=1
+                          FI_CXI_DEFAULT_CQ_SIZE=131072 FI_CXI_RDZV_PROTO=alt_read
+                          FI_CXI_RX_MATCH_MODE=hybrid FI_CXI_RDZV_EAGER_SIZE=0 FI_CXI_DEFAULT_TX_SIZE=2048) ;;
+                lcfast)
+                    # LC's /usr/tce/modulefiles/Core/rccl/fast-env-slows-mpi.lua (Tuolumne, 2026-11-27)
+                    env+=(FI_MR_CACHE_MONITOR=userfaultfd NCCL_SOCKET_IFNAME=hsi
+                          FI_CXI_RDZV_PROTO=alt_read FI_CXI_RDZV_THRESHOLD=0 FI_CXI_RDZV_GET_MIN=0
+                          FI_CXI_RDZV_EAGER_SIZE=0 FI_CXI_DEFAULT_TX_SIZE=1024
+                          FI_CXI_DISABLE_HOST_REGISTER=1 FI_CXI_DEFAULT_CQ_SIZE=131072
+                          FI_CXI_RX_MATCH_MODE=hybrid) ;;
+                lcmin)
+                    # LC's /usr/tce/modulefiles/Core/rccl/working-env.lua (Tuolumne, 2026-11-27)
+                    env+=(FI_MR_CACHE_MONITOR=userfaultfd NCCL_SOCKET_IFNAME=hsi) ;;
+            esac
             [ -d "$OFI_NCCL_LIB" ] && env+=(LD_LIBRARY_PATH="${OFI_NCCL_LIB}:${LD_LIBRARY_PATH:-}")
             ;;
         *) sd_warn "unknown backend '$backend'"; return ;;
