@@ -1,0 +1,48 @@
+experiment: acg
+preset: full
+system: tuolumne
+label: 2026-11-24-full
+prefix: /usr/WS1/derek/st-project/tuolumne/rocm7.14-mpich9.1.0
+submitted: 2026-11-24T14:16:35-08:00 from tuolumne1003
+scripts: stream-triggering-data /g/g16/derek/git/ST-project-testing/repos/stream-triggering-data feat-sc-paper-tweaks 7e29700ba284975736f9cde44a9469ec2f1559b9 clean
+modules: craype/2.7.36 rocm/7.14 rocmcc/7.14-cce-21.0.3-magic craype-accel-amd-gfx942 cray-mpich/9.1.0
+SD_NODE_LIST: 1 2 4 8 16
+SD_REPEATS: 5
+SD_JOB_MINUTES: 60
+SD_CHAIN: all
+ACG_PPN: 1 2 4
+ACG_MATRICES: Queen_4147 Bump_2911 audikw_1 Serena
+ACG_BACKENDS: mpi st rccl mpi-no-ipc
+ACG_MATRIX_DIR: /usr/workspace/derek/aCG/input
+ACG_PARTITION_DIR: /usr/workspace/derek/aCG/partitions
+ACG_TRIALS: 1
+ACG_MAX_ITERATIONS: 100000
+SD_LAUNCH_ARGS: 
+SD_STEP_MINUTES: 
+ACG_CORE_DIR: 
+ACG_HANG_SECONDS: 
+job: acg-1N-r1 f3n51sgXjxNs
+job: acg-2N-r1 f3n51spfC1zX
+job: acg-4N-r1 f3n51sxWLDWP
+job: acg-8N-r1 f3n51t5vGdEP
+job: acg-16N-r1 f3n51tDEH5q1
+job: acg-1N-r2 f3n51tLWoZ9H
+job: acg-2N-r2 f3n51tTsmzJb
+job: acg-4N-r2 f3n51tb2tXD9
+job: acg-8N-r2 f3n51tiAX4qM
+job: acg-16N-r2 f3n51tqKdbju
+job: acg-1N-r3 f3n51txWE7vo
+job: acg-2N-r3 f3n51u5atgzK
+job: acg-4N-r3 f3n51uCfZG3q
+job: acg-8N-r3 f3n51uL13hvo
+job: acg-16N-r3 f3n51uU2ZpR5
+job: acg-1N-r4 f3n51ubK6HjM
+job: acg-2N-r4 f3n51uirSds5
+job: acg-4N-r4 f3n51ur33A3y
+job: acg-8N-r4 f3n51uyC9gxX
+job: acg-16N-r4 f3n51v6TCAzT
+job: acg-1N-r5 f3n51vDs8aiT
+job: acg-2N-r5 f3n51vML2y19
+job: acg-4N-r5 f3n51vUb5T35
+job: acg-8N-r5 f3n51vcPFfzF
+job: acg-16N-r5 f3n51vjyZzgf
