@@ -23,6 +23,9 @@
 #             transport per peer (NET/OFI GDRDMA, NET/Socket, P2P/IPC) and CPU affinity
 #   +lcfast   LC's rccl/fast-env-slows-mpi module settings instead of this script's RCCL settings
 #   +lcmin    LC's rccl/working-env module settings instead of this script's RCCL settings
+#   +ncaff    NCCL_IGNORE_CPU_AFFINITY=1: RCCL binds its proxy threads to the GPU's cores, not to the
+#             calling thread's mask (which libomp's OMP_PROC_BIND=spread narrows to one core)
+#   +nobind   OMP_PROC_BIND=false: libomp leaves every thread's mask alone
 #
 # Diagnostics (all off by default):
 #   ACG_CORE_DIR=<dir>  core files on (ulimit -c unlimited; without it, ulimit -c 0). Each run starts
@@ -213,6 +216,8 @@ run_backend() {
             mcheck) env+=(MALLOC_CHECK_=3) ;;
             ncdebug) env+=(NCCL_DEBUG=INFO "NCCL_DEBUG_SUBSYS=INIT,NET") ;;
             lcfast|lcmin) rccl_env="$mod" ;;
+            ncaff) env+=(NCCL_IGNORE_CPU_AFFINITY=1) ;;
+            nobind) env+=(OMP_PROC_BIND=false) ;;
             *) sd_warn "unknown modifier '+$mod' in '$backend'"; return ;;
         esac
     done
